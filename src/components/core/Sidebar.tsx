@@ -2,10 +2,10 @@ import { Box, Flex, FlexProps } from "@chakra-ui/react";
 import { NavLink } from "react-router";
 import { ReactNode } from "react";
 import {
-  ArrowLeftRightIcon,
+  // ArrowLeftRightIcon,
   DeliveryBox01Icon,
   GoogleDocIcon,
-  Home04FreeIcons,
+  // Home04FreeIcons,
   UserMultiple02Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -17,11 +17,11 @@ interface LinkItemProps {
 }
 
 const LinkItems: Array<LinkItemProps> = [
-  { name: "Home", icon: Home04FreeIcons, url: "/" },
+  // { name: "Home", icon: Home04FreeIcons, url: "/" },
   { name: "Orders", icon: DeliveryBox01Icon, url: "orders" },
   { name: "Bills", icon: GoogleDocIcon, url: "bills" },
   { name: "Customers", icon: UserMultiple02Icon, url: "customers" },
-  { name: "Transfers", icon: ArrowLeftRightIcon, url: "transfers" },
+  // { name: "Transfers", icon: ArrowLeftRightIcon, url: "transfers" },
 ];
 
 interface NavItemProps extends FlexProps {

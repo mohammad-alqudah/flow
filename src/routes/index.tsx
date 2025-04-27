@@ -1,5 +1,5 @@
 import Layout from "@/layout/Layout";
-import Home from "@/pages/Home";
+// import Home from "@/pages/Home";
 import LoginPage from "@/pages/LoginPage";
 import CreateOrder from "@/pages/order/CreateOrder";
 // import OrderDetails from "@/pages/order/OrderDetails";
@@ -17,27 +17,13 @@ export default function AppRoutes() {
       <Routes>
         {isAuthenticated && (
           <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="orders">
+            <Route path="/orders">
               <Route index element={<Orders />} />
               <Route path=":id">
-                {/* <Route index element={<OrderDetails />} /> */}
                 <Route path="create" element={<CreateOrder />} />
                 <Route path="view" element={<OrderView />} />
               </Route>
             </Route>
-            {/* <Route path="inventory">
-              <Route index element={<Inventory />} />
-              <Route
-                path=":id/performance"
-                element={<InventoryPerformance />}
-              />
-            </Route>
-
-            <Route path="assets" element={<Assets />} />
-            <Route path="assets-inventory" element={<AssetsInventory />} />
-            <Route path="users" element={<Users />} />
-            <Route path="settings" element={<Settings />} /> */}
           </Route>
         )}
 
@@ -53,7 +39,9 @@ export default function AppRoutes() {
 
         <Route
           path="*"
-          element={<Navigate to={isAuthenticated ? "/" : "/login"} replace />}
+          element={
+            <Navigate to={isAuthenticated ? "/orders" : "/login"} replace />
+          }
         />
       </Routes>
     </BrowserRouter>

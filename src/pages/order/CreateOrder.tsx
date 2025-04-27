@@ -557,7 +557,7 @@ const CreateOrder = () => {
               {/* ETD */}
               <Box>
                 <CustomInput
-                  type="text"
+                  type="date"
                   label="ETD"
                   w="full"
                   mt={1}
@@ -569,7 +569,7 @@ const CreateOrder = () => {
               {/* ETA */}
               <Box>
                 <CustomInput
-                  type="text"
+                  type="date"
                   label="ETA"
                   w="full"
                   mt={1}

@@ -20,7 +20,7 @@ export async function storeTokens(
 
   setIsAuthenticated && setIsAuthenticated();
 
-  navigate && navigate("/orders", { replace: true });
+  navigate && navigate("/orders/");
 }
 
 export async function removeTokens(
