@@ -18,7 +18,7 @@ interface LinkItemProps {
 
 const LinkItems: Array<LinkItemProps> = [
   // { name: "Home", icon: Home04FreeIcons, url: "/" },
-  { name: "Orders", icon: DeliveryBox01Icon, url: "orders" },
+  { name: "Files", icon: DeliveryBox01Icon, url: "orders" },
   { name: "Bills", icon: GoogleDocIcon, url: "bills" },
   { name: "Customers", icon: UserMultiple02Icon, url: "customers" },
   // { name: "Transfers", icon: ArrowLeftRightIcon, url: "transfers" },

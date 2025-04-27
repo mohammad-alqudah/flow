@@ -17,6 +17,7 @@ export default function AppRoutes() {
       <Routes>
         {isAuthenticated && (
           <Route path="/" element={<Layout />}>
+            <Route index element={<Navigate to="/orders" replace />} />
             <Route path="/orders">
               <Route index element={<Orders />} />
               <Route path=":id">
