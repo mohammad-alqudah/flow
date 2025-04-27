@@ -119,7 +119,7 @@ const Orders = () => {
   const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>(
     {
       name: true,
-      bill_status: true,
+      // bill_status: true,
       client: true,
       client_mobile_number: true,
       client_email: true,
@@ -165,7 +165,7 @@ const Orders = () => {
 
   const newColumns = [
     { id: "name" },
-    { id: "bill_status" },
+    // { id: "bill_status" },
     { id: "client" },
     { id: "client_mobile_number" },
     { id: "client_email" },
@@ -204,11 +204,11 @@ const Orders = () => {
       header: () => "Name",
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor("bill_status", {
-      id: "bill_status",
-      header: () => "Bill Status",
-      cell: (info) => info.getValue(),
-    }),
+    // columnHelper.accessor("bill_status", {
+    //   id: "bill_status",
+    //   header: () => "Bill Status",
+    //   cell: (info) => info.getValue(),
+    // }),
     columnHelper.accessor("client.name", {
       id: "client",
       header: () => "Client Name",
