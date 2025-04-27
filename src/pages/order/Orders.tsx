@@ -311,7 +311,7 @@ const Orders = () => {
           rounded="full"
           onClick={() => {
             navigate({
-              pathname: `/orders/${info.row.original.id}/create`,
+              pathname: `/orders/${info.row.original.id}/view`,
               search: `?name=${info.row.original.name}&type=${info.row.original.type}&freight_type=${info.row.original.mode}&date=${info.row.original.date}`,
             });
           }}
