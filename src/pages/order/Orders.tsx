@@ -152,11 +152,6 @@ const Orders = () => {
       header: () => "Name",
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor("status", {
-      id: "status",
-      header: () => "Status",
-      cell: (info) => info.getValue(),
-    }),
     columnHelper.accessor("bill_status", {
       id: "bill_status",
       header: () => "Bill Status",
@@ -310,11 +305,16 @@ const Orders = () => {
     columnHelper.accessor("settings", {
       id: "actions",
       header: () => "Action",
-      cell: () => (
+      cell: (info) => (
         <IconButton
           variant="ghost"
           rounded="full"
-          onClick={() => navigate("/orders/1")}
+          onClick={() => {
+            navigate({
+              pathname: `/orders/${info.row.original.id}/create`,
+              search: `?name=${info.row.original.name}&type=${info.row.original.type}&freight_type=${info.row.original.mode}&date=${info.row.original.date}`,
+            });
+          }}
         >
           <HugeiconsIcon icon={ArrowUpRight02Icon} />
         </IconButton>
