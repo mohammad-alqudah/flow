@@ -160,6 +160,7 @@ const Orders = () => {
   });
 
   const ordersData = useCustomQuery(`file/files/?${params.toString()}`, [
+    "orders",
     `files-${page}`,
   ]);
 

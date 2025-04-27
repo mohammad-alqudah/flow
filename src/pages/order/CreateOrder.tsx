@@ -76,7 +76,7 @@ const CreateOrder = () => {
     setValue,
   } = useForm<any>({});
 
-  const saveOrder = useCustomUpdate(`file/files/${id}/`, ["order"]);
+  const saveOrder = useCustomUpdate(`file/files/${id}/`, ["orders"]);
   const addOptions = useCustomPost("client_settings/options/", ["options"]);
 
   const options = useCustomQuery("client_settings/options/", ["options"]);
