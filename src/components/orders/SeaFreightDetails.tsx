@@ -33,11 +33,13 @@ const SeaFreightDetails = ({
   defaultValue,
   options,
   handleOptions,
+  disabled,
 }: {
   register: any;
   defaultValue: any;
   options: any;
   handleOptions: (model: string, data: any) => void;
+  disabled?: boolean;
 }) => {
   const [selectedData, setSelectedData] = useState<any>(null);
   const [openAdd, setOpenAdd] = useState(false);
@@ -153,6 +155,7 @@ const SeaFreightDetails = ({
               mt={1}
               {...register("mbl_number")}
               defaultValue={defaultValue.mbl_number}
+              disabled={disabled}
             />
           </Box>
           {/* MBL Number */}
@@ -166,6 +169,7 @@ const SeaFreightDetails = ({
               mt={1}
               {...register("mbl_originals")}
               defaultValue={defaultValue.mbl_originals}
+              disabled={disabled}
             />
           </Box>
           {/* MBL Originals */}
@@ -179,6 +183,7 @@ const SeaFreightDetails = ({
               mt={1}
               {...register("hbl_number")}
               defaultValue={defaultValue.hbl_number}
+              disabled={disabled}
             />
           </Box>
           {/* HBL Number */}
@@ -192,6 +197,7 @@ const SeaFreightDetails = ({
               mt={1}
               {...register("hbl_originals")}
               defaultValue={defaultValue.hbl_originals}
+              disabled={disabled}
             />
           </Box>
           {/* HBL Originals */}
@@ -205,6 +211,7 @@ const SeaFreightDetails = ({
               mt={1}
               {...register("shipping_line")}
               defaultValue={defaultValue.shipping_line}
+              disabled={disabled}
             />
           </Box>
           {/* Shipping Line */}
@@ -218,6 +225,7 @@ const SeaFreightDetails = ({
               mt={1}
               {...register("teus")}
               defaultValue={defaultValue.teus}
+              disabled={disabled}
             />
           </Box>
           {/* TEUs */}
@@ -231,6 +239,7 @@ const SeaFreightDetails = ({
               mt={1}
               {...register("seal_number")}
               defaultValue={defaultValue.seal_number}
+              disabled={disabled}
             />
           </Box>
           {/* Seal Number */}

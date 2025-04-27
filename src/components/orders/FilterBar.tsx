@@ -11,6 +11,7 @@ import {
   HStack,
   IconButton,
   NativeSelect,
+  Icon,
 } from "@chakra-ui/react";
 import {
   Search,
@@ -26,6 +27,8 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Tooltip } from "../ui/tooltip";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { FilterIcon } from "@hugeicons/core-free-icons";
 
 interface FilterBarProps {
   filters: {
@@ -171,7 +174,7 @@ export function FilterBar({
 
     if (filterId === "created_at_range") {
       return (
-        <VStack gap={2}>
+        <VStack gap={2} w={"full"} align="stretch">
           <DatePicker
             selected={filters[filterId][0]}
             onChange={(date) =>
@@ -217,85 +220,117 @@ export function FilterBar({
   );
 
   return (
-    <Box bg="white" p={6} borderRadius="lg" shadow="sm">
-      <Stack gap={6}>
-        <InputGroup startElement={<Search className="h-5 w-5 text-gray-400" />}>
-          <Input
-            placeholder="Search orders by reference number, client, or description..."
-            value={filters.search}
-            onChange={(e) =>
-              onFilterChange({ ...filters, search: e.target.value })
-            }
-          />
-        </InputGroup>
-
-        <Accordion.Root
-          defaultValue={activeFilterGroups.map((_, index) => `${index}`)}
-          multiple
-        >
-          {activeFilterGroups.map((group) => {
-            const visibleGroupFilters = group.filters.filter(
-              (filterId) => visibleFilters[filterId]
-            );
-
-            if (visibleGroupFilters.length === 0) return null;
-
-            return (
-              <Accordion.Item key={group.id} value={group.id} border="none">
-                {visibleGroupFilters.length > 1 && (
-                  <Accordion.ItemTrigger px={0} _hover={{ bg: "transparent" }}>
-                    <HStack flex="1">
-                      <group.icon className="h-5 w-5 text-gray-400" />
-                      <Text fontWeight="medium">{group.title}</Text>
-                    </HStack>
-                  </Accordion.ItemTrigger>
-                )}
-                <Accordion.ItemContent pb={4} px={0}>
-                  <Grid
-                    templateColumns="repeat(auto-fit, minmax(250px, 1fr))"
-                    gap={4}
+    <Accordion.Root collapsible>
+      <Accordion.Item value={"info"}>
+        <Accordion.ItemTrigger>
+          <Icon fontSize="lg" color="fg.subtle">
+            <HugeiconsIcon icon={FilterIcon} />
+          </Icon>
+          Filter
+        </Accordion.ItemTrigger>
+        <Accordion.ItemContent>
+          <Accordion.ItemBody>
+            <>
+              {/* filters */}
+              <Box bg="white" p={6} borderRadius="lg" shadow="sm">
+                <Stack gap={6}>
+                  <InputGroup
+                    startElement={<Search className="h-5 w-5 text-gray-400" />}
                   >
-                    {visibleGroupFilters.map((filterId) => (
-                      <GridItem key={filterId}>
-                        <VStack align="stretch" gap={2}>
-                          <HStack justify="space-between">
-                            <Text
-                              fontSize="sm"
-                              fontWeight="medium"
-                              color="gray.700"
+                    <Input
+                      placeholder="Search orders by reference number, client, or description..."
+                      value={filters.search}
+                      onChange={(e) =>
+                        onFilterChange({ ...filters, search: e.target.value })
+                      }
+                    />
+                  </InputGroup>
+
+                  <Accordion.Root
+                    defaultValue={activeFilterGroups.map(
+                      (_, index) => `${index}`
+                    )}
+                    multiple
+                  >
+                    {activeFilterGroups.map((group) => {
+                      const visibleGroupFilters = group.filters.filter(
+                        (filterId) => visibleFilters[filterId]
+                      );
+
+                      if (visibleGroupFilters.length === 0) return null;
+
+                      return (
+                        <Accordion.Item
+                          key={group.id}
+                          value={group.id}
+                          border="none"
+                        >
+                          {visibleGroupFilters.length > 1 && (
+                            <Accordion.ItemTrigger
+                              px={0}
+                              _hover={{ bg: "transparent" }}
                             >
-                              {filterId
-                                .split("_")
-                                .map(
-                                  (word) =>
-                                    word.charAt(0).toUpperCase() + word.slice(1)
-                                )
-                                .join(" ")}
-                            </Text>
-                            {filters[filterId] && (
-                              <Tooltip content="Clear filter">
-                                <IconButton
-                                  size="xs"
-                                  aria-label="Clear filter"
-                                  variant="ghost"
-                                  onClick={() => handleClearFilter(filterId)}
-                                >
-                                  <X className="h-4 w-4" />
-                                </IconButton>
-                              </Tooltip>
-                            )}
-                          </HStack>
-                          {renderFilterInput(filterId)}
-                        </VStack>
-                      </GridItem>
-                    ))}
-                  </Grid>
-                </Accordion.ItemContent>
-              </Accordion.Item>
-            );
-          })}
-        </Accordion.Root>
-      </Stack>
-    </Box>
+                              <HStack flex="1">
+                                <group.icon className="h-5 w-5 text-gray-400" />
+                                <Text fontWeight="medium">{group.title}</Text>
+                              </HStack>
+                            </Accordion.ItemTrigger>
+                          )}
+                          <Accordion.ItemContent pb={4} px={0}>
+                            <Grid
+                              templateColumns="repeat(auto-fit, minmax(250px, 1fr))"
+                              gap={4}
+                            >
+                              {visibleGroupFilters.map((filterId) => (
+                                <GridItem key={filterId}>
+                                  <VStack align="stretch" gap={2} w="full">
+                                    <HStack justify="space-between" w="full">
+                                      <Text
+                                        fontSize="sm"
+                                        fontWeight="medium"
+                                        color="gray.700"
+                                      >
+                                        {filterId
+                                          .split("_")
+                                          .map(
+                                            (word) =>
+                                              word.charAt(0).toUpperCase() +
+                                              word.slice(1)
+                                          )
+                                          .join(" ")}
+                                      </Text>
+                                      {filters[filterId] && (
+                                        <Tooltip content="Clear filter">
+                                          <IconButton
+                                            size="xs"
+                                            aria-label="Clear filter"
+                                            variant="ghost"
+                                            onClick={() =>
+                                              handleClearFilter(filterId)
+                                            }
+                                          >
+                                            <X className="h-4 w-4" />
+                                          </IconButton>
+                                        </Tooltip>
+                                      )}
+                                    </HStack>
+                                    {renderFilterInput(filterId)}
+                                  </VStack>
+                                </GridItem>
+                              ))}
+                            </Grid>
+                          </Accordion.ItemContent>
+                        </Accordion.Item>
+                      );
+                    })}
+                  </Accordion.Root>
+                </Stack>
+              </Box>
+              {/* filters */}
+            </>
+          </Accordion.ItemBody>
+        </Accordion.ItemContent>
+      </Accordion.Item>
+    </Accordion.Root>
   );
 }

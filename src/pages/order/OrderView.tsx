@@ -7,7 +7,7 @@ import Invoices from "@/components/orders/Invoices";
 import LandTransportDetails from "@/components/orders/LandTransportDetails";
 import LogisticsDetails from "@/components/orders/LogisticsDetails";
 import SeaFreightDetails from "@/components/orders/SeaFreightDetails";
-import { useCustomPost, useCustomUpdate } from "@/hooks/useMutation";
+import { useCustomPost } from "@/hooks/useMutation";
 import { useCustomQuery } from "@/hooks/useQuery";
 import { formatDate } from "@/services/date";
 import handleErrorAlerts from "@/utils/showErrorMessages";
@@ -38,13 +38,13 @@ import {
   WorkIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 
 const OrderView = () => {
-  const [loading, setIsLoading] = useState(false);
+  // const [loading, setIsLoading] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -70,12 +70,11 @@ const OrderView = () => {
   const {
     control,
     register,
-    handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<any>({});
+  } = useForm<any>();
 
-  const saveOrder = useCustomUpdate(`file/files/${id}/`, ["order"]);
+  // const saveOrder = useCustomUpdate(`file/files/${id}/`, ["order"]);
   const addOptions = useCustomPost("client_settings/options/", ["options"]);
 
   const options = useCustomQuery("client_settings/options/", ["options"]);
@@ -96,47 +95,6 @@ const OrderView = () => {
       })
       .catch((err) => {
         handleErrorAlerts(err.response.data.error);
-      });
-  };
-
-  const onSubmit: SubmitHandler<any> = (data) => {
-    console.log("data", data);
-
-    const removeEmptyStrings = (
-      obj: Record<string, any>
-    ): Record<string, any> => {
-      const cleanedObj: Record<string, any> = {};
-      Object.entries(obj).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-          if (value.length === 0) {
-            return;
-          } else {
-            cleanedObj[key] = value[0];
-          }
-        } else if (value !== "" && value !== undefined) {
-          cleanedObj[key] = value;
-        }
-      });
-      return cleanedObj;
-    };
-
-    const cleanedData = removeEmptyStrings(data);
-
-    setIsLoading(true);
-    saveOrder
-      .mutateAsync(cleanedData)
-      .then(async (res) => {
-        if (res.status) {
-          toast.success(`order updated successfully`);
-        } else {
-          toast.error(res.detail);
-        }
-      })
-      .catch((err) => {
-        handleErrorAlerts(err.response.data.error);
-      })
-      .finally(() => {
-        setIsLoading(false);
       });
   };
 
@@ -216,25 +174,33 @@ const OrderView = () => {
       <HStack justifyContent="space-between" alignItems="center" mb="6">
         <VStack alignItems="flex-start" gap={0}>
           <HStack gap={2} align="center">
-            <Text fontWeight="medium" fontSize="x-large">
+            <Text
+              fontWeight="medium"
+              fontSize="x-large"
+              textTransform={"uppercase"}
+            >
               {orderData?.data?.data?.name}
             </Text>
-            {/* <Text color="GrayText">{orderData?.data?.data?.type}</Text> */}
           </HStack>
+
           <Text color="GrayText">
-            {formatDate(orderData?.data?.data?.created_at)}
-            {` - ${orderData?.data?.data?.created_by}`}
+            Created on {formatDate(orderData?.data?.data?.created_at)}
           </Text>
         </VStack>
 
         <Button
           size="sm"
-          loading={loading}
+          loading={false}
           loadingText="Loading..."
-          onClick={() => handleSubmit(onSubmit)()}
+          onClick={() => {
+            navigate({
+              pathname: `/orders/${id}/create`,
+              search: `?name=${name}&type=${type}&freight_type=${freight_type}&date=${date}`,
+            });
+          }}
         >
           <HugeiconsIcon icon={FloppyDiskIcon} />
-          Save Changes
+          Edit
         </Button>
       </HStack>
       {/* page header */}
@@ -581,16 +547,19 @@ const OrderView = () => {
               options={options}
               handleOptions={handleOptions}
               errors={errors}
+              disabled
             />
           ) : orderData?.data?.data?.mode === "LandTransport" ? (
             <LandTransportDetails
               register={register}
               defaultValue={orderData?.data?.data}
+              disabled
             />
           ) : orderData?.data?.data?.mode === "Logistics" ? (
             <LogisticsDetails
               register={register}
               defaultValue={orderData?.data?.data}
+              disabled
             />
           ) : (
             <SeaFreightDetails
@@ -598,6 +567,7 @@ const OrderView = () => {
               defaultValue={orderData?.data?.data}
               options={options}
               handleOptions={handleOptions}
+              disabled
             />
           )}
 

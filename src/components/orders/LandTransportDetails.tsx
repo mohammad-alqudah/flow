@@ -6,9 +6,11 @@ import CustomInput from "../core/CustomInput";
 const LandTransportDetails = ({
   register,
   defaultValue,
+  disabled,
 }: {
   register: any;
   defaultValue: any;
+  disabled?: boolean;
 }) => {
   return (
     <>
@@ -23,6 +25,7 @@ const LandTransportDetails = ({
               mt={1}
               {...register("bl_number")}
               defaultValue={defaultValue?.bl_number}
+              disabled={disabled}
             />
           </Box>
           {/* bl_number */}
@@ -36,6 +39,7 @@ const LandTransportDetails = ({
               mt={1}
               {...register("transporter")}
               defaultValue={defaultValue?.transporter}
+              disabled={disabled}
             />
           </Box>
           {/* transporter */}

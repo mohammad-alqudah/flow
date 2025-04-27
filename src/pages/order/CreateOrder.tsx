@@ -29,6 +29,7 @@ import {
   AirplaneTakeOff01Icon,
   BoatIcon,
   Calendar02Icon,
+  Cancel01Icon,
   Car03Icon,
   ContainerTruck02Icon,
   FloppyDiskIcon,
@@ -216,26 +217,47 @@ const CreateOrder = () => {
       <HStack justifyContent="space-between" alignItems="center" mb="6">
         <VStack alignItems="flex-start" gap={0}>
           <HStack gap={2} align="center">
-            <Text fontWeight="medium" fontSize="x-large">
+            <Text
+              fontWeight="medium"
+              fontSize="x-large"
+              textTransform={"uppercase"}
+            >
               {orderData?.data?.data?.name}
             </Text>
-            {/* <Text color="GrayText">{orderData?.data?.data?.type}</Text> */}
           </HStack>
+
           <Text color="GrayText">
-            {formatDate(orderData?.data?.data?.created_at)}
-            {` - ${orderData?.data?.data?.created_by}`}
+            Created on {formatDate(orderData?.data?.data?.created_at)}
           </Text>
         </VStack>
 
-        <Button
-          size="sm"
-          loading={loading}
-          loadingText="Loading..."
-          onClick={() => handleSubmit(onSubmit)()}
-        >
-          <HugeiconsIcon icon={FloppyDiskIcon} />
-          Save Changes
-        </Button>
+        <HStack gap={2}>
+          <Button
+            colorPalette="gray"
+            variant="outline"
+            size="sm"
+            loading={loading}
+            loadingText="Loading..."
+            onClick={() => {
+              navigate({
+                pathname: `/orders/${id}/view`,
+                search: `?name=${name}&type=${type}&freight_type=${freight_type}&date=${date}`,
+              });
+            }}
+          >
+            <HugeiconsIcon icon={Cancel01Icon} />
+            cancel
+          </Button>
+          <Button
+            size="sm"
+            loading={loading}
+            loadingText="Loading..."
+            onClick={() => handleSubmit(onSubmit)()}
+          >
+            <HugeiconsIcon icon={FloppyDiskIcon} />
+            Save Changes
+          </Button>
+        </HStack>
       </HStack>
       {/* page header */}
 

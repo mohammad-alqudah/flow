@@ -11,6 +11,7 @@ const AirFreightDetails = ({
   options,
   handleOptions,
   errors,
+  disabled = false,
 }: {
   register: any;
   defaultValue: any;
@@ -18,6 +19,7 @@ const AirFreightDetails = ({
   options: any;
   handleOptions: (model: string, data: any) => void;
   errors: any;
+  disabled?: boolean;
 }) => {
   return (
     <>
@@ -32,6 +34,7 @@ const AirFreightDetails = ({
               mt={1}
               {...register("mawb_number")}
               defaultValue={defaultValue?.mawb_number}
+              disabled={disabled}
             />
           </Box>
           {/* mawb_number */}
@@ -45,6 +48,7 @@ const AirFreightDetails = ({
               mt={1}
               {...register("hawb_number")}
               defaultValue={defaultValue?.hawb_number}
+              disabled={disabled}
             />
           </Box>
           {/* hawb_number */}
@@ -68,6 +72,7 @@ const AirFreightDetails = ({
                   ? String(errors?.seal_number?.message)
                   : ""
               }
+              disabled={disabled}
             />
           </Box>
           {/* airline */}
@@ -81,6 +86,7 @@ const AirFreightDetails = ({
               mt={1}
               {...register("gross_weight")}
               defaultValue={defaultValue?.gross_weight}
+              disabled={disabled}
             />
           </Box>
           {/* gross_weight */}
@@ -94,6 +100,7 @@ const AirFreightDetails = ({
               mt={1}
               {...register("net_weight")}
               defaultValue={defaultValue?.net_weight}
+              disabled={disabled}
             />
           </Box>
           {/* net_weight */}
@@ -107,6 +114,7 @@ const AirFreightDetails = ({
               mt={1}
               {...register("volume")}
               defaultValue={defaultValue?.volume}
+              disabled={disabled}
             />
           </Box>
           {/* volume */}
@@ -120,6 +128,7 @@ const AirFreightDetails = ({
               mt={1}
               {...register("chargable_weight")}
               defaultValue={defaultValue?.chargable_weight}
+              disabled={disabled}
             />
           </Box>
           {/* chargable_weight */}

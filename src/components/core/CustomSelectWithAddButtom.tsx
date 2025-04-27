@@ -91,8 +91,12 @@ const CustomSelectWithAddButtom = ({
                   <Select.ValueText placeholder={`Choose ${label}`} />
                 </Select.Trigger>
                 <Select.IndicatorGroup pe={disabled ? "" : "2.5rem"}>
-                  <Select.Indicator />
-                  <Select.ClearTrigger />
+                  {disabled ? null : (
+                    <>
+                      <Select.Indicator />
+                      <Select.ClearTrigger />
+                    </>
+                  )}
                 </Select.IndicatorGroup>
                 {disabled ? null : (
                   <IconButton

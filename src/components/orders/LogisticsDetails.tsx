@@ -6,9 +6,11 @@ import CustomInput from "../core/CustomInput";
 const LogisticsDetails = ({
   register,
   defaultValue,
+  disabled,
 }: {
   register: any;
   defaultValue: any;
+  disabled?: boolean;
 }) => {
   return (
     <>
@@ -23,6 +25,7 @@ const LogisticsDetails = ({
               mt={1}
               {...register("service")}
               defaultValue={defaultValue?.service}
+              disabled={disabled}
             />
           </Box>
           {/* service */}
@@ -36,6 +39,7 @@ const LogisticsDetails = ({
               mt={1}
               {...register("bl_number")}
               defaultValue={defaultValue?.bl_number}
+              disabled={disabled}
             />
           </Box>
           {/* BL Number */}
@@ -49,6 +53,7 @@ const LogisticsDetails = ({
               mt={1}
               {...register("third_party_logistics_name")}
               defaultValue={defaultValue["third_party_logistics_name"]}
+              disabled={disabled}
             />
           </Box>
           {/* 3PL Number */}

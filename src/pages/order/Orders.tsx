@@ -119,21 +119,37 @@ const Orders = () => {
   const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>(
     {
       name: true,
-      status: true,
-      client_mobile_number: true,
-      type: true,
-      mode: true,
-      declaration_number: true,
+      bill_status: true,
       client: true,
+      client_mobile_number: true,
+      client_email: true,
+      client_tax: true,
+      client_address: true,
       shipper: true,
-      consignee: true,
-      notify: true,
-      pol: true,
-      pod: true,
+      shipper_mobile_number: true,
+      shipper_email: true,
+      shipper_tax: true,
+      shipper_address: true,
       final_destination: true,
       etd: true,
       eta: true,
+      clearing_agent: true,
+      description_of_goods: true,
+      agent: true,
+      network: true,
+      mbl_number: true,
+      hbl_number: true,
+      teus: true,
+      seal_number: true,
+      pol: true,
+      pod: true,
+      pol_country: true,
+      pod_country: true,
+      mawb_number: true,
+      haqb_number: true,
+      airline: true,
       created_at: true,
+      actions: true,
     }
   );
 
@@ -146,6 +162,42 @@ const Orders = () => {
   const ordersData = useCustomQuery(`file/files/?${params.toString()}`, [
     `files-${page}`,
   ]);
+
+  const newColumns = [
+    { id: "name" },
+    { id: "bill_status" },
+    { id: "client" },
+    { id: "client_mobile_number" },
+    { id: "client_email" },
+    { id: "client_tax" },
+    { id: "client_address" },
+    { id: "shipper" },
+    { id: "shipper_mobile_number" },
+    { id: "shipper_email" },
+    { id: "shipper_tax" },
+    { id: "shipper_address" },
+    { id: "final_destination" },
+    { id: "etd" },
+    { id: "eta" },
+    { id: "clearing_agent" },
+    { id: "description_of_goods" },
+    { id: "agent" },
+    { id: "network" },
+    { id: "mbl_number" },
+    { id: "hbl_number" },
+    { id: "teus" },
+    { id: "seal_number" },
+    { id: "pol" },
+    { id: "pod" },
+    { id: "pol_country" },
+    { id: "pod_country" },
+    { id: "mawb_number" },
+    { id: "haqb_number" },
+    { id: "airline" },
+    { id: "created_at" },
+    { id: "actions" },
+  ];
+
   const columns = [
     columnHelper.accessor("name", {
       id: "name",
@@ -371,6 +423,7 @@ const Orders = () => {
   return (
     <Container maxW="container.xl" py={6}>
       <VStack gap={6} align="stretch">
+        {/* page header */}
         <Flex justify="space-between" align="center">
           <Box>
             <Heading size="lg">Orders</Heading>
@@ -398,6 +451,7 @@ const Orders = () => {
             </Button>
           </Flex>
         </Flex>
+        {/* page header */}
 
         <FilterBar
           filters={filters}
@@ -434,7 +488,7 @@ const Orders = () => {
         title="Column Settings"
       >
         <VStack align="stretch" gap={3}>
-          {columns
+          {newColumns
             .filter((col) => col.id !== "actions")
             .map((column: any) => (
               <Checkbox.Root
@@ -449,7 +503,7 @@ const Orders = () => {
               >
                 <Checkbox.HiddenInput />
                 <Checkbox.Control />
-                <Checkbox.Label>{column.header()}</Checkbox.Label>
+                <Checkbox.Label>{column.id}</Checkbox.Label>
               </Checkbox.Root>
             ))}
         </VStack>
