@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import Sidebar from "../components/core/Sidebar";
 import DesktopAccessOnly from "@/components/core/DesktopAccessOnly";
 import { Avatar, Box, Flex, HStack, Text, VStack } from "@chakra-ui/react";
@@ -7,6 +7,13 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { ShippingTruck01Icon } from "@hugeicons/core-free-icons";
 
 const Layout = () => {
+  const navigate = useNavigate();
+  const path = window.location.pathname;
+
+  if (path === "/") {
+    navigate("/orders");
+  }
+
   return (
     <>
       {/* navbar */}
