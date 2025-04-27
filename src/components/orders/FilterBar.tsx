@@ -180,7 +180,7 @@ export function FilterBar({
                 [filterId]: [date, filters[filterId][1]],
               })
             }
-            customInput={<Input />}
+            customInput={<Input w={"full"} />}
             placeholderText="Start Date"
             isClearable
           />

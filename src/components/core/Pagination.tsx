@@ -18,7 +18,7 @@ export default function Pagination({
   count,
 }: PaginationProps) {
   const totalPages = Math.ceil(count / 15);
-  const activeColor = "#67B37D";
+  const activeColor = "teal.600";
   const hoverBg = "gray.100";
 
   const generatePageNumbers = () => {
@@ -41,7 +41,7 @@ export default function Pagination({
   const pages = generatePageNumbers();
 
   return (
-    <Flex align="center" justify="center" gap={2} mt={6}>
+    <Flex align="center" justify="center" gap={2} py={6}>
       <Button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={!hasPrevious}
@@ -85,7 +85,7 @@ export default function Pagination({
           px={3}
           py={1}
           borderRadius="lg"
-          bg={page === currentPage ? activeColor : "transparent"}
+          // bg={page === currentPage ? activeColor : "transparent"}
           color={page === currentPage ? "white" : undefined}
           _hover={{ bg: page === currentPage ? activeColor : hoverBg }}
           variant={page === currentPage ? "solid" : "ghost"}

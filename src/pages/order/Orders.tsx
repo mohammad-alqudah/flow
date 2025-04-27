@@ -2,6 +2,7 @@ import CustomInput from "@/components/core/CustomInput";
 import CustomModal from "@/components/core/CustomModal";
 import CustomSelect from "@/components/core/CustomSelect";
 import { DataTableSelections } from "@/components/core/DataTableSelections";
+import Pagination from "@/components/core/Pagination";
 import SkeletonLoader from "@/components/core/SkeletonTable";
 import { FilterBar } from "@/components/orders/FilterBar";
 import { useCustomPost } from "@/hooks/useMutation";
@@ -13,11 +14,15 @@ import {
   Container,
   Flex,
   Heading,
+  IconButton,
   Text,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { ArrowUpRight02Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { createColumnHelper } from "@tanstack/react-table";
 
 import { Filter, Package, Settings2 } from "lucide-react";
 import { useState } from "react";
@@ -39,7 +44,7 @@ const schema = yup.object({
 
 const Orders = () => {
   const navigate = useNavigate();
-  // const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1);
   const [openCreateOrderDialog, setOpenCreateOrderDialog] = useState(false);
   const {
     open: isColumnSettingsOpen,
@@ -54,35 +59,28 @@ const Orders = () => {
 
   const [filters, setFilters] = useState<any>({
     search: "",
-    // Basic Information
     type: "",
     mode: "",
     declaration_number: "",
     reference_number: "",
-    // Parties
     client: "",
     shipper: "",
     consignee: "",
     notify: "",
-    // Locations
     pol: "",
     pod: "",
     pol_country: "",
     pod_country: "",
     final_destination: "",
-    // Dates
     etd: null,
     eta: null,
     created_at_range: [null, null],
-    // Sea Freight
     mbl_number: "",
     hbl_number: "",
     shipping_line: "",
-    // Air Freight
     mawb_number: "",
     hawb_number: "",
     airline: "",
-    // Agents
     clearing_agent: "",
     agent: "",
     network: "",
@@ -121,6 +119,8 @@ const Orders = () => {
   const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>(
     {
       name: true,
+      status: true,
+      client_mobile_number: true,
       type: true,
       mode: true,
       declaration_number: true,
@@ -137,73 +137,191 @@ const Orders = () => {
     }
   );
 
-  // const columnHelper = createColumnHelper<any>();
+  const columnHelper = createColumnHelper<any>();
 
-  const ordersData = useCustomQuery("file/files/", ["files"]);
+  const params = new URLSearchParams({
+    ...(page > 1 && { page: page.toString() }),
+  });
+
+  const ordersData = useCustomQuery(`file/files/?${params.toString()}`, [
+    `files-${page}`,
+  ]);
   const columns = [
-    {
+    columnHelper.accessor("name", {
       id: "name",
-      header: "Reference Number",
-      accessorKey: "name",
-    },
-    {
-      id: "type",
-      header: "Type as",
-      accessorKey: "type",
-      cell: ({ row }: any) => (
-        <Text textTransform="capitalize">{row.original.type}</Text>
-      ),
-    },
-    {
-      id: "mode",
-      header: "Mode",
-      accessorKey: "mode",
-      // cell: ({ row }) => (
-      //   <Text textTransform="capitalize">{row.original.mode}</Text>
-      // ),
-    },
-    {
-      id: "declaration_number",
-      header: "Declaration Number",
-      accessorKey: "declaration_number",
-    },
-    {
+      header: () => "Name",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("status", {
+      id: "status",
+      header: () => "Status",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("bill_status", {
+      id: "bill_status",
+      header: () => "Bill Status",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("client.name", {
       id: "client",
-      header: "Client",
-      accessorKey: "client.name",
-    },
-    {
+      header: () => "Client Name",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("client.mobile_number", {
+      id: "client_mobile_number",
+      header: () => "Client Mobile",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("client.email", {
+      id: "client_email",
+      header: () => "Client Email",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("client.tax", {
+      id: "client_tax",
+      header: () => "Client Tax",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("client.address", {
+      id: "client_address",
+      header: () => "Client Address",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("shipper.name", {
       id: "shipper",
-      header: "Shipper",
-      accessorKey: "shipper.name",
-    },
-    {
+      header: () => "Shipper Name",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("shipper.mobile_number", {
+      id: "shipper_mobile_number",
+      header: () => "Shipper Mobile",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("shipper.email", {
+      id: "shipper_email",
+      header: () => "Shipper Email",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("shipper.tax", {
+      id: "shipper_tax",
+      header: () => "Shipper Tax",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("shipper.address", {
+      id: "shipper_address",
+      header: () => "Shipper Address",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("final_destination", {
+      id: "final_destination",
+      header: () => "Final Destination",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("etd", {
+      id: "etd",
+      header: () => "ETD",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("eta", {
+      id: "eta",
+      header: () => "ETA",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("clearing_agent.name", {
+      id: "clearing_agent",
+      header: () => "Clearing Agent",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("description_of_goods", {
+      id: "description_of_goods",
+      header: () => "Description of Goods",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("agent.name", {
+      id: "agent",
+      header: () => "Agent",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("network.name", {
+      id: "network",
+      header: () => "Network",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("mbl_number", {
+      id: "mbl_number",
+      header: () => "MBL Number",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("hbl_number", {
+      id: "hbl_number",
+      header: () => "HBL Number",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("teus", {
+      id: "teus",
+      header: () => "TEUS",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("seal_number", {
+      id: "seal_number",
+      header: () => "Seal Number",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("pol.name", {
+      id: "pol",
+      header: () => "POL",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("pod.name", {
+      id: "pod",
+      header: () => "POD",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("pol_country.name", {
+      id: "pol_country",
+      header: () => "POL Country",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("pod_country.name", {
+      id: "pod_country",
+      header: () => "POD Country",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("mawb_number", {
+      id: "mawb_number",
+      header: () => "MAWB Number",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("haqb_number", {
+      id: "haqb_number",
+      header: () => "HAQB Number",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("airline.name", {
+      id: "airline",
+      header: () => "Airline",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("created_at", {
       id: "created_at",
-      header: "Created At",
-      accessorKey: "created_at",
-      // cell: ({ row }) => {
-      //   const date = new Date(row.original.created_at);
-      //   return date.toLocaleDateString("en-US", {
-      //     year: "numeric",
-      //     month: "short",
-      //     day: "numeric",
-      //   });
-      // },
-    },
-    {
+      header: () => "Created At",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("settings", {
       id: "actions",
-      // cell: ({ row }) => (
-      //   <IconButton
-      //     aria-label="View details"
-      //     variant="ghost"
-      //     colorScheme="teal"
-      //     onClick={() => navigate(`/orders/${row.original.id}`)}
-      //   >
-      //     <ArrowUpRight />
-      //   </IconButton>
-      // ),
-    },
-  ].filter((col) => col.id === "actions" || visibleColumns[col.id]);
+      header: () => "Action",
+      cell: () => (
+        <IconButton
+          variant="ghost"
+          rounded="full"
+          onClick={() => navigate("/orders/1")}
+        >
+          <HugeiconsIcon icon={ArrowUpRight02Icon} />
+        </IconButton>
+      ),
+      enableSorting: false,
+    }),
+  ].filter((col: any) => col.id === "actions" || visibleColumns[col.id]);
 
   const filterOptions = {
     type: ["import", "export"],
@@ -288,14 +406,23 @@ const Orders = () => {
           filterOptions={filterOptions}
         />
 
-        <Box bg="white" rounded="lg" shadow="sm" overflow="hidden">
+        <Box bg="white" rounded="lg" shadow="sm" overflow="scroll">
           {ordersData.isPending ? (
             <SkeletonLoader />
           ) : (
-            <DataTableSelections
-              data={ordersData?.data || []}
-              columns={columns}
-            />
+            <>
+              <DataTableSelections
+                data={ordersData?.data?.data || []}
+                columns={columns}
+              />
+              <Pagination
+                count={ordersData?.data?.total || 0}
+                currentPage={page}
+                onPageChange={setPage}
+                hasNext={ordersData?.data?.next}
+                hasPrevious={ordersData?.data?.previous}
+              />
+            </>
           )}
         </Box>
       </VStack>
@@ -309,7 +436,7 @@ const Orders = () => {
         <VStack align="stretch" gap={3}>
           {columns
             .filter((col) => col.id !== "actions")
-            .map((column) => (
+            .map((column: any) => (
               <Checkbox.Root
                 key={column.id}
                 defaultChecked={visibleColumns[column.id]}
@@ -322,7 +449,7 @@ const Orders = () => {
               >
                 <Checkbox.HiddenInput />
                 <Checkbox.Control />
-                <Checkbox.Label>{column.header}</Checkbox.Label>
+                <Checkbox.Label>{column.header()}</Checkbox.Label>
               </Checkbox.Root>
             ))}
         </VStack>
