@@ -27,6 +27,7 @@ import CustomModal from "../core/CustomModal";
 import ContainerAddModel from "./ContainerAddModel";
 import ContainerEditModel from "./ContainerEditModel";
 import { useCustomRemove } from "@/hooks/useMutation";
+import CustomSelectWithAddButtom from "../core/CustomSelectWithAddButtom";
 
 const SeaFreightDetails = ({
   register,
@@ -34,12 +35,14 @@ const SeaFreightDetails = ({
   options,
   handleOptions,
   disabled,
+  control,
 }: {
   register: any;
   defaultValue: any;
   options: any;
   handleOptions: (model: string, data: any) => void;
   disabled?: boolean;
+  control: any;
 }) => {
   const [selectedData, setSelectedData] = useState<any>(null);
   const [openAdd, setOpenAdd] = useState(false);
@@ -204,13 +207,23 @@ const SeaFreightDetails = ({
 
           {/* Shipping Line */}
           <Box>
-            <CustomInput
-              type="text"
+            <CustomSelectWithAddButtom
               label="Shipping Line"
-              w="full"
-              mt={1}
-              {...register("shipping_line")}
-              defaultValue={defaultValue.shipping_line}
+              name="shipping_line"
+              control={control}
+              data={options?.data?.data?.shipping_line?.map((item: any) => ({
+                label: item.name,
+                value: item.id,
+              }))}
+              model="shipping_line"
+              fields={[{ name: "name", type: "text", required: true }]}
+              addOptionFunc={handleOptions}
+              // defaultValue={orderData?.data?.data?.agent?.id}
+              // errorMeassage={
+              //   errors?.seal_number?.message
+              //     ? String(errors?.seal_number?.message)
+              //     : ""
+              // }
               disabled={disabled}
             />
           </Box>
@@ -229,20 +242,6 @@ const SeaFreightDetails = ({
             />
           </Box>
           {/* TEUs */}
-
-          {/* Seal Number */}
-          <Box>
-            <CustomInput
-              type="text"
-              label="Seal Number"
-              w="full"
-              mt={1}
-              {...register("seal_number")}
-              defaultValue={defaultValue.seal_number}
-              disabled={disabled}
-            />
-          </Box>
-          {/* Seal Number */}
         </SimpleGrid>
         <PageCard>
           <HStack justify="space-between" align="center" mb="4">

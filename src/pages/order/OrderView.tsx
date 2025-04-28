@@ -560,6 +560,10 @@ const OrderView = () => {
               register={register}
               defaultValue={orderData?.data?.data}
               disabled
+              control={control}
+              options={options}
+              errors={errors}
+              handleOptions={handleOptions}
             />
           ) : (
             <SeaFreightDetails
@@ -568,6 +572,7 @@ const OrderView = () => {
               options={options}
               handleOptions={handleOptions}
               disabled
+              control={control}
             />
           )}
 

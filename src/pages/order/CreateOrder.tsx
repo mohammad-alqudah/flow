@@ -108,6 +108,11 @@ const CreateOrder = () => {
     ): Record<string, any> => {
       const cleanedObj: Record<string, any> = {};
       Object.entries(obj).forEach(([key, value]) => {
+        if (key === "third_party_logistics_name") {
+          cleanedObj[key] = value;
+          return;
+        }
+
         if (Array.isArray(value)) {
           if (value.length === 0) {
             return;
@@ -169,14 +174,16 @@ const CreateOrder = () => {
     setValue("clearing_agent", [orderData?.data?.data?.clearing_agent?.id]);
     setValue("agent", [orderData?.data?.data?.agent?.id]);
     setValue("network", [orderData?.data?.data?.network?.id]);
-
-    // logistics
-    setValue("service", orderData?.data?.data?.service);
-    setValue("bl_number", orderData?.data?.data?.bl_number);
-    setValue("third_party_logistics_name", [
-      orderData?.data?.data?.third_party_logistics_name,
+    setValue("final_destination", [
+      orderData?.data?.data?.final_destination?.id,
     ]);
-
+    // logistics
+    setValue("service", [orderData?.data?.data?.service]);
+    setValue("bl_number", orderData?.data?.data?.bl_number);
+    setValue(
+      "third_party_logistics_name",
+      orderData?.data?.data?.third_party_logistics_name
+    );
     // airfreight
     setValue("mawb_number", orderData?.data?.data?.hawb_number);
     setValue("hawb_number", orderData?.data?.data?.hawb_number);
@@ -185,9 +192,10 @@ const CreateOrder = () => {
     setValue("net_weight", orderData?.data?.data?.net_weight);
     setValue("volume", orderData?.data?.data?.volume);
     setValue("chargable_weight", orderData?.data?.data?.chargable_weight);
-
     //land
     setValue("transporter", orderData?.data?.data?.transporter);
+    //sea
+    setValue("shipping_line", [orderData?.data?.data?.shipping_line]);
   }, [orderData?.data?.data]);
 
   if (!id || !name || !type || !freight_type || !date) {
@@ -537,14 +545,34 @@ const CreateOrder = () => {
               {/* POD Country */}
               {/* Final Destination */}
               <Box>
-                <CustomInput
+                <CustomSelectWithAddButtom
+                  label="Final Destination"
+                  name="final_destination"
+                  control={control}
+                  data={options?.data?.data?.final_destination?.map(
+                    (item: any) => ({
+                      label: item.name,
+                      value: item.id,
+                    })
+                  )}
+                  model="final_destination"
+                  fields={[{ name: "name", type: "text", required: true }]}
+                  addOptionFunc={handleOptions}
+                  // defaultValue={orderData?.data?.data?.agent?.id}
+                  // errorMeassage={
+                  //   errors?.seal_number?.message
+                  //     ? String(errors?.seal_number?.message)
+                  //     : ""
+                  // }
+                />
+                {/* <CustomInput
                   type="text"
                   label="Final Destination"
                   w="full"
                   mt={1}
                   {...register("final_destination")}
                   defaultValue={orderData?.data?.data?.final_destination}
-                />
+                /> */}
               </Box>
               {/* Final Destination */}
             </SimpleGrid>
@@ -600,11 +628,16 @@ const CreateOrder = () => {
             <LogisticsDetails
               register={register}
               defaultValue={orderData?.data?.data}
+              control={control}
+              options={options}
+              handleOptions={handleOptions}
+              errors={errors}
             />
           ) : (
             <SeaFreightDetails
               register={register}
               defaultValue={orderData?.data?.data}
+              control={control}
               options={options}
               handleOptions={handleOptions}
             />
@@ -629,46 +662,6 @@ const CreateOrder = () => {
           {/* Agents */}
           <PageCard title="Agents" icon={WorkIcon}>
             <SimpleGrid columns={2} gap={4}>
-              {/* Clearing Agent */}
-              <Box>
-                <Heading
-                  as="h3"
-                  size="sm"
-                  fontWeight="medium"
-                  color="gray.900"
-                  mb={4}
-                >
-                  Clearing Agent
-                </Heading>
-                <VStack gap="2">
-                  {/* <CustomInput type="text" label="Name" w="full" mt={1} /> */}
-                  <CustomSelectWithAddButtom
-                    label="Name"
-                    name="clearing_agent"
-                    control={control}
-                    data={options?.data?.data?.agents?.map((item: any) => ({
-                      label: item.name,
-                      value: item.id,
-                    }))}
-                    model="agent"
-                    fields={[
-                      { name: "name", type: "text", required: true },
-                      { name: "code", type: "number", required: true },
-                    ]}
-                    addOptionFunc={handleOptions}
-                    defaultValue={orderData?.data?.data?.clearing_agent?.id}
-                  />
-                  <CustomInput
-                    type="text"
-                    label="Code"
-                    w="full"
-                    mt={1}
-                    disabled
-                    defaultValue={orderData?.data?.data?.clearing_agent?.code}
-                  />
-                </VStack>
-              </Box>
-              {/* Clearing Agent */}
               {/* Agent */}
               <Box>
                 <Heading
@@ -726,6 +719,63 @@ const CreateOrder = () => {
                 </VStack>
               </Box>
               {/* Network  */}
+
+              {/* Clearing Agent */}
+              <Box>
+                <Heading
+                  as="h3"
+                  size="sm"
+                  fontWeight="medium"
+                  color="gray.900"
+                  mb={4}
+                >
+                  Clearing Agent
+                </Heading>
+                <VStack gap="2">
+                  {/* <CustomInput type="text" label="Name" w="full" mt={1} /> */}
+                  <CustomSelectWithAddButtom
+                    label="Name"
+                    name="clearing_agent"
+                    control={control}
+                    data={options?.data?.data?.agents?.map((item: any) => ({
+                      label: item.name,
+                      value: item.id,
+                    }))}
+                    model="agent"
+                    fields={[
+                      { name: "name", type: "text", required: true },
+                      { name: "code", type: "number", required: true },
+                    ]}
+                    addOptionFunc={handleOptions}
+                    defaultValue={orderData?.data?.data?.clearing_agent?.id}
+                  />
+                </VStack>
+              </Box>
+
+              <Box>
+                {/* hide title */}
+                <Heading
+                  as="h3"
+                  size="sm"
+                  fontWeight="medium"
+                  color="gray.900"
+                  mb={4}
+                  visibility="hidden"
+                >
+                  Clearing Agent code
+                </Heading>
+                {/* hide title */}
+
+                <CustomInput
+                  type="text"
+                  label="Code"
+                  w="full"
+                  mt={1}
+                  disabled
+                  defaultValue={orderData?.data?.data?.clearing_agent?.code}
+                />
+              </Box>
+              {/* Clearing Agent */}
             </SimpleGrid>
           </PageCard>
           {/* Agents */}
