@@ -40,7 +40,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { set, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 
@@ -74,6 +74,7 @@ const CreateOrder = () => {
     handleSubmit,
     formState: { errors },
     setValue,
+    watch,
   } = useForm<any>({});
 
   const saveOrder = useCustomUpdate(`file/files/${id}/`, ["orders"]);
@@ -197,6 +198,80 @@ const CreateOrder = () => {
     //sea
     setValue("shipping_line", [orderData?.data?.data?.shipping_line]);
   }, [orderData?.data?.data]);
+
+  const selectedClientId = watch("client")?.[0];
+  const selectedShipperId = watch("shipper")?.[0];
+  const selectedConsigneeId = watch("consignee")?.[0];
+  const selectedClearingAgentId = watch("clearing_agent")?.[0];
+  useEffect(() => {
+    console.log("selectedConsigneeId", selectedConsigneeId);
+    // const fields = [
+    //   { selectField: "client", taxField: "client_tax" },
+    //   { selectField: "shipper", taxField: "shipper_tax" },
+    //   { selectField: "consignee", taxField: "consignee_tax" },
+    // ];
+
+    // fields.forEach(({ selectField, taxField }) => {
+    //   const selectedId = watch(selectField)?.[0];
+    //   if (selectedId) {
+    //     const selectedItem = options.data.data.second_parties.find(
+    //       (item: any) => item.id === selectedId
+    //     );
+    //     setValue(taxField, selectedItem?.tax || "");
+    //   } else {
+    //     setValue(taxField, "");
+    //   }
+    // });
+
+    if (selectedClientId) {
+      const selectedClient = selectedClientId
+        ? options.data.data.second_parties.find(
+            (item: any) => item.id == selectedClientId
+          )
+        : null;
+      setValue("client_tax", selectedClient?.tax || "");
+    } else {
+      setValue("client_tax", "");
+    }
+
+    if (selectedShipperId) {
+      const selectedShipper = selectedShipperId
+        ? options.data.data.second_parties.find(
+            (item: any) => item.id == selectedShipperId
+          )
+        : null;
+      setValue("shipper_tax", selectedShipper?.tax || "");
+    } else {
+      setValue("shipper_tax", "");
+    }
+
+    if (selectedConsigneeId) {
+      const selectedConsignee = selectedConsigneeId
+        ? options.data.data.second_parties.find(
+            (item: any) => item.id == selectedConsigneeId
+          )
+        : null;
+      setValue("consignee_tax", selectedConsignee?.tax || "");
+    } else {
+      setValue("consignee_tax", "");
+    }
+
+    if (selectedClearingAgentId) {
+      const selectedClearingAgen = selectedClearingAgentId
+        ? options.data.data.second_parties.find(
+            (item: any) => item.id == selectedClearingAgentId
+          )
+        : null;
+      setValue("clearing_agent_code", selectedClearingAgen?.tax || "");
+    } else {
+      setValue("clearing_agent_code", "");
+    }
+  }, [
+    selectedClientId,
+    selectedShipperId,
+    selectedConsigneeId,
+    selectedClearingAgentId,
+  ]);
 
   if (!id || !name || !type || !freight_type || !date) {
     toast.error("Missing required parameters");
@@ -349,6 +424,7 @@ const CreateOrder = () => {
                     mt={1}
                     disabled
                     defaultValue={orderData?.data?.data?.client?.tax}
+                    {...register("client_tax")}
                   />
                 </VStack>
               </Box>
@@ -394,6 +470,7 @@ const CreateOrder = () => {
                     mt={1}
                     disabled
                     defaultValue={orderData?.data?.data?.shipper?.tax}
+                    {...register("shipper_tax")}
                   />
                 </VStack>
               </Box>
@@ -439,6 +516,7 @@ const CreateOrder = () => {
                     mt={1}
                     disabled
                     defaultValue={orderData?.data?.data?.consignee?.tax}
+                    {...register("consignee_tax")}
                   />
                 </VStack>
               </Box>
@@ -773,6 +851,7 @@ const CreateOrder = () => {
                   mt={1}
                   disabled
                   defaultValue={orderData?.data?.data?.clearing_agent?.code}
+                  {...register("clearing_agent_code")}
                 />
               </Box>
               {/* Clearing Agent */}

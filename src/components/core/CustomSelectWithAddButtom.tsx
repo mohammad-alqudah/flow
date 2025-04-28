@@ -1,5 +1,3 @@
-"use client";
-
 import {
   createListCollection,
   HStack,
