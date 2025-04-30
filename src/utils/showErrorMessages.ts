@@ -1,13 +1,15 @@
 import toast from "react-hot-toast";
 
-const handleErrorAlerts = (errorObj: { [key: string]: string[] }) => {
-  const allErrorMessages = Object.values(errorObj).flat();
-
-  console.log("errObj", errorObj);
-  console.log("allErrorMessages", allErrorMessages);
-
-  allErrorMessages.forEach((message) => {
-    toast.error(message);
+const handleErrorAlerts = (errorObj: { [key: string]: string[] | string }) => {
+  Object.entries(errorObj).forEach(([field, errors]) => {
+    const messages = Array.isArray(errors) ? errors : [errors];
+    messages.forEach((message) => {
+      const formattedField = field
+        .split("_")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+      toast.error(`${formattedField}: ${message}`);
+    });
   });
 };
 

@@ -29,8 +29,9 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import CustomInput from "@/components/core/CustomInput";
-import handleErrorAlerts from "@/utils/showErrorMessages";
+// import handleErrorAlerts from "@/utils/showErrorMessages";
 import toast from "react-hot-toast";
+import handleErrorAlerts from "@/utils/showErrorMessages";
 
 type Inputs = {
   date_issued: string;
@@ -136,14 +137,17 @@ const Bills = () => {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     addInvoice
-      .mutateAsync(data)
+      .mutateAsync({
+        ...data,
+        file: 3,
+      })
       .then((res) => {
-        res.error
+        res.status
           ? handleErrorAlerts(res.error)
           : toast.success("invoice created successflly") && setOpen(false);
       })
       .catch((error) => {
-        toast.error(error?.response?.data?.error);
+        handleErrorAlerts(error.response.data.error);
       });
   };
 
