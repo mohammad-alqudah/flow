@@ -1,7 +1,9 @@
 import Layout from "@/layout/Layout";
+import Bills from "@/pages/bills/Bills";
 // import Home from "@/pages/Home";
 import LoginPage from "@/pages/LoginPage";
 import CreateOrder from "@/pages/order/CreateOrder";
+import EditOrder from "@/pages/order/EditOrder";
 // import OrderDetails from "@/pages/order/OrderDetails";
 import Orders from "@/pages/order/Orders";
 import OrderView from "@/pages/order/OrderView";
@@ -23,6 +25,13 @@ export default function AppRoutes() {
               <Route path=":id">
                 <Route path="create" element={<CreateOrder />} />
                 <Route path="view" element={<OrderView />} />
+              </Route>
+            </Route>
+            <Route path="/invoices">
+              <Route index element={<Bills />} />
+              <Route path=":id">
+                <Route path="create" element={<EditOrder />} />
+                <Route path="view" element={<EditOrder />} />
               </Route>
             </Route>
           </Route>
