@@ -20,10 +20,12 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
+  House01Icon,
   LockPasswordIcon,
   Mail01Icon,
   ShippingTruck01Icon,
 } from "@hugeicons/core-free-icons";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -39,25 +41,30 @@ const LoginPage = () => {
   const { mutateAsync } = useCustomPost("user/login/");
 
   const onSubmit: SubmitHandler<LoginInputs> = (data) => {
+    localStorage.setItem("company_domian", data?.company_domian);
+
     setIsLoading(true);
-    mutateAsync(data)
-      .then(async (res) => {
-        if (res.status) {
-          await storeTokens(
-            res.data.tokens.access,
-            navigate,
-            setIsAuthenticated
-          );
-        } else {
-          setError(res.error);
-        }
-      })
-      .catch((error) => {
-        setError(error?.response?.data?.error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+
+    localStorage.getItem("company_domian")
+      ? mutateAsync(data)
+          .then(async (res) => {
+            if (res.status) {
+              await storeTokens(
+                res.data.tokens.access,
+                navigate,
+                setIsAuthenticated
+              );
+            } else {
+              setError(res.error);
+            }
+          })
+          .catch((error) => {
+            setError(error?.response?.data?.error);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          })
+      : toast.error("Please Enter Company Domian") && setIsLoading(false);
   };
 
   return (
@@ -171,7 +178,7 @@ const LoginPage = () => {
             {/* user name */}
 
             {/* user name */}
-            {/* <Field.Root
+            <Field.Root
               required
               invalid={
                 errors?.company_domian?.type === "required" ? true : false
@@ -191,7 +198,7 @@ const LoginPage = () => {
                   placeholder="company.domain"
                 />
               </InputGroup>
-            </Field.Root> */}
+            </Field.Root>
             {/* user name */}
 
             {/* login */}

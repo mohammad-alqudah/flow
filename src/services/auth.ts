@@ -28,6 +28,7 @@ export async function removeTokens(
   setIsAuthenticated?: () => void
 ): Promise<void> {
   await localStorage.removeItem(TOKEN_KEY);
+  await localStorage.removeItem("company_domian");
 
   setIsAuthenticated && setIsAuthenticated();
 

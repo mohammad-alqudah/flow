@@ -25,7 +25,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { createColumnHelper } from "@tanstack/react-table";
 
 import { Filter, Package, Settings2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
@@ -87,69 +87,78 @@ const Orders = () => {
   });
 
   const [visibleFilters, setVisibleFilters] = useState<Record<string, boolean>>(
-    {
-      type: true,
-      mode: true,
-      declaration_number: true,
-      reference_number: true,
-      client: true,
-      shipper: true,
-      consignee: true,
-      notify: true,
-      pol: true,
-      pod: true,
-      pol_country: true,
-      pod_country: true,
-      final_destination: true,
-      etd: true,
-      eta: true,
-      created_at_range: true,
-      mbl_number: true,
-      hbl_number: true,
-      shipping_line: true,
-      mawb_number: true,
-      hawb_number: true,
-      airline: true,
-      clearing_agent: true,
-      agent: true,
-      network: true,
+    () => {
+      const savedFilters = localStorage.getItem("visibleFilters");
+      return savedFilters
+        ? JSON.parse(savedFilters)
+        : {
+            type: true,
+            mode: true,
+            declaration_number: true,
+            reference_number: true,
+            client: true,
+            shipper: true,
+            consignee: true,
+            notify: true,
+            pol: true,
+            pod: true,
+            pol_country: true,
+            pod_country: true,
+            final_destination: true,
+            etd: true,
+            eta: true,
+            created_at_range: true,
+            mbl_number: true,
+            hbl_number: true,
+            shipping_line: true,
+            mawb_number: true,
+            hawb_number: true,
+            airline: true,
+            clearing_agent: true,
+            agent: true,
+            network: true,
+          };
     }
   );
 
   const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>(
-    {
-      name: true,
-      // bill_status: true,
-      client: true,
-      client_mobile_number: true,
-      client_email: true,
-      client_tax: true,
-      client_address: true,
-      shipper: true,
-      shipper_mobile_number: true,
-      shipper_email: true,
-      shipper_tax: true,
-      shipper_address: true,
-      final_destination: true,
-      etd: true,
-      eta: true,
-      clearing_agent: true,
-      description_of_goods: true,
-      agent: true,
-      network: true,
-      mbl_number: true,
-      hbl_number: true,
-      teus: true,
-      seal_number: true,
-      pol: true,
-      pod: true,
-      pol_country: true,
-      pod_country: true,
-      mawb_number: true,
-      haqb_number: true,
-      airline: true,
-      created_at: true,
-      actions: true,
+    () => {
+      const savedColumns = localStorage.getItem("visibleColumns");
+      return savedColumns
+        ? JSON.parse(savedColumns)
+        : {
+            name: true,
+            client: true,
+            client_mobile_number: true,
+            client_email: true,
+            client_tax: true,
+            client_address: true,
+            shipper: true,
+            shipper_mobile_number: true,
+            shipper_email: true,
+            shipper_tax: true,
+            shipper_address: true,
+            final_destination: true,
+            etd: true,
+            eta: true,
+            clearing_agent: true,
+            description_of_goods: true,
+            agent: true,
+            network: true,
+            mbl_number: true,
+            hbl_number: true,
+            teus: true,
+            seal_number: true,
+            pol: true,
+            pod: true,
+            pol_country: true,
+            pod_country: true,
+            mawb_number: true,
+            haqb_number: true,
+            airline: true,
+            created_at: true,
+            actions: true,
+          };
     }
   );
 
@@ -205,11 +214,7 @@ const Orders = () => {
       header: () => "Name",
       cell: (info) => info.getValue(),
     }),
-    // columnHelper.accessor("bill_status", {
-    //   id: "bill_status",
-    //   header: () => "Bill Status",
-    //   cell: (info) => info.getValue(),
-    // }),
+
     columnHelper.accessor("client.name", {
       id: "client",
       header: () => "Client Name",
@@ -389,7 +394,7 @@ const Orders = () => {
   } = useForm<Inputs>({
     resolver: yupResolver(schema),
   });
-  console.log("errors", errors);
+
   const createOrder = useCustomPost("file/files/", ["files"]);
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
@@ -420,6 +425,14 @@ const Orders = () => {
       }
     );
   };
+
+  useEffect(() => {
+    localStorage.setItem("visibleColumns", JSON.stringify(visibleColumns));
+  }, [visibleColumns]);
+
+  useEffect(() => {
+    localStorage.setItem("visibleFilters", JSON.stringify(visibleFilters));
+  }, [visibleFilters]);
 
   return (
     <Container maxW="container.xl" py={6}>
@@ -454,12 +467,14 @@ const Orders = () => {
         </Flex>
         {/* page header */}
 
+        {/* filter */}
         <FilterBar
           filters={filters}
           onFilterChange={setFilters}
           visibleFilters={visibleFilters}
           filterOptions={filterOptions}
         />
+        {/* filter */}
 
         <Box bg="white" rounded="lg" shadow="sm" overflow="scroll">
           {ordersData.isPending ? (

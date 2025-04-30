@@ -1,5 +1,5 @@
-import { Box, Flex, FlexProps } from "@chakra-ui/react";
-import { NavLink } from "react-router";
+import { Box, Button, Flex, FlexProps } from "@chakra-ui/react";
+import { NavLink, useNavigate } from "react-router";
 import { ReactNode } from "react";
 import {
   // ArrowLeftRightIcon,
@@ -9,6 +9,8 @@ import {
   UserMultiple02Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { removeTokens } from "@/services/auth";
+import useAuth from "@/store/useAuth";
 
 interface LinkItemProps {
   name: string;
@@ -19,7 +21,7 @@ interface LinkItemProps {
 const LinkItems: Array<LinkItemProps> = [
   // { name: "Home", icon: Home04FreeIcons, url: "/" },
   { name: "Files", icon: DeliveryBox01Icon, url: "orders" },
-  { name: "Bills", icon: GoogleDocIcon, url: "bills" },
+  { name: "Invoices", icon: GoogleDocIcon, url: "invoices" },
   { name: "Customers", icon: UserMultiple02Icon, url: "customers" },
   // { name: "Transfers", icon: ArrowLeftRightIcon, url: "transfers" },
 ];
@@ -55,6 +57,8 @@ const NavItem = ({ icon, children, url }: NavItemProps) => {
 };
 
 function Sidebar() {
+  const { setIsAuthenticated } = useAuth();
+  const navigate = useNavigate();
   return (
     <Box
       bg={"white"}
@@ -64,8 +68,12 @@ function Sidebar() {
       pos="fixed"
       h="full"
       pt="8"
+      pb="20"
       borderInlineEnd={"1px solid"}
       borderInlineEndColor={"gray.100"}
+      display={"flex"}
+      flexDir="column"
+      justifyContent="space-between"
     >
       <Flex flexDir="column">
         {LinkItems.map((link) => (
@@ -74,6 +82,17 @@ function Sidebar() {
           </NavItem>
         ))}
       </Flex>
+      <Button
+        m="2"
+        colorPalette="red"
+        variant="subtle"
+        onClick={() => {
+          removeTokens(navigate);
+          setIsAuthenticated();
+        }}
+      >
+        Logout
+      </Button>
     </Box>
   );
 }

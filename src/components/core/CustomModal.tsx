@@ -47,6 +47,7 @@ const CustomModal = ({
               <Button
                 colorPalette={actionButtonColor ? actionButtonColor : "teal"}
                 onClick={() => actionButtonFunction()}
+                textTransform="capitalize"
               >
                 {actionButtonTitle}
               </Button>
@@ -56,6 +57,7 @@ const CustomModal = ({
                 type="submit"
                 form={formNameId}
                 loading={loading}
+                textTransform="capitalize"
               >
                 {actionButtonTitle}
               </Button>

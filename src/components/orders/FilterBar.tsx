@@ -220,7 +220,14 @@ export function FilterBar({
   );
 
   return (
-    <Accordion.Root collapsible>
+    <Accordion.Root
+      collapsible
+      bg="white"
+      mb="4"
+      borderRadius="lg"
+      shadow="sm"
+      p="6"
+    >
       <Accordion.Item value={"info"}>
         <Accordion.ItemTrigger>
           <Icon fontSize="lg" color="fg.subtle">
@@ -232,7 +239,7 @@ export function FilterBar({
           <Accordion.ItemBody>
             <>
               {/* filters */}
-              <Box bg="white" p={6} borderRadius="lg" shadow="sm">
+              <Box bg="white">
                 <Stack gap={6}>
                   <InputGroup
                     startElement={<Search className="h-5 w-5 text-gray-400" />}
@@ -276,7 +283,7 @@ export function FilterBar({
                               </HStack>
                             </Accordion.ItemTrigger>
                           )}
-                          <Accordion.ItemContent pb={4} px={0}>
+                          <Accordion.ItemContent pb={4} ps="8">
                             <Grid
                               templateColumns="repeat(auto-fit, minmax(250px, 1fr))"
                               gap={4}

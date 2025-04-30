@@ -1,0 +1,362 @@
+import CustomInput from "@/components/core/CustomInput";
+import CustomModal from "@/components/core/CustomModal";
+import CustomSelect from "@/components/core/CustomSelect";
+import DataTable from "@/components/core/DataTable";
+import SkeletonLoader from "@/components/core/SkeletonTable";
+import {
+  useCustomPost,
+  useCustomRemove,
+  useCustomUpdate,
+} from "@/hooks/useMutation";
+import { useCustomQuery } from "@/hooks/useQuery";
+import handleErrorAlerts from "@/utils/showErrorMessages";
+import {
+  Box,
+  Button,
+  Heading,
+  HStack,
+  IconButton,
+  VStack,
+} from "@chakra-ui/react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Add01Icon, Delete02Icon, Pen01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { createColumnHelper } from "@tanstack/react-table";
+import { useEffect, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import * as yup from "yup";
+
+type Inputs = {
+  charges: string;
+  value: string;
+  date: string;
+  supplier: string[];
+};
+
+const schema = yup
+  .object({
+    charges: yup.string().required(),
+    value: yup.string().required(),
+    date: yup.string().required(),
+    supplier: yup.array().required(),
+  })
+  .required();
+
+const AdditionalCosts = () => {
+  const [itemDetails, setItemDetails] = useState<any>();
+  const [isOpenAdd, setIsOpenAdd] = useState(false);
+  const [isOpenEdit, setIsOpenEdit] = useState(false);
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
+  const itemsData = useCustomQuery("invoice/costs/", ["invoice-costs"]);
+  const columnHelper = createColumnHelper<any>();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+    reset,
+  } = useForm<Inputs>({
+    resolver: yupResolver(schema),
+  });
+
+  const columns = [
+    columnHelper.accessor("charges", {
+      header: () => "charges",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("value", {
+      header: () => "value",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("date", {
+      header: () => "date",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("invoice", {
+      header: () => "invoice",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("supplier", {
+      header: () => "supplier",
+      cell: (info) => info.getValue(),
+    }),
+
+    columnHelper.accessor("settings", {
+      header: () => "Settings",
+      cell: (info) => (
+        <HStack gap="0">
+          <IconButton
+            variant="ghost"
+            rounded="full"
+            onClick={() => {
+              console.log("info.row.original", info.row.original);
+              setItemDetails(info.row.original);
+              setIsOpenEdit(true);
+            }}
+          >
+            <HugeiconsIcon icon={Pen01Icon} size="20px" />
+          </IconButton>
+          <IconButton
+            colorPalette="red"
+            variant="ghost"
+            rounded="full"
+            onClick={() => {
+              setItemDetails(info.row.original);
+              setIsOpenDelete(true);
+            }}
+          >
+            <HugeiconsIcon icon={Delete02Icon} size="20px" />
+          </IconButton>
+        </HStack>
+      ),
+    }),
+  ];
+
+  const addInvoiceItem = useCustomPost("invoice/costs/", ["invoice-costs"]);
+  const editInvoiceItem = useCustomUpdate("invoice/costs/", ["invoice-costs"]);
+  const deleteInvoiceItem = useCustomRemove(
+    `invoice/costs/${itemDetails?.id}`,
+    ["invoice-costs"]
+  );
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    const cleardData = {
+      ...data,
+      currancy: null,
+      invoice: 1,
+    };
+
+    addInvoiceItem
+      .mutateAsync(cleardData)
+      .then((res) => {
+        res.error
+          ? handleErrorAlerts(res.error)
+          : toast.success("invoice created successflly") && setIsOpenAdd(false);
+      })
+      .catch((error) => {
+        handleErrorAlerts(error?.response?.data?.error);
+      });
+  };
+
+  const onSubmitEdit: SubmitHandler<Inputs> = (data) => {
+    const cleardData = {
+      ...data,
+      currancy: null,
+      invoice: 1,
+    };
+
+    editInvoiceItem
+      .mutateAsync(cleardData)
+      .then((res) => {
+        res.error
+          ? handleErrorAlerts(res.error)
+          : toast.success("invoice updated successflly") &&
+            setIsOpenEdit(false);
+      })
+      .catch((error) => {
+        handleErrorAlerts(error?.response?.data?.error);
+      });
+  };
+
+  const handleDelete = () => {
+    deleteInvoiceItem
+      .mutateAsync(itemDetails.id)
+      .then((res) => {
+        res.error
+          ? handleErrorAlerts(res.error)
+          : toast.success("invoice deleted successflly") &&
+            setIsOpenDelete(false);
+      })
+      .catch((error) => {
+        handleErrorAlerts(error?.response?.data?.error);
+      });
+  };
+
+  useEffect(() => {
+    if (isOpenEdit && itemDetails) {
+      reset({
+        charges: itemDetails.charges || "",
+        value: itemDetails.value || "",
+        date: itemDetails.date || "",
+        supplier: itemDetails.supplier ? [itemDetails.supplier] : [],
+      });
+    }
+  }, [isOpenEdit, itemDetails, reset]);
+
+  return (
+    <>
+      <HStack justify="space-between" mb={6} align="center">
+        <Heading as="h2" size="md" color="gray.900">
+          Additional Costs
+        </Heading>
+        <Button
+          colorScheme="teal"
+          variant="solid"
+          onClick={() => setIsOpenAdd(true)}
+        >
+          <HugeiconsIcon icon={Add01Icon} size="16px" />
+          Add Cost
+        </Button>
+      </HStack>
+      <Box overflowX="auto">
+        {itemsData?.isPending ? (
+          <SkeletonLoader />
+        ) : (
+          <DataTable data={itemsData?.data?.data} columns={columns} />
+        )}
+      </Box>
+
+      {/* add item */}
+      <CustomModal
+        open={isOpenAdd}
+        setOpen={setIsOpenAdd}
+        title="Add item"
+        loading={addInvoiceItem.isPending}
+        formNameId="add_invoice_item"
+        actionButtonTitle="add item"
+      >
+        <VStack
+          id="add_invoice_item"
+          as="form"
+          w="full"
+          gap={4}
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          {/* charges */}
+          <CustomInput
+            type="text"
+            label="charges"
+            {...register("charges")}
+            errorMeassage={
+              errors.charges?.message ? String(errors.charges?.message) : ""
+            }
+          />
+          {/* charges */}
+          {/* date */}
+          <CustomInput
+            type="date"
+            label="date"
+            {...register("date")}
+            errorMeassage={
+              errors.date?.message ? String(errors.date?.message) : ""
+            }
+          />
+          {/* date */}
+
+          {/* value */}
+          <CustomInput
+            type="text"
+            label="value"
+            {...register("value")}
+            errorMeassage={
+              errors.value?.message ? String(errors.value?.message) : ""
+            }
+          />
+          {/* value */}
+
+          {/* supplier */}
+          <CustomSelect
+            data={[
+              { label: "supplier1", value: "supplier1" },
+              { label: "supplier2", value: "supplier2" },
+              { label: "supplier3", value: "supplier3" },
+            ]}
+            control={control}
+            label="supplier"
+            {...register("supplier")}
+            errorMeassage={
+              errors.supplier?.message ? String(errors.supplier?.message) : ""
+            }
+          />
+          {/* supplier */}
+        </VStack>
+      </CustomModal>
+      {/* add item */}
+
+      {/* edit item */}
+      <CustomModal
+        open={isOpenEdit}
+        setOpen={setIsOpenEdit}
+        title="Edit item"
+        loading={editInvoiceItem.isPending}
+        formNameId="edit_invoice_item"
+        actionButtonTitle="Edit"
+      >
+        <VStack
+          id="edit_invoice_item"
+          as="form"
+          w="full"
+          gap={4}
+          onSubmit={handleSubmit(onSubmitEdit)}
+        >
+          {/* charges */}
+          <CustomInput
+            type="text"
+            label="charges"
+            {...register("charges")}
+            errorMeassage={
+              errors.charges?.message ? String(errors.charges?.message) : ""
+            }
+          />
+          {/* charges */}
+          {/* date */}
+          <CustomInput
+            type="date"
+            label="date"
+            {...register("date")}
+            errorMeassage={
+              errors.date?.message ? String(errors.date?.message) : ""
+            }
+          />
+          {/* date */}
+
+          {/* value */}
+          <CustomInput
+            type="text"
+            label="value"
+            {...register("value")}
+            errorMeassage={
+              errors.value?.message ? String(errors.value?.message) : ""
+            }
+          />
+          {/* value */}
+
+          {/* supplier */}
+          <CustomSelect
+            data={[
+              { label: "supplier1", value: "supplier1" },
+              { label: "supplier2", value: "supplier2" },
+              { label: "supplier3", value: "supplier3" },
+            ]}
+            control={control}
+            label="supplier"
+            {...register("supplier")}
+            errorMeassage={
+              errors.supplier?.message ? String(errors.supplier?.message) : ""
+            }
+          />
+          {/* supplier */}
+        </VStack>
+      </CustomModal>
+      {/* edit item */}
+
+      {/* delete item */}
+      <CustomModal
+        open={isOpenDelete}
+        setOpen={setIsOpenDelete}
+        title="Delete item"
+        loading={deleteInvoiceItem.isPending}
+        actionButtonTitle="delete item"
+        actionButtonColor="red"
+        actionButtonFunction={handleDelete}
+      >
+        are you sure you want to delete this item
+      </CustomModal>
+      {/* delete item */}
+    </>
+  );
+};
+
+export default AdditionalCosts;
