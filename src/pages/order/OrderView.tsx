@@ -710,7 +710,7 @@ const OrderView = () => {
             actionButtonFunction={() => {}}
             actionButtonIcon={Add01Icon}
           >
-            <Invoices />
+            <Invoices id={id} />
           </PageCard>
           <PageCard title="Documents">
             {["index", "cover letter", "Pre-advice", "arrival notes"].map(
