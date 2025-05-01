@@ -280,11 +280,11 @@ const CreateOrder = () => {
   const debouncedSubmit = useCallback(
     debounce((data: any) => {
       if (!isInitialLoad) {
-        console.log("Submitting", data); // للتصحيح
+        console.log("Submitting", data);
         onSubmit(data);
       }
-    }, 1000), // تأخير 3 ثوانٍ لحقول النصوص
-    [isInitialLoad] // الاعتماد على isInitialLoad
+    }, 1000),
+    [isInitialLoad]
   );
   useEffect(() => {
     if (
@@ -303,10 +303,9 @@ const CreateOrder = () => {
   }, []);
   useEffect(() => {
     if (orderData?.data?.data) {
-      // تأخير تعيين isInitialLoad لضمان اكتمال جميع setValue
       const timeout = setTimeout(() => {
         setIsInitialLoad(false);
-      }, 1000); // تأخير 1 ثانية لانتظار اكتمال setValue
+      }, 1000);
       return () => clearTimeout(timeout);
     }
   }, [orderData?.data?.data]);
@@ -372,7 +371,12 @@ const CreateOrder = () => {
             size="sm"
             loading={loading}
             loadingText="Loading..."
-            onClick={() => handleSubmit(onSubmit)()}
+            onClick={() => {
+              navigate({
+                pathname: `/orders/${id}/view`,
+                search: `?name=${name}&type=${type}&freight_type=${freight_type}&date=${date}`,
+              });
+            }}
           >
             <HugeiconsIcon icon={FloppyDiskIcon} />
             Save Changes
