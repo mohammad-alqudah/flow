@@ -71,6 +71,7 @@ const Invoices = ({ id }: { id: string }) => {
       >
         {data?.data?.map((item: any) => (
           <InvoicesCard
+            key={item.id}
             name={item.date_issued}
             date={item.date}
             number={item.number}

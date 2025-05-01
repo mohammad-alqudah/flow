@@ -38,13 +38,14 @@ import {
   WorkIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate, useParams, useSearchParams } from "react-router";
-
+import { debounce } from "lodash";
 const CreateOrder = () => {
   const [loading, setIsLoading] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -272,6 +273,43 @@ const CreateOrder = () => {
     selectedClearingAgentId,
   ]);
 
+  // auto save
+  const formValues = watch();
+  const prevFormValues = useRef(formValues);
+
+  const debouncedSubmit = useCallback(
+    debounce((data: any) => {
+      if (!isInitialLoad) {
+        console.log("Submitting", data); // للتصحيح
+        onSubmit(data);
+      }
+    }, 1000), // تأخير 3 ثوانٍ لحقول النصوص
+    [isInitialLoad] // الاعتماد على isInitialLoad
+  );
+  useEffect(() => {
+    if (
+      Object.keys(formValues).length > 0 &&
+      JSON.stringify(formValues) !== JSON.stringify(prevFormValues.current)
+    ) {
+      debouncedSubmit(formValues);
+      prevFormValues.current = formValues;
+    }
+  }, [formValues, debouncedSubmit]);
+
+  useEffect(() => {
+    return () => {
+      debouncedSubmit.cancel();
+    };
+  }, []);
+  useEffect(() => {
+    if (orderData?.data?.data) {
+      // تأخير تعيين isInitialLoad لضمان اكتمال جميع setValue
+      const timeout = setTimeout(() => {
+        setIsInitialLoad(false);
+      }, 1000); // تأخير 1 ثانية لانتظار اكتمال setValue
+      return () => clearTimeout(timeout);
+    }
+  }, [orderData?.data?.data]);
   if (!id || !name || !type || !freight_type || !date) {
     toast.error("Missing required parameters");
 

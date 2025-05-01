@@ -212,7 +212,21 @@ const Orders = () => {
     columnHelper.accessor("name", {
       id: "name",
       header: () => "Name",
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <Button
+          // size="xs"
+          variant="plain"
+          // rounded="full"
+          onClick={() => {
+            navigate({
+              pathname: `/orders/${info.row.original.id}/view`,
+              search: `?name=${info.row.original.name}&type=${info.row.original.type}&freight_type=${info.row.original.mode}&date=${info.row.original.date}`,
+            });
+          }}
+        >
+          {info.getValue()}
+        </Button>
+      ),
     }),
 
     columnHelper.accessor("client.name", {

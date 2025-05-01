@@ -114,7 +114,6 @@ const OrderView = () => {
         return <HugeiconsIcon icon={Car03Icon} size="24px" />;
     }
   }
-
   useEffect(() => {
     setValue("client", [orderData?.data?.data?.client?.id]);
     setValue("shipper", [orderData?.data?.data?.shipper?.id]);
@@ -126,14 +125,16 @@ const OrderView = () => {
     setValue("clearing_agent", [orderData?.data?.data?.clearing_agent?.id]);
     setValue("agent", [orderData?.data?.data?.agent?.id]);
     setValue("network", [orderData?.data?.data?.network?.id]);
-
-    // logistics
-    setValue("service", orderData?.data?.data?.service);
-    setValue("bl_number", orderData?.data?.data?.bl_number);
-    setValue("third_party_logistics_name", [
-      orderData?.data?.data?.third_party_logistics_name,
+    setValue("final_destination", [
+      orderData?.data?.data?.final_destination?.id,
     ]);
-
+    // logistics
+    setValue("service", [orderData?.data?.data?.service]);
+    setValue("bl_number", orderData?.data?.data?.bl_number);
+    setValue(
+      "third_party_logistics_name",
+      orderData?.data?.data?.third_party_logistics_name
+    );
     // airfreight
     setValue("mawb_number", orderData?.data?.data?.hawb_number);
     setValue("hawb_number", orderData?.data?.data?.hawb_number);
@@ -142,9 +143,10 @@ const OrderView = () => {
     setValue("net_weight", orderData?.data?.data?.net_weight);
     setValue("volume", orderData?.data?.data?.volume);
     setValue("chargable_weight", orderData?.data?.data?.chargable_weight);
-
     //land
     setValue("transporter", orderData?.data?.data?.transporter);
+    //sea
+    setValue("shipping_line", [orderData?.data?.data?.shipping_line]);
   }, [orderData?.data?.data]);
 
   if (!id || !name || !type || !freight_type || !date) {
