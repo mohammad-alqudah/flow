@@ -224,7 +224,7 @@ const CreateOrder = () => {
 
     if (selectedClientId) {
       const selectedClient = selectedClientId
-        ? options.data.data.second_parties.find(
+        ? options?.data?.data?.second_parties?.find(
             (item: any) => item.id == selectedClientId
           )
         : null;
@@ -235,7 +235,7 @@ const CreateOrder = () => {
 
     if (selectedShipperId) {
       const selectedShipper = selectedShipperId
-        ? options.data.data.second_parties.find(
+        ? options?.data?.data?.second_parties?.find(
             (item: any) => item.id == selectedShipperId
           )
         : null;
@@ -246,7 +246,7 @@ const CreateOrder = () => {
 
     if (selectedConsigneeId) {
       const selectedConsignee = selectedConsigneeId
-        ? options.data.data.second_parties.find(
+        ? options?.data?.data?.second_parties?.find(
             (item: any) => item.id == selectedConsigneeId
           )
         : null;
@@ -257,7 +257,7 @@ const CreateOrder = () => {
 
     if (selectedClearingAgentId) {
       const selectedClearingAgen = selectedClearingAgentId
-        ? options.data.data.second_parties.find(
+        ? options?.data?.data?.second_parties?.find(
             (item: any) => item.id == selectedClearingAgentId
           )
         : null;

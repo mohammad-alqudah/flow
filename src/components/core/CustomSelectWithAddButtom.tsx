@@ -14,6 +14,7 @@ import CustomModal from "./CustomModal";
 import { AddIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import CustomInput from "./CustomInput";
+import formatFieldName from "@/utils/formatFieldName";
 
 type DataItem = { label: string; value: string }[];
 
@@ -137,15 +138,15 @@ const CustomSelectWithAddButtom = ({
       <CustomModal
         open={open}
         setOpen={setOpen}
-        title={`Add New ${name} `}
-        actionButtonTitle={`add ${name}`}
+        title={`Add New ${formatFieldName(name)} `}
+        actionButtonTitle={`add ${formatFieldName(name)}`}
         actionButtonFunction={() => handleSubmit(onSubmit)()}
       >
         <VStack gap="2">
           {fields?.map((el) => (
             <CustomInput
               type={el.type}
-              label={el.name}
+              label={formatFieldName(el.name)}
               {...register(el.name, { required: el.required })}
               errorMeassage={
                 errors[el.name]?.type && String(errors[el.name]?.type)

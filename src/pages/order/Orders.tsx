@@ -440,7 +440,7 @@ const Orders = () => {
         {/* page header */}
         <Flex justify="space-between" align="center">
           <Box>
-            <Heading size="lg">Orders</Heading>
+            <Heading size="lg">Files</Heading>
             <Text color="gray.600" mt={1}>
               Manage and track all your shipment orders
             </Text>
@@ -461,7 +461,7 @@ const Orders = () => {
               }}
             >
               <Package />
-              New Order
+              New File
             </Button>
           </Flex>
         </Flex>
@@ -604,7 +604,7 @@ const Orders = () => {
       <CustomModal
         open={openCreateOrderDialog}
         setOpen={setOpenCreateOrderDialog}
-        title="Create Order"
+        title="Create File"
         actionButtonTitle="Create"
         actionButtonFunction={() => handleSubmit(onSubmit)()}
         loading={createOrder.isPending}
