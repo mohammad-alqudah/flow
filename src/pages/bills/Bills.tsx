@@ -1,9 +1,7 @@
-import CustomModal from "@/components/core/CustomModal";
 import DataTable from "@/components/core/DataTable";
 import PageHeader from "@/components/core/PageHeader";
 import Pagination from "@/components/core/Pagination";
 import SkeletonLoader from "@/components/core/SkeletonTable";
-import { useCustomPost } from "@/hooks/useMutation";
 import { useCustomQuery } from "@/hooks/useQuery";
 import { formatDate } from "@/services/date";
 import {
@@ -14,51 +12,20 @@ import {
   IconButton,
   Input,
   SimpleGrid,
-  VStack,
 } from "@chakra-ui/react";
-import {
-  ArrowUpRight03Icon,
-  FilterIcon,
-  GoogleDocIcon,
-} from "@hugeicons/core-free-icons";
+import { ArrowUpRight03Icon, FilterIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { SubmitHandler, useForm } from "react-hook-form";
-import CustomInput from "@/components/core/CustomInput";
-// import handleErrorAlerts from "@/utils/showErrorMessages";
-import toast from "react-hot-toast";
-import handleErrorAlerts from "@/utils/showErrorMessages";
-
-type Inputs = {
-  date_issued: string;
-};
-
-const schema = yup
-  .object({
-    date_issued: yup.string().required(),
-  })
-  .required();
 
 const Bills = () => {
-  const [open, setOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const columnHelper = createColumnHelper<any>();
   const navigate = useNavigate();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>({
-    resolver: yupResolver(schema),
-  });
 
   const columns = [
     columnHelper.accessor("id", {
@@ -133,24 +100,6 @@ const Bills = () => {
     ["invoices", `invoices-${params}`]
   );
 
-  const addInvoice = useCustomPost("invoice/invoices/", ["invoices"]);
-
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    addInvoice
-      .mutateAsync({
-        ...data,
-        file: 3,
-      })
-      .then((res) => {
-        res.status
-          ? handleErrorAlerts(res.error)
-          : toast.success("invoice created successflly") && setOpen(false);
-      })
-      .catch((error) => {
-        handleErrorAlerts(error.response.data.error);
-      });
-  };
-
   return (
     <Container maxW="container.xl" py={6}>
       {/* page header */}
@@ -158,9 +107,6 @@ const Bills = () => {
         title="Bills"
         description="Manage and track all billing information"
         buttonTitle="New Bill"
-        buttonIcon={GoogleDocIcon}
-        buttonClick={() => setOpen(true)}
-        buttonLoading={addInvoice.isPending}
       />
       {/* page header */}
 
@@ -241,40 +187,6 @@ const Bills = () => {
       </Box>
 
       {/* table */}
-
-      {/* add bill modal */}
-      <CustomModal
-        open={open}
-        setOpen={setOpen}
-        title="Create bill"
-        loading={addInvoice.isPending}
-        formNameId="add_invoice"
-        actionButtonTitle="add invoice"
-        // actionButtonFunction={() => handleSubmit(onSubmit)}
-      >
-        <VStack
-          id="add_invoice"
-          as="form"
-          w="full"
-          gap={4}
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          {/* date */}
-          <CustomInput
-            type="date"
-            label="Date"
-            {...register("date_issued")}
-            errorMeassage={
-              errors.date_issued?.message
-                ? String(errors.date_issued?.message)
-                : ""
-            }
-          />
-
-          {/* date */}
-        </VStack>
-      </CustomModal>
-      {/* add bill modal */}
     </Container>
   );
 };

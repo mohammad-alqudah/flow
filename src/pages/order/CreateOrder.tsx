@@ -25,7 +25,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import {
-  Add01Icon,
   AirplaneTakeOff01Icon,
   BoatIcon,
   Calendar02Icon,
@@ -863,14 +862,8 @@ const CreateOrder = () => {
 
         {/* right side */}
         <VStack w="1/3" gap="6">
-          <PageCard
-            title="Invoices"
-            actionButtonTitle="Add invoice"
-            actionButtonFunction={() => {}}
-            actionButtonIcon={Add01Icon}
-          >
-            <Invoices />
-          </PageCard>
+          <Invoices id={id} />
+
           <PageCard title="Documents">
             {["index", "cover letter", "Pre-advice", "arrival notes"].map(
               (item) => (

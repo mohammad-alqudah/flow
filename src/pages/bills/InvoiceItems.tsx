@@ -1,6 +1,6 @@
 import CustomInput from "@/components/core/CustomInput";
 import CustomModal from "@/components/core/CustomModal";
-import CustomSelect from "@/components/core/CustomSelect";
+import CustomSelectWithAddButtom from "@/components/core/CustomSelectWithAddButtom";
 import DataTable from "@/components/core/DataTable";
 import SkeletonLoader from "@/components/core/SkeletonTable";
 import {
@@ -127,11 +127,14 @@ const InvoiceItems = () => {
   ];
 
   const addInvoiceItem = useCustomPost("invoice/items/", ["invoice-items"]);
-  const editInvoiceItem = useCustomUpdate("invoice/items/", ["invoice-items"]);
+  const editInvoiceItem = useCustomUpdate(`invoice/items/${itemDetails?.id}/`, [
+    "invoice-items",
+  ]);
   const deleteInvoiceItem = useCustomRemove(
     `invoice/items/${itemDetails?.id}`,
     ["invoice-items"]
   );
+  const addOptions = useCustomPost("client_settings/options/", ["options"]);
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const cleardData = {
@@ -183,6 +186,24 @@ const InvoiceItems = () => {
       })
       .catch((error) => {
         handleErrorAlerts(error?.response?.data?.error);
+      });
+  };
+
+  const handleOptions = (model: string, data: any) => {
+    addOptions
+      .mutateAsync({
+        model,
+        ...data,
+      })
+      .then((res) => {
+        if (res.status) {
+          toast.success(`${data.name} created successfully`);
+        } else {
+          handleErrorAlerts(res.error);
+        }
+      })
+      .catch((err) => {
+        handleErrorAlerts(err.response.data.error);
       });
   };
 
@@ -271,18 +292,22 @@ const InvoiceItems = () => {
           {/* unit */}
 
           {/* currancy */}
-          <CustomSelect
+          <CustomSelectWithAddButtom
+            model="currancy"
+            addOptionFunc={handleOptions}
             data={[
               { value: "USD", label: "USD" },
               { value: "EGP", label: "EGP" },
               { value: "EUR", label: "EUR" },
             ]}
+            fields={[{ name: "name", type: "text", required: true }]}
             control={control}
+            name="currancy"
             label="currancy"
-            {...register("currancy")}
             errorMeassage={
               errors.currancy?.message ? String(errors.currancy?.message) : ""
             }
+            defaultValue={itemDetails?.currancy}
           />
           {/* currancy */}
 
@@ -360,15 +385,18 @@ const InvoiceItems = () => {
           {/* unit */}
 
           {/* currancy */}
-          <CustomSelect
+          <CustomSelectWithAddButtom
+            model="currancy"
+            addOptionFunc={handleOptions}
             data={[
               { value: "USD", label: "USD" },
               { value: "EGP", label: "EGP" },
               { value: "EUR", label: "EUR" },
             ]}
+            fields={[{ name: "name", type: "text", required: true }]}
             control={control}
+            name="currancy"
             label="currancy"
-            {...register("currancy")}
             errorMeassage={
               errors.currancy?.message ? String(errors.currancy?.message) : ""
             }

@@ -1,6 +1,6 @@
 import CustomInput from "@/components/core/CustomInput";
 import CustomModal from "@/components/core/CustomModal";
-import CustomSelect from "@/components/core/CustomSelect";
+import CustomSelectWithAddButtom from "@/components/core/CustomSelectWithAddButtom";
 import DataTable from "@/components/core/DataTable";
 import SkeletonLoader from "@/components/core/SkeletonTable";
 import {
@@ -120,6 +120,27 @@ const AdditionalCosts = () => {
     `invoice/costs/${itemDetails?.id}`,
     ["invoice-costs"]
   );
+
+  const addOptions = useCustomPost("client_settings/options/", ["options"]);
+  const options = useCustomQuery("client_settings/options/", ["options"]);
+
+  const handleOptions = (model: string, data: any) => {
+    addOptions
+      .mutateAsync({
+        model,
+        ...data,
+      })
+      .then((res) => {
+        if (res.status) {
+          toast.success(`${data.name} created successfully`);
+        } else {
+          handleErrorAlerts(res.error);
+        }
+      })
+      .catch((err) => {
+        handleErrorAlerts(err.response.data.error);
+      });
+  };
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const cleardData = {
@@ -255,17 +276,18 @@ const AdditionalCosts = () => {
             }
           />
           {/* value */}
-
           {/* supplier */}
-          <CustomSelect
-            data={[
-              { label: "supplier1", value: "supplier1" },
-              { label: "supplier2", value: "supplier2" },
-              { label: "supplier3", value: "supplier3" },
-            ]}
+          <CustomSelectWithAddButtom
+            name="supplier"
+            model="supplier"
+            addOptionFunc={handleOptions}
+            data={options?.data?.data?.supplier?.map((item: any) => ({
+              label: item.name,
+              value: item._id,
+            }))}
+            fields={[{ name: "name", type: "text", required: true }]}
             control={control}
             label="supplier"
-            {...register("supplier")}
             errorMeassage={
               errors.supplier?.message ? String(errors.supplier?.message) : ""
             }
@@ -324,15 +346,17 @@ const AdditionalCosts = () => {
           {/* value */}
 
           {/* supplier */}
-          <CustomSelect
-            data={[
-              { label: "supplier1", value: "supplier1" },
-              { label: "supplier2", value: "supplier2" },
-              { label: "supplier3", value: "supplier3" },
-            ]}
+          <CustomSelectWithAddButtom
+            name="supplier"
+            model="supplier"
+            addOptionFunc={handleOptions}
+            data={options?.data?.data?.supplier?.map((item: any) => ({
+              label: item.name,
+              value: item._id,
+            }))}
+            fields={[{ name: "name", type: "text", required: true }]}
             control={control}
             label="supplier"
-            {...register("supplier")}
             errorMeassage={
               errors.supplier?.message ? String(errors.supplier?.message) : ""
             }

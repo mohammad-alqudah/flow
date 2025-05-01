@@ -1,6 +1,17 @@
-import { Badge, Box, Flex, Icon, Link, Text } from "@chakra-ui/react";
+import { formatDate } from "@/services/date";
+import { Box, Flex, Icon, Link, Text } from "@chakra-ui/react";
 
-const InvoicesCard = () => {
+const InvoicesCard = ({
+  date,
+  // id,
+  name,
+  number,
+}: {
+  name: string;
+  date: string;
+  number: string;
+  id: string;
+}) => {
   return (
     <Box
       display="flex"
@@ -40,19 +51,19 @@ const InvoicesCard = () => {
         </Box>
         <Box>
           <Text fontSize="sm" fontWeight="medium" color="gray.900">
-            INV001
+            {name}
           </Text>
           <Text fontSize="sm" color="gray.500">
-            Due Apr 15, 2024
+            {formatDate(date)}
           </Text>
         </Box>
       </Flex>
       <Flex alignItems="center" gap={4}>
         <Box textAlign="right">
           <Text fontSize="sm" fontWeight="medium" color="gray.900">
-            $2,500
+            {number}
           </Text>
-          <Badge
+          {/* <Badge
             px={2}
             py={0.5}
             borderRadius="full"
@@ -63,7 +74,7 @@ const InvoicesCard = () => {
             color="yellow.800"
           >
             pending
-          </Badge>
+          </Badge> */}
         </Box>
         <Link
           href="/bills/INV001"
