@@ -14,6 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 // import { useCustomQuery } from "@/hooks/useQuery";
 import * as yup from "yup";
 import CustomInput from "@/components/core/CustomInput";
+import getTodayDate from "@/utils/getTodayDate";
 type Inputs = {
   date_issued: string;
 };
@@ -107,6 +108,7 @@ const Invoices = ({ id }: { id: string }) => {
                 ? String(errors.date_issued?.message)
                 : ""
             }
+            defaultValue={getTodayDate()}
           />
 
           {/* date */}

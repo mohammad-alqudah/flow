@@ -6,6 +6,7 @@ import { useCustomQuery } from "@/hooks/useQuery";
 import { formatDate } from "@/services/date";
 import {
   Box,
+  Button,
   Container,
   Field,
   HStack,
@@ -28,17 +29,19 @@ const Bills = () => {
   const navigate = useNavigate();
 
   const columns = [
-    columnHelper.accessor("id", {
-      header: () => "id",
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("name", {
-      header: () => "Name",
-      cell: (info) => info.row.original.file.id,
-    }),
     columnHelper.accessor("number", {
       header: () => "Invoice Number",
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <Button
+          variant="plain"
+          rounded="full"
+          onClick={() => {
+            navigate(`/invoices/${info.row.original.id}/view`);
+          }}
+        >
+          {info.getValue()}
+        </Button>
+      ),
     }),
     columnHelper.accessor("date_issued", {
       header: () => "Date issued",

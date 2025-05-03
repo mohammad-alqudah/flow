@@ -28,7 +28,6 @@ const CustomModal = ({
     placement="center"
     onOpenChange={() => setOpen(!open)}
   >
-    <Dialog.Trigger />
     <Dialog.Backdrop />
     <Dialog.Positioner>
       <Dialog.Content>

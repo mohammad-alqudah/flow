@@ -61,13 +61,31 @@ const InvoiceItems = () => {
     formState: { errors },
     control,
     reset,
+    watch,
+    setValue,
   } = useForm<Inputs>({
     resolver: yupResolver(schema),
   });
 
   const columns = [
     columnHelper.accessor("id", {
-      header: () => "id",
+      header: () => "idx",
+      cell: (info) => info.row.index + 1,
+    }),
+    columnHelper.accessor("charges", {
+      header: () => "charges",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("quntity", {
+      header: () => "quntity",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("unit", {
+      header: () => "unit",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("rate", {
+      header: () => "rate",
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor("currancy", {
@@ -78,21 +96,13 @@ const InvoiceItems = () => {
       header: () => "ex_rate",
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor("charges", {
-      header: () => "charges",
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("quntity", {
-      header: () => "quntity",
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("rate", {
-      header: () => "rate",
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("unit", {
-      header: () => "unit",
-      cell: (info) => info.getValue(),
+
+    columnHelper.accessor("total", {
+      header: () => "Total",
+      cell: (info) =>
+        info.row.original.quntity *
+        info.row.original.rate *
+        info.row.original.ex_rate,
     }),
 
     columnHelper.accessor("settings", {
@@ -134,6 +144,7 @@ const InvoiceItems = () => {
     `invoice/items/${itemDetails?.id}`,
     ["invoice-items"]
   );
+  const options = useCustomQuery("client_settings/options/", ["options"]);
   const addOptions = useCustomPost("client_settings/options/", ["options"]);
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
@@ -220,6 +231,23 @@ const InvoiceItems = () => {
     }
   }, [isOpenEdit, itemDetails, reset]);
 
+  const selectedCurrency = watch("currancy")?.[0];
+
+  console.log("selectedClientId", selectedCurrency);
+
+  useEffect(() => {
+    if (selectedCurrency) {
+      const selectedClient = selectedCurrency
+        ? options?.data?.data?.currancy?.find(
+            (item: any) => item.id == selectedCurrency
+          )
+        : null;
+      setValue("ex_rate", selectedClient?.ex_rate || "");
+    } else {
+      setValue("ex_rate", "");
+    }
+  }, []);
+
   return (
     <>
       <HStack justify="space-between" mb={6} align="center">
@@ -291,26 +319,6 @@ const InvoiceItems = () => {
           />
           {/* unit */}
 
-          {/* currancy */}
-          <CustomSelectWithAddButtom
-            model="currancy"
-            addOptionFunc={handleOptions}
-            data={[
-              { value: "USD", label: "USD" },
-              { value: "EGP", label: "EGP" },
-              { value: "EUR", label: "EUR" },
-            ]}
-            fields={[{ name: "name", type: "text", required: true }]}
-            control={control}
-            name="currancy"
-            label="currancy"
-            errorMeassage={
-              errors.currancy?.message ? String(errors.currancy?.message) : ""
-            }
-            defaultValue={itemDetails?.currancy}
-          />
-          {/* currancy */}
-
           {/* rate */}
           <CustomInput
             type="number"
@@ -321,6 +329,29 @@ const InvoiceItems = () => {
             }
           />
           {/* rate */}
+
+          {/* currancy */}
+          <CustomSelectWithAddButtom
+            model="currancy"
+            addOptionFunc={handleOptions}
+            data={[
+              { value: "USD", label: "USD" },
+              { value: "EGP", label: "EGP" },
+              { value: "EUR", label: "EUR" },
+            ]}
+            fields={[
+              { name: "name", type: "text", required: true },
+              { name: "rate", type: "number", required: true },
+            ]}
+            control={control}
+            name="currancy"
+            label="currancy"
+            errorMeassage={
+              errors.currancy?.message ? String(errors.currancy?.message) : ""
+            }
+            defaultValue={itemDetails?.currancy}
+          />
+          {/* currancy */}
 
           {/* ex_rate */}
           <CustomInput

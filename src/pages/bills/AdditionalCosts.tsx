@@ -9,6 +9,7 @@ import {
   useCustomUpdate,
 } from "@/hooks/useMutation";
 import { useCustomQuery } from "@/hooks/useQuery";
+import getTodayDate from "@/utils/getTodayDate";
 import handleErrorAlerts from "@/utils/showErrorMessages";
 import {
   Box,
@@ -263,6 +264,7 @@ const AdditionalCosts = () => {
             errorMeassage={
               errors.date?.message ? String(errors.date?.message) : ""
             }
+            defaultValue={getTodayDate()}
           />
           {/* date */}
 

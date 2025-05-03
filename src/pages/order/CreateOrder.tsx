@@ -204,25 +204,6 @@ const CreateOrder = () => {
   const selectedConsigneeId = watch("consignee")?.[0];
   const selectedClearingAgentId = watch("clearing_agent")?.[0];
   useEffect(() => {
-    console.log("selectedConsigneeId", selectedConsigneeId);
-    // const fields = [
-    //   { selectField: "client", taxField: "client_tax" },
-    //   { selectField: "shipper", taxField: "shipper_tax" },
-    //   { selectField: "consignee", taxField: "consignee_tax" },
-    // ];
-
-    // fields.forEach(({ selectField, taxField }) => {
-    //   const selectedId = watch(selectField)?.[0];
-    //   if (selectedId) {
-    //     const selectedItem = options.data.data.second_parties.find(
-    //       (item: any) => item.id === selectedId
-    //     );
-    //     setValue(taxField, selectedItem?.tax || "");
-    //   } else {
-    //     setValue(taxField, "");
-    //   }
-    // });
-
     if (selectedClientId) {
       const selectedClient = selectedClientId
         ? options?.data?.data?.second_parties?.find(

@@ -7,6 +7,7 @@ import SkeletonLoader from "@/components/core/SkeletonTable";
 import { FilterBar } from "@/components/orders/FilterBar";
 import { useCustomPost } from "@/hooks/useMutation";
 import { useCustomQuery } from "@/hooks/useQuery";
+import getTodayDate from "@/utils/getTodayDate";
 import {
   Box,
   Button,
@@ -651,7 +652,7 @@ const Orders = () => {
           <CustomInput
             type="date"
             label="Date"
-            defaultValue={new Date().toISOString().slice(0, 10)}
+            defaultValue={getTodayDate()}
             {...register("date")}
             errorMeassage={
               errors?.date?.message ? String(errors?.date?.message) : ""

@@ -64,7 +64,7 @@ const CustomSelectWithAddButtom = ({
 
   return (
     <>
-      <HStack gap="2" align="end" w="full">
+      <HStack w="full">
         <Controller
           name={name}
           control={control}
