@@ -20,7 +20,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
-const Bills = () => {
+const Invoices = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const [dateFrom, setDateFrom] = useState("");
@@ -194,4 +194,4 @@ const Bills = () => {
   );
 };
 
-export default Bills;
+export default Invoices;

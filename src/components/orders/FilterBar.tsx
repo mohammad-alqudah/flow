@@ -12,6 +12,7 @@ import {
   IconButton,
   NativeSelect,
   Icon,
+  Field,
 } from "@chakra-ui/react";
 import {
   Search,
@@ -24,7 +25,7 @@ import {
   Users,
   Briefcase,
 } from "lucide-react";
-import DatePicker from "react-datepicker";
+// import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Tooltip } from "../ui/tooltip";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -50,9 +51,9 @@ interface FilterBarProps {
     pod_country: string;
     final_destination: string;
     // Dates
-    etd: Date | null;
-    eta: Date | null;
-    created_at_range: [Date | null, Date | null];
+    etd: string;
+    eta: string;
+    created_at_range: [string, string];
     // Sea Freight
     mbl_number: string;
     hbl_number: string;
@@ -162,12 +163,12 @@ export function FilterBar({
 
     if (filterId === "etd" || filterId === "eta") {
       return (
-        <DatePicker
-          selected={filters[filterId]}
-          onChange={(date) => onFilterChange({ ...filters, [filterId]: date })}
-          customInput={<Input />}
-          placeholderText={label}
-          isClearable
+        <Input
+          type="date"
+          value={filters[filterId]}
+          onChange={(e) =>
+            onFilterChange({ ...filters, [filterId]: e.target.value })
+          }
         />
       );
     }
@@ -175,7 +176,7 @@ export function FilterBar({
     if (filterId === "created_at_range") {
       return (
         <VStack gap={2} w={"full"} align="stretch">
-          <DatePicker
+          {/* <DatePicker
             selected={filters[filterId][0]}
             onChange={(date) =>
               onFilterChange({
@@ -186,8 +187,21 @@ export function FilterBar({
             customInput={<Input w={"full"} />}
             placeholderText="Start Date"
             isClearable
-          />
-          <DatePicker
+          /> */}
+          <Field.Root>
+            <Field.Label>Start date</Field.Label>
+            <Input
+              type="date"
+              value={filters[filterId][0] ?? ""}
+              onChange={(e) =>
+                onFilterChange({
+                  ...filters,
+                  [filterId]: [e.target.value, filters[filterId][1]],
+                })
+              }
+            />
+          </Field.Root>
+          {/* <DatePicker
             selected={filters[filterId][1]}
             onChange={(date) =>
               onFilterChange({
@@ -198,7 +212,20 @@ export function FilterBar({
             customInput={<Input />}
             placeholderText="End Date"
             isClearable
-          />
+          /> */}
+          <Field.Root>
+            <Field.Label>End date</Field.Label>
+            <Input
+              type="date"
+              value={filters[filterId][1] ?? ""}
+              onChange={(e) =>
+                onFilterChange({
+                  ...filters,
+                  [filterId]: [filters[filterId][0], e.target.value],
+                })
+              }
+            />
+          </Field.Root>
         </VStack>
       );
     }

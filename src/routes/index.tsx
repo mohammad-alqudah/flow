@@ -1,13 +1,13 @@
 import Layout from "@/layout/Layout";
-import Bills from "@/pages/bills/Bills";
+import Invoices from "@/pages/invoice/Invoices";
 import LoginPage from "@/pages/LoginPage";
 import CreateOrder from "@/pages/order/CreateOrder";
-import EditOrder from "@/pages/order/EditOrder";
 import Orders from "@/pages/order/Orders";
 import OrderView from "@/pages/order/OrderView";
 
 import useAuth from "@/store/useAuth";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import InvoiceDetails from "@/pages/invoice/InvoiceDetails";
 
 export default function AppRoutes() {
   const { isAuthenticated } = useAuth();
@@ -26,10 +26,9 @@ export default function AppRoutes() {
               </Route>
             </Route>
             <Route path="/invoices">
-              <Route index element={<Bills />} />
+              <Route index element={<Invoices />} />
               <Route path=":id">
-                <Route path="create" element={<EditOrder />} />
-                <Route path="view" element={<EditOrder />} />
+                <Route path="view" element={<InvoiceDetails />} />
               </Route>
             </Route>
           </Route>

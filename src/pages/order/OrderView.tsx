@@ -25,7 +25,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import {
-  Add01Icon,
   AirplaneTakeOff01Icon,
   BoatIcon,
   Calendar02Icon,

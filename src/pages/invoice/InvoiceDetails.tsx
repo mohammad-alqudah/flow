@@ -14,10 +14,10 @@ import {
 import { ArrowLeft01Icon, BoatIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useParams } from "react-router";
-import InvoiceItems from "../bills/InvoiceItems";
-import AdditionalCosts from "../bills/AdditionalCosts";
+import InvoiceItems from "./InvoiceItems";
+import AdditionalCosts from "./AdditionalCosts";
 
-const EditOrder = () => {
+const InvoiceDetails = () => {
   const { id } = useParams();
 
   const invoiceData = useCustomQuery(`/invoice/invoices/${id}`, [
@@ -161,4 +161,4 @@ const EditOrder = () => {
   );
 };
 
-export default EditOrder;
+export default InvoiceDetails;

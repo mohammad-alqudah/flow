@@ -73,9 +73,9 @@ const Orders = () => {
     pol_country: "",
     pod_country: "",
     final_destination: "",
-    etd: null,
-    eta: null,
-    created_at_range: [null, null],
+    etd: "",
+    eta: "",
+    created_at_range: ["", ""],
     mbl_number: "",
     hbl_number: "",
     shipping_line: "",
@@ -86,6 +86,8 @@ const Orders = () => {
     agent: "",
     network: "",
   });
+
+  console.log("filters", filters);
 
   const [visibleFilters, setVisibleFilters] = useState<Record<string, boolean>>(
     () => {
@@ -167,12 +169,53 @@ const Orders = () => {
 
   const params = new URLSearchParams({
     ...(page > 1 && { page: page.toString() }),
+    ...(filters.search && { search: filters.search }),
+    ...(filters.type && { type: filters.type }),
+    ...(filters.mode && { mode: filters.mode }),
+    ...(filters.declaration_number && {
+      declaration_number: filters.declaration_number,
+    }),
+    ...(filters.reference_number && {
+      reference_number: filters.reference_number,
+    }),
+    ...(filters.client && { client: filters.client }),
+    ...(filters.shipper && { shipper: filters.shipper }),
+    ...(filters.consignee && { consignee: filters.consignee }),
+    ...(filters.notify && { notify: filters.notify }),
+    ...(filters.pol && { pol: filters.pol }),
+    ...(filters.pod && { pod: filters.pod }),
+    ...(filters.pol_country && { pol_country: filters.pol_country }),
+    ...(filters.pod_country && { pod_country: filters.pod_country }),
+    ...(filters.final_destination && {
+      final_destination: filters.final_destination,
+    }),
+    ...(filters.etd && { etd: filters.etd }),
+    ...(filters.eta && { eta: filters.eta }),
+    ...(filters.created_at_range[0] && {
+      created_at_start: filters.created_at_range[0],
+    }),
+    ...(filters.created_at_range[1] && {
+      created_at_end: filters.created_at_range[1],
+    }),
+    ...(filters.mbl_number && { mbl_number: filters.mbl_number }),
+    ...(filters.hbl_number && { hbl_number: filters.hbl_number }),
+    ...(filters.shipping_line && { shipping_line: filters.shipping_line }),
+    ...(filters.mawb_number && { mawb_number: filters.mawb_number }),
+    ...(filters.hawb_number && { hawb_number: filters.hawb_number }),
+    ...(filters.airline && { airline: filters.airline }),
+    ...(filters.clearing_agent && { clearing_agent: filters.clearing_agent }),
+    ...(filters.agent && { agent: filters.agent }),
+    ...(filters.network && { network: filters.network }),
   });
-
   const ordersData = useCustomQuery(`file/files/?${params.toString()}`, [
     "orders",
-    `files-${page}`,
+    `files-${params}`,
   ]);
+
+  // const ordersData = useCustomQuery(`file/files/?${params.toString()}`, [
+  //   "orders",
+  //   `files-${page}`,
+  // ]);
 
   const newColumns = [
     { id: "name" },
