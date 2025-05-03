@@ -44,7 +44,7 @@ const schema = yup
   })
   .required();
 
-const AdditionalCosts = () => {
+const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
   const [itemDetails, setItemDetails] = useState<any>();
   const [isOpenAdd, setIsOpenAdd] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -63,6 +63,10 @@ const AdditionalCosts = () => {
   });
 
   const columns = [
+    columnHelper.accessor("id", {
+      header: () => "idx",
+      cell: (info) => info.row.index + 1,
+    }),
     columnHelper.accessor("charges", {
       header: () => "charges",
       cell: (info) => info.getValue(),
@@ -81,7 +85,7 @@ const AdditionalCosts = () => {
     }),
     columnHelper.accessor("supplier", {
       header: () => "supplier",
-      cell: (info) => info.getValue(),
+      cell: (info) => info.getValue().name,
     }),
 
     columnHelper.accessor("settings", {
@@ -116,7 +120,9 @@ const AdditionalCosts = () => {
   ];
 
   const addInvoiceItem = useCustomPost("invoice/costs/", ["invoice-costs"]);
-  const editInvoiceItem = useCustomUpdate("invoice/costs/", ["invoice-costs"]);
+  const editInvoiceItem = useCustomUpdate(`invoice/costs/${itemDetails?.id}`, [
+    `invoice-costs-${itemDetails?.id}`,
+  ]);
   const deleteInvoiceItem = useCustomRemove(
     `invoice/costs/${itemDetails?.id}`,
     ["invoice-costs"]
@@ -146,8 +152,8 @@ const AdditionalCosts = () => {
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const cleardData = {
       ...data,
-      currancy: null,
-      invoice: 1,
+      supplier: data?.supplier[0],
+      invoice: invoiceId,
     };
 
     addInvoiceItem
@@ -165,8 +171,8 @@ const AdditionalCosts = () => {
   const onSubmitEdit: SubmitHandler<Inputs> = (data) => {
     const cleardData = {
       ...data,
-      currancy: null,
-      invoice: 1,
+      supplier: data?.supplier[0],
+      invoice: invoiceId,
     };
 
     editInvoiceItem
@@ -234,13 +240,13 @@ const AdditionalCosts = () => {
       <CustomModal
         open={isOpenAdd}
         setOpen={setIsOpenAdd}
-        title="Add item"
+        title="Add additional cost"
         loading={addInvoiceItem.isPending}
-        formNameId="add_invoice_item"
-        actionButtonTitle="add item"
+        formNameId="add_additional_cost"
+        actionButtonTitle="add cost"
       >
         <VStack
-          id="add_invoice_item"
+          id="add_additional_cost"
           as="form"
           w="full"
           gap={4}
@@ -270,7 +276,7 @@ const AdditionalCosts = () => {
 
           {/* value */}
           <CustomInput
-            type="text"
+            type="number"
             label="value"
             {...register("value")}
             errorMeassage={
@@ -285,7 +291,7 @@ const AdditionalCosts = () => {
             addOptionFunc={handleOptions}
             data={options?.data?.data?.supplier?.map((item: any) => ({
               label: item.name,
-              value: item._id,
+              value: item.id,
             }))}
             fields={[{ name: "name", type: "text", required: true }]}
             control={control}
@@ -303,13 +309,13 @@ const AdditionalCosts = () => {
       <CustomModal
         open={isOpenEdit}
         setOpen={setIsOpenEdit}
-        title="Edit item"
+        title="Edit additional cost"
         loading={editInvoiceItem.isPending}
-        formNameId="edit_invoice_item"
-        actionButtonTitle="Edit"
+        formNameId="edit_additional_cost"
+        actionButtonTitle="Edit const"
       >
         <VStack
-          id="edit_invoice_item"
+          id="edit_additional_cost"
           as="form"
           w="full"
           gap={4}
@@ -354,7 +360,7 @@ const AdditionalCosts = () => {
             addOptionFunc={handleOptions}
             data={options?.data?.data?.supplier?.map((item: any) => ({
               label: item.name,
-              value: item._id,
+              value: item.id,
             }))}
             fields={[{ name: "name", type: "text", required: true }]}
             control={control}

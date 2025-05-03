@@ -47,13 +47,15 @@ const schema = yup
   })
   .required();
 
-const InvoiceItems = () => {
+const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
   const [itemDetails, setItemDetails] = useState<any>();
   const [isOpenAdd, setIsOpenAdd] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
   const itemsData = useCustomQuery("/invoice/items/", ["invoice-items"]);
   const columnHelper = createColumnHelper<any>();
+
+  console.log("itemDetails", itemDetails);
 
   const {
     register,
@@ -90,7 +92,7 @@ const InvoiceItems = () => {
     }),
     columnHelper.accessor("currancy", {
       header: () => "currancy",
-      cell: (info) => info.getValue(),
+      cell: (info) => info.getValue().name,
     }),
     columnHelper.accessor("ex_rate", {
       header: () => "ex_rate",
@@ -150,8 +152,8 @@ const InvoiceItems = () => {
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const cleardData = {
       ...data,
-      currancy: null,
-      invoice: 1,
+      currancy: data?.currancy[0],
+      invoice: invoiceId,
     };
 
     addInvoiceItem
@@ -169,7 +171,7 @@ const InvoiceItems = () => {
   const onSubmitEdit: SubmitHandler<Inputs> = (data) => {
     const cleardData = {
       ...data,
-      currancy: null,
+      currancy: data?.currancy[0],
       invoice: 1,
     };
 
@@ -209,6 +211,7 @@ const InvoiceItems = () => {
       .then((res) => {
         if (res.status) {
           toast.success(`${data.name} created successfully`);
+          setIsOpenAdd(false);
         } else {
           handleErrorAlerts(res.error);
         }
@@ -242,11 +245,11 @@ const InvoiceItems = () => {
             (item: any) => item.id == selectedCurrency
           )
         : null;
-      setValue("ex_rate", selectedClient?.ex_rate || "");
+      setValue("ex_rate", selectedClient?.rate || "");
     } else {
       setValue("ex_rate", "");
     }
-  }, []);
+  }, [selectedCurrency]);
 
   return (
     <>
@@ -334,11 +337,10 @@ const InvoiceItems = () => {
           <CustomSelectWithAddButtom
             model="currancy"
             addOptionFunc={handleOptions}
-            data={[
-              { value: "USD", label: "USD" },
-              { value: "EGP", label: "EGP" },
-              { value: "EUR", label: "EUR" },
-            ]}
+            data={options?.data?.data?.currancy?.map((item: any) => ({
+              label: item.name,
+              value: item.id,
+            }))}
             fields={[
               { name: "name", type: "text", required: true },
               { name: "rate", type: "number", required: true },
@@ -415,25 +417,6 @@ const InvoiceItems = () => {
           />
           {/* unit */}
 
-          {/* currancy */}
-          <CustomSelectWithAddButtom
-            model="currancy"
-            addOptionFunc={handleOptions}
-            data={[
-              { value: "USD", label: "USD" },
-              { value: "EGP", label: "EGP" },
-              { value: "EUR", label: "EUR" },
-            ]}
-            fields={[{ name: "name", type: "text", required: true }]}
-            control={control}
-            name="currancy"
-            label="currancy"
-            errorMeassage={
-              errors.currancy?.message ? String(errors.currancy?.message) : ""
-            }
-          />
-          {/* currancy */}
-
           {/* rate */}
           <CustomInput
             type="number"
@@ -444,6 +427,28 @@ const InvoiceItems = () => {
             }
           />
           {/* rate */}
+
+          {/* currancy */}
+          <CustomSelectWithAddButtom
+            model="currancy"
+            addOptionFunc={handleOptions}
+            data={options?.data?.data?.currancy?.map((item: any) => ({
+              label: item.name,
+              value: item.id,
+            }))}
+            fields={[
+              { name: "name", type: "text", required: true },
+              { name: "rate", type: "number", required: true },
+            ]}
+            control={control}
+            name="currancy"
+            label="currancy"
+            errorMeassage={
+              errors.currancy?.message ? String(errors.currancy?.message) : ""
+            }
+            defaultValue={itemDetails?.currancy}
+          />
+          {/* currancy */}
 
           {/* ex_rate */}
           <CustomInput

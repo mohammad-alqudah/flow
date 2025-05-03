@@ -1,10 +1,8 @@
 import Layout from "@/layout/Layout";
 import Bills from "@/pages/bills/Bills";
-// import Home from "@/pages/Home";
 import LoginPage from "@/pages/LoginPage";
 import CreateOrder from "@/pages/order/CreateOrder";
 import EditOrder from "@/pages/order/EditOrder";
-// import OrderDetails from "@/pages/order/OrderDetails";
 import Orders from "@/pages/order/Orders";
 import OrderView from "@/pages/order/OrderView";
 

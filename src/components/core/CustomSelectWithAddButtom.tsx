@@ -54,6 +54,7 @@ const CustomSelectWithAddButtom = ({
 
   const onSubmit: SubmitHandler<any> = (data) => {
     addOptionFunc(model, data);
+    setOpen(false);
   };
 
   const choices = useMemo(() => {

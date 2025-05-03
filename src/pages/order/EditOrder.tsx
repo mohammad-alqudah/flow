@@ -145,14 +145,14 @@ const EditOrder = () => {
         {/* Card 2: Invoice Items */}
         <Card.Root p={6}>
           <Card.Body>
-            <InvoiceItems />
+            <InvoiceItems invoiceId={String(id)} />
           </Card.Body>
         </Card.Root>
 
         {/* Card 3: Additional Costs */}
         <Card.Root p={6}>
           <Card.Body>
-            <AdditionalCosts />
+            <AdditionalCosts invoiceId={String(id)} />
           </Card.Body>
         </Card.Root>
       </VStack>
