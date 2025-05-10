@@ -15,6 +15,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import CustomInput from "@/components/core/CustomInput";
 import getTodayDate from "@/utils/getTodayDate";
+import { useNavigate } from "react-router";
 type Inputs = {
   date_issued: string;
 };
@@ -27,7 +28,7 @@ const schema = yup
 const Invoices = ({ id }: { id: string }) => {
   const [open, setOpen] = useState(false);
   const { data, isPending } = useCustomQuery(`invoice/invoices/`, ["invoices"]);
-
+  const navigate = useNavigate();
   const addInvoice = useCustomPost("invoice/invoices/", ["invoices"]);
 
   const {
@@ -45,9 +46,13 @@ const Invoices = ({ id }: { id: string }) => {
         file: id,
       })
       .then((res) => {
-        res.status
-          ? handleErrorAlerts(res.error)
-          : toast.success("invoice created successflly") && setOpen(false);
+        if (!res.status) {
+          handleErrorAlerts(res.error);
+        } else {
+          toast.success("invoice created successflly");
+          setOpen(false);
+          navigate("/invoices");
+        }
       })
       .catch((error) => {
         handleErrorAlerts(error.response.data.error);

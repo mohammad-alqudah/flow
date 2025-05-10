@@ -55,8 +55,6 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
   const itemsData = useCustomQuery("/invoice/items/", ["invoice-items"]);
   const columnHelper = createColumnHelper<any>();
 
-  console.log("itemDetails", itemDetails);
-
   const {
     register,
     handleSubmit,
