@@ -1,5 +1,6 @@
 import { getStoredTokens } from "@/services/auth";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const axiosInstance = axios.create({
   headers: {
@@ -42,6 +43,14 @@ axiosInstance.interceptors.response.use(
       localStorage.removeItem("company_domain");
       window.location.href = "/login";
     }
+
+    if (error?.response?.status === 404) {
+      toast.error("page not found");
+      localStorage.removeItem("auth_tokens");
+      localStorage.removeItem("company_domain");
+      window.location.href = "/login";
+    }
+    console.log("errorerrorerrorerror", error);
 
     return Promise.reject(error);
   }

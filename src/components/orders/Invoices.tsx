@@ -51,7 +51,7 @@ const Invoices = ({ id }: { id: string }) => {
         } else {
           toast.success("invoice created successflly");
           setOpen(false);
-          navigate("/invoices");
+          navigate(`/invoices/${res?.data?.id}/view`);
         }
       })
       .catch((error) => {
