@@ -139,9 +139,7 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
     }),
   ];
 
-  const addInvoiceItem = useCustomPost(`invoice/items/${itemDetails?.id}/`, [
-    "invoice-items",
-  ]);
+  const addInvoiceItem = useCustomPost(`invoice/items/`, ["invoice-items"]);
   const editInvoiceItem = useCustomUpdate(`invoice/items/${itemDetails?.id}/`, [
     "invoice-items",
   ]);
@@ -230,7 +228,7 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
         charges: itemDetails.charges || "",
         quntity: itemDetails.quntity || "",
         unit: itemDetails.unit || "",
-        currancy: itemDetails.currancy ? [itemDetails.currancy] : [],
+        currancy: itemDetails.currancy.id ? [itemDetails.currancy.id] : [],
         rate: itemDetails.rate || "",
         ex_rate: itemDetails.ex_rate || "",
       });
@@ -447,7 +445,7 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
             errorMeassage={
               errors.currancy?.message ? String(errors.currancy?.message) : ""
             }
-            defaultValue={itemDetails?.currancy}
+            defaultValue={itemDetails?.currancy?.id}
           />
           {/* currancy */}
 

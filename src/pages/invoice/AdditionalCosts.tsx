@@ -121,10 +121,8 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
     }),
   ];
 
-  const addInvoiceItem = useCustomPost(`invoice/costs/${itemDetails?.id}`, [
-    "invoice-costs",
-  ]);
-  const editInvoiceItem = useCustomUpdate(`invoice/costs/${itemDetails?.id}`, [
+  const addInvoiceItem = useCustomPost(`invoice/costs/`, ["invoice-costs"]);
+  const editInvoiceItem = useCustomUpdate(`invoice/costs/${itemDetails?.id}/`, [
     `invoice-costs`,
   ]);
   const deleteInvoiceItem = useCustomRemove(
@@ -212,7 +210,7 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
         charges: itemDetails.charges || "",
         value: itemDetails.value || "",
         date: itemDetails.date || "",
-        supplier: itemDetails.supplier ? [itemDetails.supplier] : [],
+        supplier: itemDetails.supplier.id ? [itemDetails.supplier.id] : [],
       });
     }
   }, [isOpenEdit, itemDetails, reset]);
