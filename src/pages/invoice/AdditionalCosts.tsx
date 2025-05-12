@@ -121,9 +121,11 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
     }),
   ];
 
-  const addInvoiceItem = useCustomPost("invoice/costs/", ["invoice-costs"]);
+  const addInvoiceItem = useCustomPost(`invoice/costs/${itemDetails?.id}`, [
+    "invoice-costs",
+  ]);
   const editInvoiceItem = useCustomUpdate(`invoice/costs/${itemDetails?.id}`, [
-    `invoice-costs-${itemDetails?.id}`,
+    `invoice-costs`,
   ]);
   const deleteInvoiceItem = useCustomRemove(
     `invoice/costs/${itemDetails?.id}`,
