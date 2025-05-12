@@ -12,17 +12,18 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { ArrowLeft01Icon, BoatIcon } from "@hugeicons/core-free-icons";
+import { ArrowLeft01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useParams } from "react-router";
 import InvoiceItems from "./InvoiceItems";
 import AdditionalCosts from "./AdditionalCosts";
 import { useMutation } from "@tanstack/react-query";
 import axiosInstance from "@/api/config";
+import ModeIcon from "@/utils/Mode";
 
 const downloadPreAdvicePDF = async (id?: string) => {
   const response = await axiosInstance.get(`invoice/pdf/${id}/`, {
-    responseType: "blob", // استقبال البيانات كملف
+    responseType: "blob",
   });
   return response.data;
 };
@@ -129,14 +130,14 @@ const InvoiceDetails = () => {
           <Card.Body>
             <HStack gap={3} mb={6} align="center">
               <Box p={2} bg="teal.50" rounded="lg" color="teal.800">
-                <HugeiconsIcon icon={BoatIcon} size="24px" />
+                <ModeIcon mode="SeaFreight" />
               </Box>
               <VStack align="start" gap={0}>
                 <Heading as="h2" size="md" color="gray.900">
-                  SEA FREIGHT
+                  {invoiceData?.data?.data?.file?.mode}
                 </Heading>
                 <Text fontSize="sm" color="gray.500">
-                  Type: IMPORT
+                  {invoiceData?.data?.data?.file?.type}
                 </Text>
               </VStack>
             </HStack>
@@ -144,10 +145,18 @@ const InvoiceDetails = () => {
             <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
               <Box>
                 <Text fontSize="sm" fontWeight="medium" color="#374151" mb={1}>
-                  Invoice Date
+                  created at
                 </Text>
                 <Text color="gray.900">
                   {formatDate(invoiceData?.data?.data?.date)}
+                </Text>
+              </Box>
+              <Box>
+                <Text fontSize="sm" fontWeight="medium" color="#374151" mb={1}>
+                  Date issued
+                </Text>
+                <Text color="gray.900">
+                  {formatDate(invoiceData?.data?.data?.date_issued)}
                 </Text>
               </Box>
               <Box>
@@ -158,47 +167,79 @@ const InvoiceDetails = () => {
                   {invoiceData?.data?.data?.file?.client?.name}
                 </Text>
               </Box>
-              <Box>
+              {/* <Box>
                 <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1}>
                   Sales
                 </Text>
                 <Text color="gray.900">John Doe</Text>
-              </Box>
-              <Box>
+              </Box> */}
+              {/* <Box>
                 <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1}>
                   Shipping Line
                 </Text>
-                <Text color="gray.900">Maersk</Text>
-              </Box>
-              <Box>
+                <Text color="gray.900">
+                  {invoiceData?.data?.data?.file?.client?.name}
+                </Text>
+              </Box> */}
+              {/* <Box>
                 <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1}>
                   Agent
                 </Text>
                 <Text color="gray.900">Global Logistics</Text>
-              </Box>
+              </Box> */}
               <Box>
                 <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1}>
                   Port of Loading (POL)
                 </Text>
-                <Text color="gray.900">Shanghai</Text>
+                <Text color="gray.900">
+                  {invoiceData?.data?.data?.file?.pol?.name}
+                </Text>
               </Box>
               <Box>
                 <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1}>
                   Port of Discharge (POD)
                 </Text>
-                <Text color="gray.900">Dubai</Text>
+                <Text color="gray.900">
+                  {invoiceData?.data?.data?.file?.pod?.name}
+                </Text>
               </Box>
-              <Box>
+              {/* <Box>
                 <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1}>
                   Forwarder
                 </Text>
                 <Text color="gray.900">Fast Freight</Text>
-              </Box>
+              </Box> */}
               <Box>
                 <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1}>
-                  Airline
+                  Consignee
                 </Text>
-                <Text color="gray.900">Emirates</Text>
+                <Text color="gray.900">
+                  {invoiceData?.data?.data?.file?.consignee?.name}
+                </Text>
+              </Box>{" "}
+              <Box>
+                <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1}>
+                  ETA
+                </Text>
+                <Text color="gray.900">
+                  {invoiceData?.data?.data?.file?.eta}
+                </Text>
+              </Box>{" "}
+              <Box>
+                <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1}>
+                  ETD
+                </Text>
+                <Text color="gray.900">
+                  {invoiceData?.data?.data?.file?.etd}
+                </Text>
+              </Box>{" "}
+              <Box>
+                <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1}>
+                  Shipper
+                </Text>
+                <Text color="gray.900">
+                  {invoiceData?.data?.data?.file?.shipper?.name}
+                </Text>
               </Box>
             </SimpleGrid>
           </Card.Body>

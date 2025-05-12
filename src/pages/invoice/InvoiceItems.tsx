@@ -53,7 +53,9 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
   const [isOpenAdd, setIsOpenAdd] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
-  const itemsData = useCustomQuery("/invoice/items/", ["invoice-items"]);
+  const itemsData = useCustomQuery(`/invoice/items/?invoice_id=${invoiceId}`, [
+    "invoice-items",
+  ]);
   const columnHelper = createColumnHelper<any>();
 
   const {
@@ -137,10 +139,9 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
     }),
   ];
 
-  const addInvoiceItem = useCustomPost(
-    `invoice/items/?invoice_id=${invoiceId}`,
-    ["invoice-items"]
-  );
+  const addInvoiceItem = useCustomPost(`invoice/items/${itemDetails?.id}/`, [
+    "invoice-items",
+  ]);
   const editInvoiceItem = useCustomUpdate(`invoice/items/${itemDetails?.id}/`, [
     "invoice-items",
   ]);
