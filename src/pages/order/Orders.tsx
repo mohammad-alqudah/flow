@@ -87,8 +87,6 @@ const Orders = () => {
     network: "",
   });
 
-  console.log("filters", filters);
-
   const [visibleFilters, setVisibleFilters] = useState<Record<string, boolean>>(
     () => {
       const savedFilters = localStorage.getItem("visibleFilters");
@@ -207,19 +205,14 @@ const Orders = () => {
     ...(filters.agent && { agent: filters.agent }),
     ...(filters.network && { network: filters.network }),
   });
+
   const ordersData = useCustomQuery(`file/files/?${params.toString()}`, [
     "orders",
     `files-${params}`,
   ]);
 
-  // const ordersData = useCustomQuery(`file/files/?${params.toString()}`, [
-  //   "orders",
-  //   `files-${page}`,
-  // ]);
-
   const newColumns = [
     { id: "name" },
-    // { id: "bill_status" },
     { id: "client" },
     { id: "client_mobile_number" },
     { id: "client_email" },

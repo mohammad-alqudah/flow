@@ -117,7 +117,7 @@ const InvoiceDetails = () => {
             )}
             boxSize={5}
           />
-          Download cove letter
+          Download invoice
         </Button>
       </HStack>
       {/* page header */}

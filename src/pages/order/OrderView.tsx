@@ -1,5 +1,6 @@
 import CustomInput from "@/components/core/CustomInput";
 import CustomSelectWithAddButtom from "@/components/core/CustomSelectWithAddButtom";
+import Loading from "@/components/core/Loading";
 import PageCard from "@/components/core/PageCard";
 import PageHeader from "@/components/core/PageHeader";
 import AirFreightDetails from "@/components/orders/AirFreightDetails";
@@ -157,7 +158,7 @@ const OrderView = () => {
     return null;
   }
 
-  if (options.isPending || orderData.isPending) {
+  if (orderData.isPending) {
     return (
       <Box>
         <PageHeader
@@ -710,6 +711,8 @@ const OrderView = () => {
         </VStack>
         {/* right side */}
       </HStack>
+
+      {options.isPending || orderData.isPending ? <Loading /> : ""}
     </Box>
   );
 };

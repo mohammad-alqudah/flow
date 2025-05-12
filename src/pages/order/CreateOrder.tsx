@@ -43,6 +43,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { debounce } from "lodash";
+import Loading from "@/components/core/Loading";
 const CreateOrder = () => {
   const [loading, setIsLoading] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -83,7 +84,6 @@ const CreateOrder = () => {
   const options = useCustomQuery("client_settings/options/", ["options"]);
 
   const handleOptions = (model: string, data: any) => {
-    console.log(model, data, "///");
     addOptions
       .mutateAsync({
         model,
@@ -300,7 +300,7 @@ const CreateOrder = () => {
     return null;
   }
 
-  if (options.isPending || orderData.isPending) {
+  if (orderData.isPending) {
     return (
       <Box>
         <PageHeader
@@ -931,6 +931,8 @@ const CreateOrder = () => {
         </VStack>
         {/* right side */}
       </HStack>
+
+      {options.isPending ? <Loading /> : ""}
     </Box>
   );
 };

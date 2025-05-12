@@ -57,10 +57,12 @@ const Layout = () => {
           </Avatar.Root>
           <VStack gap="0">
             <Text fontWeight="medium" fontSize="sm">
-              John Doe
+              {JSON.parse(localStorage.getItem("user") || "{}")?.name ||
+                "John Doe"}
             </Text>
             <Text color="gray.500" fontSize="xs">
-              Administrator
+              {JSON.parse(localStorage.getItem("user") || "{}")?.groups[0]
+                ?.name || "no role"}
             </Text>
           </VStack>
         </HStack>

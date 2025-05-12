@@ -142,9 +142,10 @@ const SeaFreightDetails = ({
       });
   };
 
-  if (containerData.isPending || deleteContainer.isPending) {
-    return <SkeletonLoader />;
-  }
+  // if (containerData.isPending || deleteContainer.isPending) {
+  //   return <SkeletonLoader />;
+  // }
+
   return (
     <>
       <PageCard title="Sea Freight Details" icon={BoatIcon}>
@@ -269,7 +270,7 @@ const SeaFreightDetails = ({
               Add container
             </Button>
           </HStack>
-          <DataTable columns={columns} data={containerData?.data?.data} />
+          <DataTable columns={columns} data={containerData?.data?.data || []} />
         </PageCard>
       </PageCard>
 

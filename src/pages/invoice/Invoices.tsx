@@ -94,14 +94,17 @@ const Invoices = () => {
   const params = new URLSearchParams({
     ...(currentPage > 1 && { page: currentPage.toString() }),
     ...(search && { search }),
-    ...(dateFrom && { date: dateFrom }),
-    ...(dateTo && { date_to: dateTo }),
+    ...(dateFrom && { date_issued_after: dateFrom }),
+    ...(dateTo && { date_issued_before: dateTo }),
   });
 
   const { data, isPending } = useCustomQuery(
     `invoice/invoices/?${params.toString()}`,
     ["invoices", `invoices-${params}`]
   );
+
+  JSON.parse(localStorage.getItem("user") || "{}")?.permissions
+    ?.can_view_invoices === false && navigate("/");
 
   return (
     <Container maxW="container.xl" py={6}>
@@ -136,6 +139,8 @@ const Invoices = () => {
           </Box>
           {/* number */}
 
+          <Box></Box>
+
           {/* date_issued */}
           <Box>
             <Field.Root>
@@ -156,7 +161,7 @@ const Invoices = () => {
           <Box>
             <Field.Root>
               <Field.Label>
-                Date <Field.RequiredIndicator />
+                Date to <Field.RequiredIndicator />
               </Field.Label>
               <Input
                 type="date"

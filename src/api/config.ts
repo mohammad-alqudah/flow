@@ -15,7 +15,9 @@ axiosInstance.interceptors.request.use(
   (config) => {
     // const companyDomain = localStorage.getItem("company_domain");
     config.baseURL =
-      "https://" + localStorage.getItem("company_domian") + ".eng-mahmoud.com";
+      "https://" +
+      localStorage.getItem("company_domian") +
+      ".freights-vision.com";
 
     // config.baseURL = companyDomain
     //   ? `https://${companyDomain}.eng-mahmoud.com`

@@ -2,6 +2,7 @@ import CustomInput from "@/components/core/CustomInput";
 import CustomModal from "@/components/core/CustomModal";
 import CustomSelectWithAddButtom from "@/components/core/CustomSelectWithAddButtom";
 import DataTable from "@/components/core/DataTable";
+import Loading from "@/components/core/Loading";
 import SkeletonLoader from "@/components/core/SkeletonTable";
 import {
   useCustomPost,
@@ -209,7 +210,7 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
       .then((res) => {
         if (res.status) {
           toast.success(`${data.name} created successfully`);
-          setIsOpenAdd(false);
+          // setIsOpenAdd(false);
         } else {
           handleErrorAlerts(res.error);
         }
@@ -233,8 +234,6 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
   }, [isOpenEdit, itemDetails, reset]);
 
   const selectedCurrency = watch("currancy")?.[0];
-
-  console.log("selectedClientId", selectedCurrency);
 
   useEffect(() => {
     if (selectedCurrency) {
@@ -475,6 +474,8 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
         are you sure you want to delete this item
       </CustomModal>
       {/* delete item */}
+
+      {options.isPending ? <Loading /> : ""}
     </>
   );
 };

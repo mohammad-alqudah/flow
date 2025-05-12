@@ -54,6 +54,8 @@ const LoginPage = () => {
                 navigate,
                 setIsAuthenticated
               );
+
+              localStorage.setItem("user", JSON.stringify(res?.data?.user));
             } else {
               setError(res.error);
             }
