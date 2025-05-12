@@ -21,7 +21,6 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import DataTable from "../core/DataTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useCustomQuery } from "@/hooks/useQuery";
-import SkeletonLoader from "../core/SkeletonTable";
 import { useState } from "react";
 import CustomModal from "../core/CustomModal";
 import ContainerAddModel from "./ContainerAddModel";
