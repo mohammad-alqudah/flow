@@ -137,7 +137,10 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
     }),
   ];
 
-  const addInvoiceItem = useCustomPost("invoice/items/", ["invoice-items"]);
+  const addInvoiceItem = useCustomPost(
+    `invoice/items/?invoice_id=${invoiceId}`,
+    ["invoice-items"]
+  );
   const editInvoiceItem = useCustomUpdate(`invoice/items/${itemDetails?.id}/`, [
     "invoice-items",
   ]);
