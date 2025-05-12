@@ -179,7 +179,7 @@ const CreateOrder = () => {
       orderData?.data?.data?.final_destination?.id,
     ]);
     // logistics
-    setValue("service", [orderData?.data?.data?.service]);
+    setValue("service", [orderData?.data?.data?.service?.id]);
     setValue("bl_number", orderData?.data?.data?.bl_number);
     setValue(
       "third_party_logistics_name",
