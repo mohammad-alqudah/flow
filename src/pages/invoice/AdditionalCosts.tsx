@@ -49,10 +49,9 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
   const [isOpenAdd, setIsOpenAdd] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
-  const itemsData = useCustomQuery(
-    `invoice/costs/?invoice_id=${itemDetails?.id}`,
-    ["invoice-costs"]
-  );
+  const itemsData = useCustomQuery(`invoice/costs/?invoice_id=${invoiceId}`, [
+    "invoice-costs",
+  ]);
   const columnHelper = createColumnHelper<any>();
 
   const {
