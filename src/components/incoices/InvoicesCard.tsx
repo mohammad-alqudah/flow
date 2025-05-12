@@ -3,7 +3,7 @@ import { Box, Flex, Icon, Link, Text } from "@chakra-ui/react";
 
 const InvoicesCard = ({
   date,
-  // id,
+  id,
   name,
   number,
 }: {
@@ -77,7 +77,7 @@ const InvoicesCard = ({
           </Badge> */}
         </Box>
         <Link
-          href="/bills/INV001"
+          href={`/invoices/${id}/view`}
           p={2}
           color="gray.400"
           _hover={{ color: "gray.500" }}
