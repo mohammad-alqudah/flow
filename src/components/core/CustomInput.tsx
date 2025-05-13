@@ -9,6 +9,7 @@ const CustomInput = ({
   errorMeassage,
   required,
   disabled,
+  pattern,
   ...props
 }: {
   type: "text" | "email" | "password" | "number" | "file" | "date" | "select";
@@ -18,6 +19,7 @@ const CustomInput = ({
   errorMeassage?: string | boolean;
   required?: boolean;
   disabled?: boolean;
+  pattern?: string;
   [key: string]: any;
 }) => {
   if (type === "file") {
@@ -56,6 +58,7 @@ const CustomInput = ({
         {...props}
         mt="0"
         disabled={disabled}
+        pattern={pattern}
       />
       {errorMeassage && typeof errorMeassage === "string" && (
         <Field.ErrorText>{errorMeassage}</Field.ErrorText>

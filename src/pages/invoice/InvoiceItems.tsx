@@ -329,6 +329,7 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
             errorMeassage={
               errors.rate?.message ? String(errors.rate?.message) : ""
             }
+            pattern="[0-9]+(\.[0-9]{0,2})?"
           />
           {/* rate */}
 
@@ -362,6 +363,7 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
             errorMeassage={
               errors.ex_rate?.message ? String(errors.ex_rate?.message) : ""
             }
+            pattern="[0-9]+(\.[0-9]{0,2})?"
           />
           {/* ex_rate */}
         </VStack>
@@ -418,12 +420,13 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
 
           {/* rate */}
           <CustomInput
-            type="number"
+            type="text"
             label="rate"
             {...register("rate")}
             errorMeassage={
               errors.rate?.message ? String(errors.rate?.message) : ""
             }
+            pattern="[0-9]+(\.[0-9]{0,2})?"
           />
           {/* rate */}
 
@@ -451,12 +454,13 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
 
           {/* ex_rate */}
           <CustomInput
-            type="number"
+            type="text"
             label="ex_rate"
             {...register("ex_rate")}
             errorMeassage={
               errors.ex_rate?.message ? String(errors.ex_rate?.message) : ""
             }
+            pattern="[0-9]+(\.[0-9]{0,2})?"
           />
           {/* ex_rate */}
         </VStack>

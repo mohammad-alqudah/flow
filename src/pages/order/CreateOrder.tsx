@@ -239,11 +239,12 @@ const CreateOrder = () => {
 
     if (selectedClearingAgentId) {
       const selectedClearingAgen = selectedClearingAgentId
-        ? options?.data?.data?.second_parties?.find(
+        ? options?.data?.data?.agents?.find(
             (item: any) => item.id == selectedClearingAgentId
           )
         : null;
-      setValue("clearing_agent_code", selectedClearingAgen?.tax || "");
+
+      setValue("clearing_agent_code", selectedClearingAgen?.code || "");
     } else {
       setValue("clearing_agent_code", "");
     }
