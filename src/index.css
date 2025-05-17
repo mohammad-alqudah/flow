@@ -14,3 +14,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   top: 0;
   width: auto;
 }
+
+.react-date-picker__wrapper {
+  border: none !important;
+}
