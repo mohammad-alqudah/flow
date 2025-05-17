@@ -6,7 +6,7 @@ import {
   DeliveryBox01Icon,
   GoogleDocIcon,
   // Home04FreeIcons,
-  UserMultiple02Icon,
+  // UserMultiple02Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { removeTokens } from "@/services/auth";
@@ -22,7 +22,7 @@ const LinkItems: Array<LinkItemProps> = [
   // { name: "Home", icon: Home04FreeIcons, url: "/" },
   { name: "Files", icon: DeliveryBox01Icon, url: "orders" },
   { name: "Invoices", icon: GoogleDocIcon, url: "invoices" },
-  { name: "Customers", icon: UserMultiple02Icon, url: "customers" },
+  // { name: "Customers", icon: UserMultiple02Icon, url: "customers" },
   // { name: "Transfers", icon: ArrowLeftRightIcon, url: "transfers" },
 ];
 

@@ -39,7 +39,7 @@ const SeaFreightDetails = ({
   register: any;
   defaultValue: any;
   options: any;
-  handleOptions: (model: string, data: any) => void;
+  handleOptions: (model: string, data: any) => Promise<void>;
   disabled?: boolean;
   control: any;
 }) => {

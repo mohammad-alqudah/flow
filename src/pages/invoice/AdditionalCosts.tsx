@@ -10,6 +10,7 @@ import {
 } from "@/hooks/useMutation";
 import { useCustomQuery } from "@/hooks/useQuery";
 import getTodayDate from "@/utils/getTodayDate";
+import handleOption from "@/utils/handleOptions";
 import handleErrorAlerts from "@/utils/showErrorMessages";
 import {
   Box,
@@ -133,22 +134,8 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
   const addOptions = useCustomPost("client_settings/options/", ["options"]);
   const options = useCustomQuery("client_settings/options/", ["options"]);
 
-  const handleOptions = (model: string, data: any) => {
-    addOptions
-      .mutateAsync({
-        model,
-        ...data,
-      })
-      .then((res) => {
-        if (res.status) {
-          toast.success(`${data.name} created successfully`);
-        } else {
-          handleErrorAlerts(res.error);
-        }
-      })
-      .catch((err) => {
-        handleErrorAlerts(err.response.data.error);
-      });
+  const handleOptions = async (model: string, data: any) => {
+    await handleOption(addOptions, model, data);
   };
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {

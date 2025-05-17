@@ -36,7 +36,7 @@ const Invoices = () => {
           variant="plain"
           rounded="full"
           onClick={() => {
-            navigate(`/invoices/${info.row.original.id}/view`);
+            navigate(`/invoices/${info?.row?.original?.id}/view`);
           }}
         >
           {info.getValue()}
@@ -53,23 +53,23 @@ const Invoices = () => {
     }),
     columnHelper.accessor("amount", {
       header: () => "amount",
-      cell: (info) => info.getValue(),
+      cell: (info) => info.getValue() ?? "",
     }),
     columnHelper.accessor("client_name", {
       header: () => "Client name",
-      cell: (info) => info.row.original.file.client.name,
+      cell: (info) => info?.row?.original?.file?.client?.name ?? "",
     }),
     columnHelper.accessor("client_email", {
       header: () => "Client email",
-      cell: (info) => info.row.original.file.client.email,
+      cell: (info) => info?.row?.original?.file?.client?.email ?? "",
     }),
     columnHelper.accessor("client_mobile", {
       header: () => "Client mobile",
-      cell: (info) => info.row.original.file.client.mobile_number,
+      cell: (info) => info?.row?.original?.file?.client?.mobile_number ?? "",
     }),
     columnHelper.accessor("tax", {
       header: () => "Tax",
-      cell: (info) => info.row.original.file.client.tax,
+      cell: (info) => info?.row?.original?.file?.client?.tax ?? "",
     }),
     columnHelper.accessor("settings", {
       header: () => "Settings",
@@ -78,7 +78,7 @@ const Invoices = () => {
           variant="ghost"
           rounded="full"
           onClick={() => {
-            navigate(`/invoices/${info.row.original.id}/view`);
+            navigate(`/invoices/${info?.row?.original?.id}/view`);
           }}
         >
           <HugeiconsIcon

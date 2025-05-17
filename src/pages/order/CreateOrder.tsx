@@ -44,6 +44,7 @@ import toast from "react-hot-toast";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { debounce } from "lodash";
 import Loading from "@/components/core/Loading";
+import handleOption from "@/utils/handleOptions";
 const CreateOrder = () => {
   const [loading, setIsLoading] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -83,27 +84,10 @@ const CreateOrder = () => {
 
   const options = useCustomQuery("client_settings/options/", ["options"]);
 
-  const handleOptions = (model: string, data: any) => {
-    addOptions
-      .mutateAsync({
-        model,
-        ...data,
-      })
-      .then((res) => {
-        if (res.status) {
-          toast.success(`${data.name} created successfully`);
-        } else {
-          handleErrorAlerts(res.error);
-        }
-      })
-      .catch((err) => {
-        handleErrorAlerts(err.response.data.error);
-      });
+  const handleOptions = async (model: string, data: any) => {
+    await handleOption(addOptions, model, data);
   };
-
   const onSubmit: SubmitHandler<any> = (data) => {
-    console.log("data", data);
-
     const removeEmptyStrings = (
       obj: Record<string, any>
     ): Record<string, any> => {
@@ -433,7 +417,7 @@ const CreateOrder = () => {
                     fields={[
                       { name: "name", type: "text", required: true },
                       { name: "mobile_number", type: "text", required: true },
-                      { name: "email", type: "text", required: true },
+                      { name: "email", type: "email", required: true },
                       { name: "tax", type: "number", required: true },
                       { name: "address", type: "text", required: true },
                     ]}
@@ -525,7 +509,7 @@ const CreateOrder = () => {
                     fields={[
                       { name: "name", type: "text", required: true },
                       { name: "mobile_number", type: "text", required: true },
-                      { name: "email", type: "text", required: true },
+                      { name: "email", type: "email", required: true },
                       { name: "tax", type: "number", required: true },
                       { name: "address", type: "text", required: true },
                     ]}

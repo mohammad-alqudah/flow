@@ -30,7 +30,9 @@ const CustomSelectWithAddButtom = ({
   addOptionFunc,
   model,
   defaultValue,
-}: {
+}: // openOptionsModal,
+// setOpenOptionsModal,
+{
   data: DataItem;
   label: string;
   control: any;
@@ -39,22 +41,41 @@ const CustomSelectWithAddButtom = ({
   errorMeassage?: string | undefined;
   name: string;
   fields?: any[];
-  addOptionFunc: (model: string, data: any) => void;
+  addOptionFunc: (model: string, data: any) => Promise<void>;
   model: string;
   defaultValue?: string;
+  // openOptionsModal: boolean;
+  // setOpenOptionsModal: (state: boolean) => void;
 }) => {
-  const [open, setOpen] = useState(false);
-  // const [selectedNameId, setSelectedNameId] = useState<string | null>(null);
+  const [openOptionsModal, setOpenOptionsModal] = useState(false);
+
+  const defaultValues =
+    fields?.reduce((acc, field) => {
+      acc[field.name] = field.type === "number" ? 0 : "";
+      return acc;
+    }, {} as FormData) || {};
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<any>();
+    reset,
+  } = useForm<any>({
+    defaultValues,
+  });
 
-  const onSubmit: SubmitHandler<any> = (data) => {
-    addOptionFunc(model, data);
-    setOpen(false);
+  const onSubmit: SubmitHandler<any> = async (data) => {
+    // addOptionFunc(model, data).then(async () => {
+    //   setOpenOptionsModal(false);
+    // });
+
+    try {
+      await addOptionFunc(model, data);
+      setOpenOptionsModal(false);
+      reset(defaultValues);
+    } catch (error) {
+      console.error("Error in submission:", error);
+    }
   };
 
   const choices = useMemo(() => {
@@ -108,7 +129,7 @@ const CustomSelectWithAddButtom = ({
                     colorScheme="teal"
                     borderRadius="full"
                     size="2xs"
-                    onClick={() => setOpen(true)}
+                    onClick={() => setOpenOptionsModal(true)}
                     _hover={{
                       transform: "translateY(-50%) scale(1.1)",
                       transition: "transform 0.2s",
@@ -137,8 +158,8 @@ const CustomSelectWithAddButtom = ({
         />
       </HStack>
       <CustomModal
-        open={open}
-        setOpen={setOpen}
+        open={openOptionsModal}
+        setOpen={setOpenOptionsModal}
         title={`Add New ${formatFieldName(name)} `}
         actionButtonTitle={`add ${formatFieldName(name)}`}
         actionButtonFunction={() => handleSubmit(onSubmit)()}

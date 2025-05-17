@@ -12,6 +12,7 @@ import SeaFreightDetails from "@/components/orders/SeaFreightDetails";
 import { useCustomPost } from "@/hooks/useMutation";
 import { useCustomQuery } from "@/hooks/useQuery";
 import { formatDate } from "@/services/date";
+import handleOption from "@/utils/handleOptions";
 import ModeIcon from "@/utils/Mode";
 import handleErrorAlerts from "@/utils/showErrorMessages";
 import {
@@ -21,12 +22,15 @@ import {
   Flex,
   Heading,
   HStack,
+  Icon,
+  Link,
   SimpleGrid,
   Text,
   Textarea,
   VStack,
 } from "@chakra-ui/react";
 import {
+  ArrowLeft01Icon,
   Calendar02Icon,
   FloppyDiskIcon,
   GoogleDocIcon,
@@ -76,22 +80,8 @@ const OrderView = () => {
 
   const options = useCustomQuery("client_settings/options/", ["options"]);
 
-  const handleOptions = (model: string, data: any) => {
-    addOptions
-      .mutateAsync({
-        model,
-        ...data,
-      })
-      .then((res) => {
-        if (res.status) {
-          toast.success(`${data.name} created successfully`);
-        } else {
-          handleErrorAlerts(res.error);
-        }
-      })
-      .catch((err) => {
-        handleErrorAlerts(err.response.data.error);
-      });
+  const handleOptions = async (model: string, data: any) => {
+    await handleOption(addOptions, model, data);
   };
 
   useEffect(() => {
@@ -154,21 +144,34 @@ const OrderView = () => {
     <Box>
       {/* page header */}
       <HStack justifyContent="space-between" alignItems="center" mb="6">
-        <VStack alignItems="flex-start" gap={0}>
-          <HStack gap={2} align="center">
-            <Text
-              fontWeight="medium"
-              fontSize="x-large"
-              textTransform={"uppercase"}
-            >
-              {orderData?.data?.data?.name}
-            </Text>
-          </HStack>
+        {/* Back Arrow */}
+        <HStack>
+          <Link
+            href="/invoices"
+            _hover={{ color: "gray.500" }}
+            color="gray.400"
+          >
+            <Icon
+              as={() => <HugeiconsIcon icon={ArrowLeft01Icon} size="24px" />}
+              boxSize={6}
+            />
+          </Link>
+          <VStack alignItems="flex-start" gap={0}>
+            <HStack gap={2} align="center">
+              <Text
+                fontWeight="medium"
+                fontSize="x-large"
+                textTransform={"uppercase"}
+              >
+                {orderData?.data?.data?.name}
+              </Text>
+            </HStack>
 
-          <Text color="GrayText">
-            Created on {formatDate(orderData?.data?.data?.created_at)}
-          </Text>
-        </VStack>
+            <Text color="GrayText">
+              Created on {formatDate(orderData?.data?.data?.created_at)}
+            </Text>
+          </VStack>
+        </HStack>
 
         <Button
           size="sm"

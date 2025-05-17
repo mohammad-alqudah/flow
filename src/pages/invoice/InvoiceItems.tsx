@@ -10,6 +10,7 @@ import {
   useCustomUpdate,
 } from "@/hooks/useMutation";
 import { useCustomQuery } from "@/hooks/useQuery";
+import handleOption from "@/utils/handleOptions";
 import handleErrorAlerts from "@/utils/showErrorMessages";
 import {
   Box,
@@ -203,23 +204,8 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
       });
   };
 
-  const handleOptions = (model: string, data: any) => {
-    addOptions
-      .mutateAsync({
-        model,
-        ...data,
-      })
-      .then((res) => {
-        if (res.status) {
-          toast.success(`${data.name} created successfully`);
-          // setIsOpenAdd(false);
-        } else {
-          handleErrorAlerts(res.error);
-        }
-      })
-      .catch((err) => {
-        handleErrorAlerts(err.response.data.error);
-      });
+  const handleOptions = async (model: string, data: any) => {
+    await handleOption(addOptions, model, data);
   };
 
   useEffect(() => {
