@@ -36,7 +36,7 @@ const ContainerEditModel = ({
   defaultValue: any;
   containerId: string | null;
   options: any;
-  handleOptions: (model: string, data: any) => void;
+  handleOptions: (model: string, data: any) => Promise<void>;
 }) => {
   const {
     control,

@@ -33,7 +33,7 @@ const ContainerAddModel = ({
   setLoading?: (state: boolean) => void;
   orderId: string;
   options: any;
-  handleOptions: (model: string, data: any) => void;
+  handleOptions: (model: string, data: any) => Promise<void>;
 }) => {
   const {
     control,

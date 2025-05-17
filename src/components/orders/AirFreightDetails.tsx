@@ -17,7 +17,7 @@ const AirFreightDetails = ({
   defaultValue: any;
   control: any;
   options: any;
-  handleOptions: (model: string, data: any) => void;
+  handleOptions: (model: string, data: any) => Promise<void>;
   errors: any;
   disabled?: boolean;
 }) => {

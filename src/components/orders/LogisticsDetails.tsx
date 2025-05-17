@@ -18,7 +18,7 @@ const LogisticsDetails = ({
   disabled?: boolean;
   control: any;
   options?: any;
-  handleOptions: (model: string, data: any) => void;
+  handleOptions: (model: string, data: any) => Promise<void>;
   errors: any;
 }) => {
   console.log("asdasdas", options);

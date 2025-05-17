@@ -14,7 +14,6 @@ import { useCustomQuery } from "@/hooks/useQuery";
 import { formatDate } from "@/services/date";
 import handleOption from "@/utils/handleOptions";
 import ModeIcon from "@/utils/Mode";
-import handleErrorAlerts from "@/utils/showErrorMessages";
 import {
   Box,
   Button,
