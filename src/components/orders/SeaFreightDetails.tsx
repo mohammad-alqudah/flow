@@ -67,7 +67,7 @@ const SeaFreightDetails = ({
     }),
     columnHelper.accessor("number", {
       header: () => "Number",
-      cell: (info) => info.getValue()?.name,
+      cell: (info) => info.getValue(),
     }),
     columnHelper.accessor("container_type", {
       header: () => "Container Type",
