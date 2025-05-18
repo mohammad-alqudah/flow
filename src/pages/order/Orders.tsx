@@ -27,7 +27,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 
 import { Filter, Package, Settings2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import DatePicker from "react-date-picker";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import * as yup from "yup";
@@ -685,7 +686,7 @@ const Orders = () => {
             label="Freight Type"
             errorMeassage={errors?.freight_type?.message}
           />
-          <CustomInput
+          {/* <CustomInput
             type="date"
             label="Date"
             defaultValue={getTodayDate()}
@@ -693,6 +694,30 @@ const Orders = () => {
             errorMeassage={
               errors?.date?.message ? String(errors?.date?.message) : ""
             }
+          /> */}
+          <Controller
+            control={control}
+            name="date"
+            render={({ field }) => (
+              <Box
+                asChild
+                w="full"
+                border="1px solid #e4e4e7 !important"
+                outline="none"
+                rounded="0.25rem !important"
+                py="1.5"
+                px="2"
+              >
+                <DatePicker
+                  onChange={(value) => field.onChange(value)}
+                  value={field.value ? field.value : new Date()}
+                  format="MM/dd/yyyy"
+                  dayPlaceholder="d"
+                  monthPlaceholder="m"
+                  yearPlaceholder="y"
+                />
+              </Box>
+            )}
           />
         </VStack>
       </CustomModal>

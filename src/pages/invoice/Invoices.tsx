@@ -19,12 +19,17 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import DatePicker from "react-date-picker";
+
+type ValuePiece = Date | null;
+
+type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 const Invoices = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [dateFrom, setDateFrom] = useState("");
-  const [dateTo, setDateTo] = useState("");
+  const [dateFrom, setDateFrom] = useState<Value>();
+  const [dateTo, setDateTo] = useState<Value>();
   const columnHelper = createColumnHelper<any>();
   const navigate = useNavigate();
 
@@ -94,8 +99,8 @@ const Invoices = () => {
   const params = new URLSearchParams({
     ...(currentPage > 1 && { page: currentPage.toString() }),
     ...(search && { search }),
-    ...(dateFrom && { date_issued_after: dateFrom }),
-    ...(dateTo && { date_issued_before: dateTo }),
+    ...(dateFrom && { date_issued_after: dateFrom.toString() }),
+    ...(dateTo && { date_issued_before: dateTo.toString() }),
   });
 
   const { data, isPending } = useCustomQuery(
@@ -110,7 +115,7 @@ const Invoices = () => {
     <Container maxW="container.xl" py={6}>
       {/* page header */}
       <PageHeader
-        title="Bills"
+        title="Invoices"
         description="Manage and track all billing information"
         buttonTitle="New Bill"
       />
@@ -147,12 +152,31 @@ const Invoices = () => {
               <Field.Label>
                 Date From <Field.RequiredIndicator />
               </Field.Label>
-              <Input
+              {/* <Input
                 type="date"
-                value={dateFrom}
-                onChange={(e) => setDateFrom(e.target.value)}
+                value={formatDate(dateFrom)}
+                onChange={(e) => setDateFrom(formatDate(e.target.value))}
                 // defaultValue={new Date().toISOString().split("T")[0]}
-              />
+                placeholder="mm/dd/yyyy"
+              /> */}
+              <Box
+                asChild
+                w="full"
+                border="1px solid #e4e4e7 !important"
+                outline="none"
+                rounded="0.25rem !important"
+                py="1.5"
+                px="2"
+              >
+                <DatePicker
+                  onChange={setDateFrom}
+                  value={dateFrom}
+                  format="MM/dd/yyyy"
+                  dayPlaceholder="d"
+                  monthPlaceholder="m"
+                  yearPlaceholder="y"
+                />
+              </Box>
             </Field.Root>
           </Box>
           {/* date_issued */}
@@ -163,12 +187,31 @@ const Invoices = () => {
               <Field.Label>
                 Date to <Field.RequiredIndicator />
               </Field.Label>
-              <Input
+              {/* <Input
                 type="date"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
                 // defaultValue={new Date().toISOString().split("T")[0]}
-              />
+              /> */}
+
+              <Box
+                asChild
+                w="full"
+                border="1px solid #e4e4e7 !important"
+                outline="none"
+                rounded="0.25rem !important"
+                py="1.5"
+                px="2"
+              >
+                <DatePicker
+                  onChange={setDateTo}
+                  value={dateTo}
+                  format="MM/dd/yyyy"
+                  dayPlaceholder="d"
+                  monthPlaceholder="m"
+                  yearPlaceholder="y"
+                />
+              </Box>
             </Field.Root>
           </Box>
           {/* date  */}

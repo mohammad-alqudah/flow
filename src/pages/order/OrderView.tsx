@@ -145,11 +145,7 @@ const OrderView = () => {
       <HStack justifyContent="space-between" alignItems="center" mb="6">
         {/* Back Arrow */}
         <HStack>
-          <Link
-            href="/invoices"
-            _hover={{ color: "gray.500" }}
-            color="gray.400"
-          >
+          <Link href="/orders" _hover={{ color: "gray.500" }} color="gray.400">
             <Icon
               as={() => <HugeiconsIcon icon={ArrowLeft01Icon} size="24px" />}
               boxSize={6}

@@ -9,6 +9,10 @@ import useAuth from "@/store/useAuth";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import InvoiceDetails from "@/pages/invoice/InvoiceDetails";
 
+// react date picker
+import "react-date-picker/dist/DatePicker.css";
+import "react-calendar/dist/Calendar.css";
+
 export default function AppRoutes() {
   const { isAuthenticated } = useAuth();
 

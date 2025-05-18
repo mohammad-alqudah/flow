@@ -7,15 +7,14 @@ import { useCustomQuery } from "@/hooks/useQuery";
 import handleErrorAlerts from "@/utils/showErrorMessages";
 import toast from "react-hot-toast";
 import CustomModal from "../core/CustomModal";
-import { VStack } from "@chakra-ui/react";
+import { Box, VStack } from "@chakra-ui/react";
 import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 // import { useCustomQuery } from "@/hooks/useQuery";
 import * as yup from "yup";
-import CustomInput from "@/components/core/CustomInput";
-import getTodayDate from "@/utils/getTodayDate";
 import { useNavigate } from "react-router";
+import DatePicker from "react-date-picker";
 type Inputs = {
   date_issued: string;
 };
@@ -33,11 +32,7 @@ const Invoices = ({ id }: { id: string }) => {
   const navigate = useNavigate();
   const addInvoice = useCustomPost("invoice/invoices/", ["invoices"]);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>({
+  const { control, handleSubmit } = useForm<Inputs>({
     resolver: yupResolver(schema),
   });
 
@@ -72,10 +67,6 @@ const Invoices = ({ id }: { id: string }) => {
         actionButtonTitle="Add invoice"
         actionButtonFunction={() => setOpen(true)}
         actionButtonIcon={Add01Icon}
-
-        // buttonIcon={GoogleDocIcon}
-        // buttonClick={() => setOpen(true)}
-        // buttonLoading={addInvoice.isPending}
       >
         {data?.data?.map((item: any) => (
           <InvoicesCard
@@ -106,7 +97,7 @@ const Invoices = ({ id }: { id: string }) => {
           onSubmit={handleSubmit(onSubmit)}
         >
           {/* date */}
-          <CustomInput
+          {/* <CustomInput
             type="date"
             label="Date"
             {...register("date_issued")}
@@ -116,6 +107,33 @@ const Invoices = ({ id }: { id: string }) => {
                 : ""
             }
             defaultValue={getTodayDate()}
+          /> */}
+
+          <Controller
+            control={control}
+            name="date_issued"
+            render={({ field }) => (
+              <Box
+                asChild
+                w="full"
+                border="1px solid #e4e4e7 !important"
+                outline="none"
+                rounded="0.25rem !important"
+                py="1.5"
+                px="2"
+              >
+                <DatePicker
+                  onChange={(value) => field.onChange(value)}
+                  value={field.value ? field.value : new Date()}
+                  format="MM/dd/yyyy"
+                  dayPlaceholder="d"
+                  monthPlaceholder="m"
+                  yearPlaceholder="y"
+                  autoFocus={false}
+                  openCalendarOnFocus={false}
+                />
+              </Box>
+            )}
           />
 
           {/* date */}

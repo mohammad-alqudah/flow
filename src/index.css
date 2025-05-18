@@ -18,3 +18,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .react-date-picker__wrapper {
   border: none !important;
 }
+
+.react-select {
+  width: 100% !important;
+}
+
+.react-select__indicators {
+  margin-right: 30px !important;
+}

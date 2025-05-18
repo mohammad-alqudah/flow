@@ -15,6 +15,7 @@ import handleErrorAlerts from "@/utils/showErrorMessages";
 import {
   Box,
   Button,
+  Field,
   Heading,
   HStack,
   IconButton,
@@ -25,7 +26,8 @@ import { Add01Icon, Delete02Icon, Pen01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import DatePicker from "react-date-picker";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as yup from "yup";
 
@@ -252,7 +254,7 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
           />
           {/* charges */}
           {/* date */}
-          <CustomInput
+          {/* <CustomInput
             type="date"
             label="date"
             {...register("date")}
@@ -260,7 +262,41 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
               errors.date?.message ? String(errors.date?.message) : ""
             }
             defaultValue={getTodayDate()}
-          />
+          /> */}
+          <Field.Root>
+            <Field.Label
+              color="#6b7280"
+              fontWeight="normal"
+              textTransform="capitalize"
+            >
+              Date <Field.RequiredIndicator />
+            </Field.Label>
+
+            <Controller
+              control={control}
+              name="date"
+              render={({ field }) => (
+                <Box
+                  asChild
+                  w="full"
+                  border="1px solid #e4e4e7 !important"
+                  outline="none"
+                  rounded="0.25rem !important"
+                  py="1.5"
+                  px="2"
+                >
+                  <DatePicker
+                    onChange={(value) => field.onChange(value)}
+                    value={field.value}
+                    format="MM/dd/yyyy"
+                    dayPlaceholder="d"
+                    monthPlaceholder="m"
+                    yearPlaceholder="y"
+                  />
+                </Box>
+              )}
+            />
+          </Field.Root>
           {/* date */}
 
           {/* value */}
@@ -321,14 +357,48 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
           />
           {/* charges */}
           {/* date */}
-          <CustomInput
+          {/* <CustomInput
             type="date"
             label="date"
             {...register("date")}
             errorMeassage={
               errors.date?.message ? String(errors.date?.message) : ""
             }
-          />
+          /> */}
+          <Field.Root>
+            <Field.Label
+              color="#6b7280"
+              fontWeight="normal"
+              textTransform="capitalize"
+            >
+              Date <Field.RequiredIndicator />
+            </Field.Label>
+
+            <Controller
+              control={control}
+              name="date"
+              render={({ field }) => (
+                <Box
+                  asChild
+                  w="full"
+                  border="1px solid #e4e4e7 !important"
+                  outline="none"
+                  rounded="0.25rem !important"
+                  py="1.5"
+                  px="2"
+                >
+                  <DatePicker
+                    onChange={(value) => field.onChange(value)}
+                    value={field.value}
+                    format="MM/dd/yyyy"
+                    dayPlaceholder="d"
+                    monthPlaceholder="m"
+                    yearPlaceholder="y"
+                  />
+                </Box>
+              )}
+            />
+          </Field.Root>
           {/* date */}
 
           {/* value */}

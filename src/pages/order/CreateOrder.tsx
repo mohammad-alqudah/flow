@@ -183,10 +183,11 @@ const CreateOrder = () => {
     setValue("shipping_line", [orderData?.data?.data?.shipping_line]);
   }, [orderData?.data?.data]);
 
-  const selectedClientId = watch("client")?.[0];
-  const selectedShipperId = watch("shipper")?.[0];
-  const selectedConsigneeId = watch("consignee")?.[0];
-  const selectedClearingAgentId = watch("clearing_agent")?.[0];
+  const selectedClientId = watch("client");
+  const selectedShipperId = watch("shipper");
+  const selectedConsigneeId = watch("consignee");
+  const selectedClearingAgentId = watch("clearing_agent");
+
   useEffect(() => {
     if (selectedClientId) {
       const selectedClient = selectedClientId

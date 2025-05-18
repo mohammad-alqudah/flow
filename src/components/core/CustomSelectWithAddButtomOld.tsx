@@ -1,16 +1,24 @@
+import {
+  createListCollection,
+  HStack,
+  IconButton,
+  Portal,
+  Select,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
+
 import { useMemo, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import Select from "react-select";
 import CustomModal from "./CustomModal";
 import { AddIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import CustomInput from "./CustomInput";
 import formatFieldName from "@/utils/formatFieldName";
-import { Field, HStack, IconButton, Text, VStack } from "@chakra-ui/react";
 
 type DataItem = { label: string; value: string }[];
 
-const CustomSelectWithAddButton = ({
+const CustomSelectWithAddButtomOld = ({
   label,
   data,
   control,
@@ -41,7 +49,7 @@ const CustomSelectWithAddButton = ({
     fields?.reduce((acc, field) => {
       acc[field.name] = field.type === "number" ? 0 : "";
       return acc;
-    }, {} as any) || {};
+    }, {} as FormData) || {};
 
   const {
     register,
@@ -53,6 +61,10 @@ const CustomSelectWithAddButton = ({
   });
 
   const onSubmit: SubmitHandler<any> = async (data) => {
+    // addOptionFunc(model, data).then(async () => {
+    //   setOpenOptionsModal(false);
+    // });
+
     try {
       await addOptionFunc(model, data);
       setOpenOptionsModal(false);
@@ -63,8 +75,9 @@ const CustomSelectWithAddButton = ({
   };
 
   const choices = useMemo(() => {
-    const options = data || [];
-    return options;
+    return createListCollection({
+      items: data || [],
+    });
   }, [data]);
 
   return (
@@ -73,43 +86,40 @@ const CustomSelectWithAddButton = ({
         <Controller
           name={name}
           control={control}
-          defaultValue={defaultValue}
-          render={({ field: { onChange, value, name, ref } }) => {
-            const selectedValue = multiple
-              ? value?.map((val: string) =>
-                  choices.find((choice) => choice.value === val)
-                )
-              : choices.find(
-                  (choice) => String(choice.value) === String(value)
-                );
-
-            return (
-              <Field.Root w="full" position="relative">
-                <Field.Label color="#6b7280" fontWeight="normal">
-                  {label}
-                </Field.Label>
-                <Select
-                  ref={ref}
-                  name={name}
-                  options={choices}
-                  value={selectedValue || (multiple ? [] : null)}
-                  onChange={(val: any) => {
-                    if (multiple) {
-                      onChange(val ? val.map((v: any) => v.value) : []);
-                    } else {
-                      onChange(val ? val.value : "");
-                    }
-                  }}
-                  className="react-select"
-                  classNamePrefix="react-select"
-                  isMulti={multiple}
-                  isDisabled={disabled}
-                />
+          render={({ field }) => (
+            <Select.Root
+              w="full"
+              collection={choices}
+              multiple={multiple}
+              disabled={disabled}
+              invalid={errorMeassage ? true : false}
+              name={field.name}
+              value={field.value}
+              onValueChange={({ value }) => field.onChange(value)}
+              onInteractOutside={() => field.onBlur()}
+              defaultValue={defaultValue ? [defaultValue] : undefined}
+            >
+              <Select.HiddenSelect />
+              <Select.Label color="#6b7280" fontWeight="normal">
+                {label}
+              </Select.Label>
+              <Select.Control position="relative">
+                <Select.Trigger>
+                  <Select.ValueText placeholder={`Choose ${label}`} />
+                </Select.Trigger>
+                <Select.IndicatorGroup pe={disabled ? "" : "2.5rem"}>
+                  {disabled ? null : (
+                    <>
+                      <Select.Indicator />
+                      <Select.ClearTrigger />
+                    </>
+                  )}
+                </Select.IndicatorGroup>
                 {disabled ? null : (
                   <IconButton
                     position="absolute"
                     right="0.5rem"
-                    top="70%"
+                    top="50%"
                     transform="translateY(-50%)"
                     variant="surface"
                     colorScheme="teal"
@@ -124,23 +134,35 @@ const CustomSelectWithAddButton = ({
                     <HugeiconsIcon icon={AddIcon} />
                   </IconButton>
                 )}
-                {errorMeassage && <Text color="fg.error">{errorMeassage}</Text>}
-              </Field.Root>
-            );
-          }}
+              </Select.Control>
+              <Portal disabled>
+                <Select.Positioner>
+                  <Select.Content>
+                    {choices?.items.map((choice) => (
+                      <Select.Item item={choice} key={choice.value}>
+                        {choice.label}
+
+                        <Select.ItemIndicator />
+                      </Select.Item>
+                    ))}
+                  </Select.Content>
+                </Select.Positioner>
+              </Portal>
+              {errorMeassage && <Text color="fg.error">{errorMeassage}</Text>}
+            </Select.Root>
+          )}
         />
       </HStack>
       <CustomModal
         open={openOptionsModal}
         setOpen={setOpenOptionsModal}
-        title={`Add New ${formatFieldName(name)}`}
-        actionButtonTitle={`Add ${formatFieldName(name)}`}
+        title={`Add New ${formatFieldName(name)} `}
+        actionButtonTitle={`add ${formatFieldName(name)}`}
         actionButtonFunction={() => handleSubmit(onSubmit)()}
       >
         <VStack gap="2">
           {fields?.map((el) => (
             <CustomInput
-              key={el.name}
               type={el.type}
               label={formatFieldName(el.name)}
               {...register(el.name, { required: el.required })}
@@ -155,4 +177,4 @@ const CustomSelectWithAddButton = ({
   );
 };
 
-export default CustomSelectWithAddButton;
+export default CustomSelectWithAddButtomOld;
