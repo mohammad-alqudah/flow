@@ -23,40 +23,40 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useParams } from "react-router";
 import InvoiceItems from "./InvoiceItems";
 import AdditionalCosts from "./AdditionalCosts";
-import { useMutation } from "@tanstack/react-query";
-import axiosInstance from "@/api/config";
+// import { useMutation } from "@tanstack/react-query";
+// import axiosInstance from "@/api/config";
 import ModeIcon from "@/utils/Mode";
 import { useCustomPost } from "@/hooks/useMutation";
 import handleErrorAlerts from "@/utils/showErrorMessages";
 import toast from "react-hot-toast";
 
-const downloadPreAdvicePDF = async (id?: string) => {
-  const response = await axiosInstance.get(`invoice/pdf/${id}/`, {
-    responseType: "blob",
-  });
-  return response.data;
-};
+// const downloadPreAdvicePDF = async (id?: string) => {
+//   const response = await axiosInstance.get(`invoice/pdf/${id}/`, {
+//     responseType: "blob",
+//   });
+//   return response.data;
+// };
 
 const InvoiceDetails = () => {
   const { id } = useParams();
-  console.log("id", id);
-  const { mutate, isPending, isError } = useMutation({
-    mutationFn: () => downloadPreAdvicePDF(id),
-    onSuccess: (data) => {
-      const url = window.URL.createObjectURL(new Blob([data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `invoice_${id}.pdf`);
-      document.body.appendChild(link);
-      link.click();
+  // console.log("id", id);
+  // const { mutate, isPending, isError } = useMutation({
+  //   mutationFn: () => downloadPreAdvicePDF(id),
+  //   onSuccess: (data) => {
+  //     const url = window.URL.createObjectURL(new Blob([data]));
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", `invoice_${id}.pdf`);
+  //     document.body.appendChild(link);
+  //     link.click();
 
-      link.parentNode?.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    },
-    onError: (error) => {
-      console.error("error:", error);
-    },
-  });
+  //     link.parentNode?.removeChild(link);
+  //     window.URL.revokeObjectURL(url);
+  //   },
+  //   onError: (error) => {
+  //     console.error("error:", error);
+  //   },
+  // });
 
   const invoiceData = useCustomQuery(`/invoice/invoices/${id}`, [
     "invoice",
