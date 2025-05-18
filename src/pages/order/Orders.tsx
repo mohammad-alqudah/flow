@@ -13,6 +13,7 @@ import {
   Button,
   Checkbox,
   Container,
+  Field,
   Flex,
   Heading,
   IconButton,
@@ -24,6 +25,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { ArrowUpRight02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { createColumnHelper } from "@tanstack/react-table";
+import { get } from "lodash";
 
 import { Filter, Package, Settings2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -695,30 +697,41 @@ const Orders = () => {
               errors?.date?.message ? String(errors?.date?.message) : ""
             }
           /> */}
-          <Controller
-            control={control}
-            name="date"
-            render={({ field }) => (
-              <Box
-                asChild
-                w="full"
-                border="1px solid #e4e4e7 !important"
-                outline="none"
-                rounded="0.25rem !important"
-                py="1.5"
-                px="2"
-              >
-                <DatePicker
-                  onChange={(value) => field.onChange(value)}
-                  value={field.value ? field.value : new Date()}
-                  format="MM/dd/yyyy"
-                  dayPlaceholder="d"
-                  monthPlaceholder="m"
-                  yearPlaceholder="y"
-                />
-              </Box>
-            )}
-          />
+          <Field.Root>
+            <Field.Label
+              color="#6b7280"
+              fontWeight="normal"
+              textTransform="capitalize"
+            >
+              date
+            </Field.Label>
+
+            <Controller
+              control={control}
+              name="date"
+              defaultValue={getTodayDate()}
+              render={({ field }) => (
+                <Box
+                  asChild
+                  w="full"
+                  border="1px solid #e4e4e7 !important"
+                  outline="none"
+                  rounded="0.25rem !important"
+                  py="1.5"
+                  px="2"
+                >
+                  <DatePicker
+                    onChange={(value) => field.onChange(value)}
+                    value={field.value ? field.value : new Date()}
+                    format="MM/dd/yyyy"
+                    dayPlaceholder="d"
+                    monthPlaceholder="m"
+                    yearPlaceholder="y"
+                  />
+                </Box>
+              )}
+            />
+          </Field.Root>
         </VStack>
       </CustomModal>
       {/* create order */}
