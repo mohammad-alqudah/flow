@@ -10,6 +10,7 @@ import {
 } from "@/hooks/useMutation";
 import { useCustomQuery } from "@/hooks/useQuery";
 import getTodayDate from "@/utils/getTodayDate";
+// import getTodayDate from "@/utils/getTodayDate";
 import handleOption from "@/utils/handleOptions";
 import handleErrorAlerts from "@/utils/showErrorMessages";
 import {
@@ -275,6 +276,7 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
             <Controller
               control={control}
               name="date"
+              defaultValue={getTodayDate()}
               render={({ field }) => (
                 <Box
                   asChild

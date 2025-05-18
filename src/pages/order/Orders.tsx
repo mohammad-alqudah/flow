@@ -1,4 +1,4 @@
-import CustomInput from "@/components/core/CustomInput";
+// import CustomInput from "@/components/core/CustomInput";
 import CustomModal from "@/components/core/CustomModal";
 import CustomSelect from "@/components/core/CustomSelect";
 import { DataTableSelections } from "@/components/core/DataTableSelections";
@@ -25,7 +25,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { ArrowUpRight02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { get } from "lodash";
 
 import { Filter, Package, Settings2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -441,7 +440,7 @@ const Orders = () => {
   };
 
   const {
-    register,
+    // register,
     handleSubmit,
     control,
     formState: { errors },
