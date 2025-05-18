@@ -1,19 +1,16 @@
 import CustomInput from "@/components/core/CustomInput";
 import CustomSelectWithAddButtom from "@/components/core/CustomSelectWithAddButtom";
-import Loading from "@/components/core/Loading";
 import PageCard from "@/components/core/PageCard";
 import PageHeader from "@/components/core/PageHeader";
 import AirFreightDetails from "@/components/orders/AirFreightDetails";
-import Documents from "@/components/orders/Documents";
 import Invoices from "@/components/orders/Invoices";
 import LandTransportDetails from "@/components/orders/LandTransportDetails";
 import LogisticsDetails from "@/components/orders/LogisticsDetails";
 import SeaFreightDetails from "@/components/orders/SeaFreightDetails";
-import { useCustomPost } from "@/hooks/useMutation";
+import { useCustomPost, useCustomUpdate } from "@/hooks/useMutation";
 import { useCustomQuery } from "@/hooks/useQuery";
 import { formatDate } from "@/services/date";
-import handleOption from "@/utils/handleOptions";
-import ModeIcon from "@/utils/Mode";
+import handleErrorAlerts from "@/utils/showErrorMessages";
 import {
   Box,
   Button,
@@ -23,14 +20,20 @@ import {
   HStack,
   Icon,
   Link,
+  // Icon,
   SimpleGrid,
   Text,
   Textarea,
   VStack,
 } from "@chakra-ui/react";
 import {
+  AirplaneTakeOff01Icon,
   ArrowLeft01Icon,
+  BoatIcon,
   Calendar02Icon,
+  // Cancel01Icon,
+  Car03Icon,
+  ContainerTruck02Icon,
   FloppyDiskIcon,
   GoogleDocIcon,
   Location01Icon,
@@ -38,13 +41,17 @@ import {
   WorkIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate, useParams, useSearchParams } from "react-router";
-
+import { debounce } from "lodash";
+import Loading from "@/components/core/Loading";
+import handleOption from "@/utils/handleOptions";
+import Documents from "@/components/orders/Documents";
 const OrderView = () => {
-  // const [loading, setIsLoading] = useState(false);
+  const [_, setIsLoading] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -63,18 +70,20 @@ const OrderView = () => {
   const date = searchParams.get("date");
 
   const orderData = useCustomQuery(`/file/files/${id}`, [
-    "order",
-    `order-${id}`,
+    "order-view",
+    `order-${id}-view`,
   ]);
 
   const {
     control,
     register,
+    // handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<any>();
+    watch,
+  } = useForm<any>({});
 
-  // const saveOrder = useCustomUpdate(`file/files/${id}/`, ["order"]);
+  const saveOrder = useCustomUpdate(`file/files/${id}/`, ["orders"]);
   const addOptions = useCustomPost("client_settings/options/", ["options"]);
 
   const options = useCustomQuery("client_settings/options/", ["options"]);
@@ -82,6 +91,66 @@ const OrderView = () => {
   const handleOptions = async (model: string, data: any) => {
     await handleOption(addOptions, model, data);
   };
+  const onSubmit: SubmitHandler<any> = (data) => {
+    const removeEmptyStrings = (
+      obj: Record<string, any>
+    ): Record<string, any> => {
+      const cleanedObj: Record<string, any> = {};
+      Object.entries(obj).forEach(([key, value]) => {
+        if (key === "third_party_logistics_name") {
+          cleanedObj[key] = value;
+          return;
+        }
+
+        if (Array.isArray(value)) {
+          if (value.length === 0) {
+            return;
+          } else {
+            cleanedObj[key] = value[0];
+          }
+        } else if (value !== "" && value !== undefined) {
+          cleanedObj[key] = value;
+        }
+      });
+      return cleanedObj;
+    };
+
+    const cleanedData = removeEmptyStrings(data);
+
+    setIsLoading(true);
+    saveOrder
+      .mutateAsync(cleanedData)
+      .then(async (res) => {
+        if (res.status) {
+          toast.success(`order updated successfully`);
+        } else {
+          toast.error(res.detail);
+        }
+      })
+      .catch((err) => {
+        handleErrorAlerts(err.response.data.error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  function ModeIcon({
+    mode,
+  }: {
+    mode: "SeaFreight" | "AirFreight" | "LandTransport" | "Logistics";
+  }) {
+    switch (mode) {
+      case "SeaFreight":
+        return <HugeiconsIcon icon={BoatIcon} size="24px" />;
+      case "AirFreight":
+        return <HugeiconsIcon icon={AirplaneTakeOff01Icon} size="24px" />;
+      case "LandTransport":
+        return <HugeiconsIcon icon={ContainerTruck02Icon} size="24px" />;
+      case "Logistics":
+        return <HugeiconsIcon icon={Car03Icon} size="24px" />;
+    }
+  }
 
   useEffect(() => {
     setValue("client", [orderData?.data?.data?.client?.id]);
@@ -94,11 +163,9 @@ const OrderView = () => {
     setValue("clearing_agent", [orderData?.data?.data?.clearing_agent?.id]);
     setValue("agent", [orderData?.data?.data?.agent?.id]);
     setValue("network", [orderData?.data?.data?.network?.id]);
-    setValue("final_destination", [
-      orderData?.data?.data?.final_destination?.id,
-    ]);
+    setValue("final_destination", [orderData?.data?.data?.final_destination]);
     // logistics
-    setValue("service", [orderData?.data?.data?.service]);
+    setValue("service", [orderData?.data?.data?.service?.id]);
     setValue("bl_number", orderData?.data?.data?.bl_number);
     setValue(
       "third_party_logistics_name",
@@ -117,6 +184,104 @@ const OrderView = () => {
     //sea
     setValue("shipping_line", [orderData?.data?.data?.shipping_line]);
   }, [orderData?.data?.data]);
+
+  const selectedClientId = watch("client");
+  const selectedShipperId = watch("shipper");
+  const selectedConsigneeId = watch("consignee");
+  const selectedClearingAgentId = watch("clearing_agent");
+
+  useEffect(() => {
+    if (selectedClientId) {
+      const selectedClient = selectedClientId
+        ? options?.data?.data?.second_parties?.find(
+            (item: any) => item.id == selectedClientId
+          )
+        : null;
+      setValue("client_tax", selectedClient?.tax || "");
+    } else {
+      setValue("client_tax", "");
+    }
+
+    if (selectedShipperId) {
+      const selectedShipper = selectedShipperId
+        ? options?.data?.data?.second_parties?.find(
+            (item: any) => item.id == selectedShipperId
+          )
+        : null;
+      setValue("shipper_tax", selectedShipper?.tax || "");
+    } else {
+      setValue("shipper_tax", "");
+    }
+
+    if (selectedConsigneeId) {
+      const selectedConsignee = selectedConsigneeId
+        ? options?.data?.data?.second_parties?.find(
+            (item: any) => item.id == selectedConsigneeId
+          )
+        : null;
+      setValue("consignee_tax", selectedConsignee?.tax || "");
+    } else {
+      setValue("consignee_tax", "");
+    }
+
+    if (selectedClearingAgentId) {
+      const selectedClearingAgen = selectedClearingAgentId
+        ? options?.data?.data?.agents?.find(
+            (item: any) => item.id == selectedClearingAgentId
+          )
+        : null;
+
+      setValue("clearing_agent_code", selectedClearingAgen?.code || "");
+    } else {
+      setValue("clearing_agent_code", "");
+    }
+  }, [
+    selectedClientId,
+    selectedShipperId,
+    selectedConsigneeId,
+    selectedClearingAgentId,
+  ]);
+
+  // auto save
+  const formValues = watch();
+  const prevFormValues = useRef(formValues);
+
+  const debouncedSubmit = useCallback(
+    debounce((data: any) => {
+      if (!isInitialLoad) {
+        console.log("Submitting", data);
+        onSubmit(data);
+      }
+    }, 1000),
+    [isInitialLoad]
+  );
+  useEffect(() => {
+    if (
+      Object.keys(formValues).length > 0 &&
+      JSON.stringify(formValues) !== JSON.stringify(prevFormValues.current)
+    ) {
+      debouncedSubmit(formValues);
+      prevFormValues.current = formValues;
+    }
+  }, [formValues, debouncedSubmit]);
+
+  useEffect(() => {
+    return () => {
+      debouncedSubmit.cancel();
+    };
+  }, []);
+  useEffect(() => {
+    if (orderData?.data?.data) {
+      const timeout = setTimeout(() => {
+        setIsInitialLoad(false);
+      }, 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [orderData?.data?.data]);
+
+  useEffect(() => {
+    orderData.refetch();
+  }, []);
 
   if (!id || !name || !type || !freight_type || !date) {
     toast.error("Missing required parameters");
@@ -254,7 +419,7 @@ const OrderView = () => {
                     fields={[
                       { name: "name", type: "text", required: true },
                       { name: "mobile_number", type: "text", required: true },
-                      { name: "email", type: "text", required: true },
+                      { name: "email", type: "email", required: true },
                       { name: "tax", type: "number", required: true },
                       { name: "address", type: "text", required: true },
                     ]}
@@ -269,6 +434,7 @@ const OrderView = () => {
                     mt={1}
                     disabled
                     defaultValue={orderData?.data?.data?.client?.tax}
+                    {...register("client_tax")}
                   />
                 </VStack>
               </Box>
@@ -315,6 +481,7 @@ const OrderView = () => {
                     mt={1}
                     disabled
                     defaultValue={orderData?.data?.data?.shipper?.tax}
+                    {...register("shipper_tax")}
                   />
                 </VStack>
               </Box>
@@ -346,7 +513,7 @@ const OrderView = () => {
                     fields={[
                       { name: "name", type: "text", required: true },
                       { name: "mobile_number", type: "text", required: true },
-                      { name: "email", type: "text", required: true },
+                      { name: "email", type: "email", required: true },
                       { name: "tax", type: "number", required: true },
                       { name: "address", type: "text", required: true },
                     ]}
@@ -361,6 +528,7 @@ const OrderView = () => {
                     mt={1}
                     disabled
                     defaultValue={orderData?.data?.data?.consignee?.tax}
+                    {...register("consignee_tax")}
                   />
                 </VStack>
               </Box>
@@ -472,15 +640,35 @@ const OrderView = () => {
               {/* POD Country */}
               {/* Final Destination */}
               <Box>
-                <CustomInput
+                <CustomSelectWithAddButtom
+                  label="Final Destination"
+                  name="final_destination"
+                  control={control}
+                  data={options?.data?.data?.final_destination?.map(
+                    (item: any) => ({
+                      label: item.name,
+                      value: item.id,
+                    })
+                  )}
+                  model="final_destination"
+                  fields={[{ name: "name", type: "text", required: true }]}
+                  addOptionFunc={handleOptions}
+                  defaultValue={orderData?.data?.data?.final_destination}
+                  // errorMeassage={
+                  //   errors?.seal_number?.message
+                  //     ? String(errors?.seal_number?.message)
+                  //     : ""
+                  // }
+                  disabled
+                />
+                {/* <CustomInput
                   type="text"
                   label="Final Destination"
                   w="full"
                   mt={1}
                   {...register("final_destination")}
                   defaultValue={orderData?.data?.data?.final_destination}
-                  disabled
-                />
+                /> */}
               </Box>
               {/* Final Destination */}
             </SimpleGrid>
@@ -493,7 +681,7 @@ const OrderView = () => {
               {/* ETD */}
               <Box>
                 <CustomInput
-                  type="text"
+                  type="date"
                   label="ETD"
                   w="full"
                   mt={1}
@@ -506,7 +694,7 @@ const OrderView = () => {
               {/* ETA */}
               <Box>
                 <CustomInput
-                  type="text"
+                  type="date"
                   label="ETA"
                   w="full"
                   mt={1}
@@ -543,17 +731,17 @@ const OrderView = () => {
               disabled
               control={control}
               options={options}
-              errors={errors}
               handleOptions={handleOptions}
+              errors={errors}
             />
           ) : (
             <SeaFreightDetails
               register={register}
               defaultValue={orderData?.data?.data}
+              control={control}
               options={options}
               handleOptions={handleOptions}
               disabled
-              control={control}
             />
           )}
 
@@ -577,47 +765,6 @@ const OrderView = () => {
           {/* Agents */}
           <PageCard title="Agents" icon={WorkIcon}>
             <SimpleGrid columns={2} gap={4}>
-              {/* Clearing Agent */}
-              <Box>
-                <Heading
-                  as="h3"
-                  size="sm"
-                  fontWeight="medium"
-                  color="gray.900"
-                  mb={4}
-                >
-                  Clearing Agent
-                </Heading>
-                <VStack gap="2">
-                  {/* <CustomInput type="text" label="Name" w="full" mt={1} /> */}
-                  <CustomSelectWithAddButtom
-                    label="Name"
-                    name="clearing_agent"
-                    control={control}
-                    data={options?.data?.data?.agents?.map((item: any) => ({
-                      label: item.name,
-                      value: item.id,
-                    }))}
-                    model="agent"
-                    fields={[
-                      { name: "name", type: "text", required: true },
-                      { name: "code", type: "number", required: true },
-                    ]}
-                    addOptionFunc={handleOptions}
-                    defaultValue={orderData?.data?.data?.clearing_agent?.id}
-                    disabled
-                  />
-                  <CustomInput
-                    type="text"
-                    label="Code"
-                    w="full"
-                    mt={1}
-                    disabled
-                    defaultValue={orderData?.data?.data?.clearing_agent?.code}
-                  />
-                </VStack>
-              </Box>
-              {/* Clearing Agent */}
               {/* Agent */}
               <Box>
                 <Heading
@@ -677,6 +824,65 @@ const OrderView = () => {
                 </VStack>
               </Box>
               {/* Network  */}
+
+              {/* Clearing Agent */}
+              <Box>
+                <Heading
+                  as="h3"
+                  size="sm"
+                  fontWeight="medium"
+                  color="gray.900"
+                  mb={4}
+                >
+                  Clearing Agent
+                </Heading>
+                <VStack gap="2">
+                  {/* <CustomInput type="text" label="Name" w="full" mt={1} /> */}
+                  <CustomSelectWithAddButtom
+                    label="Name"
+                    name="clearing_agent"
+                    control={control}
+                    data={options?.data?.data?.agents?.map((item: any) => ({
+                      label: item.name,
+                      value: item.id,
+                    }))}
+                    model="agent"
+                    fields={[
+                      { name: "name", type: "text", required: true },
+                      { name: "code", type: "number", required: true },
+                    ]}
+                    addOptionFunc={handleOptions}
+                    defaultValue={orderData?.data?.data?.clearing_agent?.id}
+                    disabled
+                  />
+                </VStack>
+              </Box>
+
+              <Box>
+                {/* hide title */}
+                <Heading
+                  as="h3"
+                  size="sm"
+                  fontWeight="medium"
+                  color="gray.900"
+                  mb={4}
+                  visibility="hidden"
+                >
+                  Clearing Agent code
+                </Heading>
+                {/* hide title */}
+
+                <CustomInput
+                  type="text"
+                  label="Code"
+                  w="full"
+                  mt={1}
+                  disabled
+                  defaultValue={orderData?.data?.data?.clearing_agent?.code}
+                  {...register("clearing_agent_code")}
+                />
+              </Box>
+              {/* Clearing Agent */}
             </SimpleGrid>
           </PageCard>
           {/* Agents */}
@@ -692,7 +898,7 @@ const OrderView = () => {
         {/* right side */}
       </HStack>
 
-      {options.isPending || orderData.isPending ? <Loading /> : ""}
+      {options.isPending ? <Loading /> : ""}
     </Box>
   );
 };

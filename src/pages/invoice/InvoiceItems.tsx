@@ -49,7 +49,13 @@ const schema = yup
   })
   .required();
 
-const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
+const InvoiceItems = ({
+  invoiceId,
+  canEdit,
+}: {
+  invoiceId: string;
+  canEdit: boolean;
+}) => {
   const [itemDetails, setItemDetails] = useState<any>();
   const [isOpenAdd, setIsOpenAdd] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -122,6 +128,7 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
               setItemDetails(info.row.original);
               setIsOpenEdit(true);
             }}
+            disabled={!canEdit}
           >
             <HugeiconsIcon icon={Pen01Icon} size="20px" />
           </IconButton>
@@ -133,6 +140,7 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
               setItemDetails(info.row.original);
               setIsOpenDelete(true);
             }}
+            disabled={!canEdit}
           >
             <HugeiconsIcon icon={Delete02Icon} size="20px" />
           </IconButton>
@@ -247,6 +255,7 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
           colorScheme="teal"
           variant="solid"
           onClick={() => setIsOpenAdd(true)}
+          disabled={!canEdit}
         >
           <HugeiconsIcon icon={Add01Icon} size="16px" />
           Add Item

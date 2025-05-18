@@ -160,9 +160,7 @@ const CreateOrder = () => {
     setValue("clearing_agent", [orderData?.data?.data?.clearing_agent?.id]);
     setValue("agent", [orderData?.data?.data?.agent?.id]);
     setValue("network", [orderData?.data?.data?.network?.id]);
-    setValue("final_destination", [
-      orderData?.data?.data?.final_destination?.id,
-    ]);
+    setValue("final_destination", [orderData?.data?.data?.final_destination]);
     // logistics
     setValue("service", [orderData?.data?.data?.service?.id]);
     setValue("bl_number", orderData?.data?.data?.bl_number);
@@ -286,6 +284,10 @@ const CreateOrder = () => {
 
     return null;
   }
+
+  useEffect(() => {
+    orderData.refetch();
+  }, []);
 
   if (orderData.isPending) {
     return (
@@ -646,7 +648,7 @@ const CreateOrder = () => {
                   model="final_destination"
                   fields={[{ name: "name", type: "text", required: true }]}
                   addOptionFunc={handleOptions}
-                  // defaultValue={orderData?.data?.data?.agent?.id}
+                  defaultValue={orderData?.data?.data?.final_destination}
                   // errorMeassage={
                   //   errors?.seal_number?.message
                   //     ? String(errors?.seal_number?.message)

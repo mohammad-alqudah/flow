@@ -9,6 +9,7 @@ import {
   useCustomUpdate,
 } from "@/hooks/useMutation";
 import { useCustomQuery } from "@/hooks/useQuery";
+import { formatDate } from "@/services/date";
 import getTodayDate from "@/utils/getTodayDate";
 import handleOption from "@/utils/handleOptions";
 import handleErrorAlerts from "@/utils/showErrorMessages";
@@ -144,6 +145,7 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const cleardData = {
       ...data,
+      date: formatDate(data.date),
       supplier: data?.supplier[0],
       invoice: invoiceId,
     };
@@ -163,6 +165,7 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
   const onSubmitEdit: SubmitHandler<Inputs> = (data) => {
     const cleardData = {
       ...data,
+      date: formatDate(data.date),
       supplier: data?.supplier[0],
       invoice: invoiceId,
     };

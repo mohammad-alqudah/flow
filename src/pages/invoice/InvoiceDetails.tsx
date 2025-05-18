@@ -12,7 +12,13 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { ArrowLeft01Icon } from "@hugeicons/core-free-icons";
+import {
+  ArrowLeft01Icon,
+  CancelIcon,
+  OfficeChairFreeIcons,
+  ReturnRequestIcon,
+  SendToMobileIcon,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useParams } from "react-router";
 import InvoiceItems from "./InvoiceItems";
@@ -20,6 +26,9 @@ import AdditionalCosts from "./AdditionalCosts";
 import { useMutation } from "@tanstack/react-query";
 import axiosInstance from "@/api/config";
 import ModeIcon from "@/utils/Mode";
+import { useCustomPost } from "@/hooks/useMutation";
+import handleErrorAlerts from "@/utils/showErrorMessages";
+import toast from "react-hot-toast";
 
 const downloadPreAdvicePDF = async (id?: string) => {
   const response = await axiosInstance.get(`invoice/pdf/${id}/`, {
@@ -50,8 +59,24 @@ const InvoiceDetails = () => {
   });
 
   const invoiceData = useCustomQuery(`/invoice/invoices/${id}`, [
+    "invoice",
     `invoice-${id}`,
   ]);
+
+  const sendToFotara = useCustomPost(`/invoice/invoice/${id}/send_to_fotara/`, [
+    `invoice`,
+  ]);
+
+  const handleSendToFotara = (data: any) => {
+    sendToFotara
+      .mutateAsync({ jofotra_status: data })
+      .then((res) => {
+        res.error ? handleErrorAlerts(res.error) : toast.success(res.data);
+      })
+      .catch((error) => {
+        handleErrorAlerts(error?.response?.data?.error);
+      });
+  };
 
   if (invoiceData.isPending) {
     return <div>Loading...</div>;
@@ -87,39 +112,109 @@ const InvoiceDetails = () => {
           </VStack>
         </HStack>
 
-        <Button
-          colorScheme="teal"
-          variant="solid"
-          justifyContent="center"
-          display="flex"
-          alignItems="center"
-          gap={2}
-          onClick={() => mutate()}
-          loading={isPending}
-          disabled={isError}
-        >
-          <Icon
-            as={() => (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" x2="12" y1="15" y2="3"></line>
-              </svg>
-            )}
-            boxSize={5}
-          />
-          Download invoice
-        </Button>
+        <HStack>
+          {/* <Button
+            colorScheme="teal"
+            variant="ghost"
+            justifyContent="center"
+            display="flex"
+            alignItems="center"
+            gap={2}
+            onClick={() => mutate()}
+            loading={isPending}
+            disabled={isError}
+          >
+            <Icon
+              as={() => (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" x2="12" y1="15" y2="3"></line>
+                </svg>
+              )}
+              boxSize={5}
+            />
+            Download invoice
+          </Button> */}
+          {/*
+            not_sent             -- Send to Jo fotara -- active 
+            pending_to_sent      -- cancel send       -- active
+            sent                 -- return            --active  
+            pending_to_returned  -- cancel return     --active  
+            returned             -- returned          - disactive 
+           */}
+          {/* {invoiceData?.data?.data?.status === "not_sent" && (
+            <Button>asd</Button>
+          )} */}{" "}
+          {/* 
+            ======
+              send_to_fotara - 
+              cancel_send
+              return
+              cancel_return
+              returned
+            ===== */}
+          {invoiceData?.data?.data?.jofotra_status === "not_sent" ? (
+            <Button
+              variant="solid"
+              onClick={() => {
+                handleSendToFotara("send_to_fotara");
+              }}
+            >
+              <HugeiconsIcon icon={SendToMobileIcon} size="24px" />
+              Send to Jo fotara
+            </Button>
+          ) : invoiceData?.data?.data?.jofotra_status === "pending_to_sent" ? (
+            <Button
+              variant="subtle"
+              colorPalette="red"
+              onClick={() => {
+                handleSendToFotara("cancel_send");
+              }}
+            >
+              <HugeiconsIcon icon={CancelIcon} size="24px" />
+              Cancel send
+            </Button>
+          ) : invoiceData?.data?.data?.jofotra_status === "sent" ? (
+            <Button
+              variant="solid"
+              colorPalette="orange"
+              onClick={() => {
+                handleSendToFotara("return");
+              }}
+            >
+              <HugeiconsIcon icon={ReturnRequestIcon} size="24px" />
+              Return
+            </Button>
+          ) : invoiceData?.data?.data?.jofotra_status ===
+            "pending_to_returned" ? (
+            <Button
+              variant="subtle"
+              colorPalette="red"
+              onClick={() => {
+                handleSendToFotara("cancel_return");
+              }}
+            >
+              <HugeiconsIcon icon={CancelIcon} size="24px" />
+              Cancel return
+            </Button>
+          ) : (
+            <Button variant="plain" disabled>
+              <HugeiconsIcon icon={OfficeChairFreeIcons} size="24px" />
+              Returned
+            </Button>
+          )}
+        </HStack>
       </HStack>
       {/* page header */}
 
@@ -248,7 +343,14 @@ const InvoiceDetails = () => {
         {/* Card 2: Invoice Items */}
         <Card.Root p={6}>
           <Card.Body>
-            <InvoiceItems invoiceId={String(id)} />
+            <InvoiceItems
+              invoiceId={String(id)}
+              canEdit={
+                invoiceData?.data?.data?.jofotra_status === "not_sent"
+                  ? true
+                  : false
+              }
+            />
           </Card.Body>
         </Card.Root>
 
