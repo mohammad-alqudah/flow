@@ -1,4 +1,5 @@
-const formatFieldName = (field: string): string => {
+const formatFieldName = (field: string | undefined): string => {
+  if (!field) return "";
   return field
     .split("_")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))

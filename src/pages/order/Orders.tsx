@@ -7,6 +7,7 @@ import SkeletonLoader from "@/components/core/SkeletonTable";
 import { FilterBar } from "@/components/orders/FilterBar";
 import { useCustomPost } from "@/hooks/useMutation";
 import { useCustomQuery } from "@/hooks/useQuery";
+import formatFieldName from "@/utils/formatFieldName";
 import getTodayDate from "@/utils/getTodayDate";
 import {
   Box,
@@ -685,7 +686,7 @@ const Orders = () => {
             control={control}
             name="freight_type"
             label="Freight Type"
-            errorMeassage={errors?.freight_type?.message}
+            errorMeassage={formatFieldName(errors?.freight_type?.message)}
           />
           {/* <CustomInput
             type="date"

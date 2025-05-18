@@ -1,4 +1,3 @@
-// import React from "react";
 import { Add01Icon } from "@hugeicons/core-free-icons";
 import PageCard from "../core/PageCard";
 import InvoicesCard from "../incoices/InvoicesCard";
@@ -11,17 +10,17 @@ import { Box, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-// import { useCustomQuery } from "@/hooks/useQuery";
 import * as yup from "yup";
 import { useNavigate } from "react-router";
 import DatePicker from "react-date-picker";
+import { formatDate } from "@/services/date";
 type Inputs = {
-  date_issued: string;
+  date_issued: Date;
 };
 
 const schema = yup
   .object({
-    date_issued: yup.string().required(),
+    date_issued: yup.date().required(),
   })
   .required();
 const Invoices = ({ id }: { id: string }) => {
@@ -39,7 +38,7 @@ const Invoices = ({ id }: { id: string }) => {
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     addInvoice
       .mutateAsync({
-        ...data,
+        date_issued: formatDate(data?.date_issued || ""),
         file: id,
       })
       .then((res) => {
@@ -79,11 +78,11 @@ const Invoices = ({ id }: { id: string }) => {
         ))}
       </PageCard>
 
-      {/* add bill modal */}
+      {/* add invoice modal */}
       <CustomModal
         open={open}
         setOpen={setOpen}
-        title="Create bill"
+        title="Create Invoice"
         loading={addInvoice.isPending}
         formNameId="add_invoice"
         actionButtonTitle="add invoice"
@@ -112,6 +111,7 @@ const Invoices = ({ id }: { id: string }) => {
           <Controller
             control={control}
             name="date_issued"
+            defaultValue={new Date()}
             render={({ field }) => (
               <Box
                 asChild
@@ -139,7 +139,7 @@ const Invoices = ({ id }: { id: string }) => {
           {/* date */}
         </VStack>
       </CustomModal>
-      {/* add bill modal */}
+      {/* add invoice modal */}
     </>
   );
 };

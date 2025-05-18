@@ -1,3 +1,4 @@
+import formatFieldName from "@/utils/formatFieldName";
 import { Box, Field, FileUpload, Icon, Input } from "@chakra-ui/react";
 import { LuUpload } from "react-icons/lu";
 
@@ -61,7 +62,7 @@ const CustomInput = ({
         pattern={pattern}
       />
       {errorMeassage && typeof errorMeassage === "string" && (
-        <Field.ErrorText>{errorMeassage}</Field.ErrorText>
+        <Field.ErrorText>{formatFieldName(errorMeassage)}</Field.ErrorText>
       )}
     </Field.Root>
   );

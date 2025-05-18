@@ -30,7 +30,7 @@ const downloadPreAdvicePDF = async (id?: string) => {
 
 const InvoiceDetails = () => {
   const { id } = useParams();
-
+  console.log("id", id);
   const { mutate, isPending, isError } = useMutation({
     mutationFn: () => downloadPreAdvicePDF(id),
     onSuccess: (data) => {

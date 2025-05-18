@@ -12,12 +12,13 @@ import { useEffect } from "react";
 
 const schema = yup
   .object({
-    container_type: yup.array().required(),
+    container_type: yup.string().required(),
     gross_weight: yup.string().required(),
     volume: yup.string().required(),
     number_of_packages: yup.string().required(),
-    package_types: yup.array().required(),
+    package_types: yup.string().required(),
     seal_number: yup.string().required(),
+    number: yup.string().required(),
   })
   .required();
 
@@ -69,6 +70,7 @@ const ContainerEditModel = ({
         number_of_packages: data?.number_of_packages,
         package_type: data?.package_types[0],
         seal_number: data?.seal_number,
+        number: data?.number,
       })
       .then((res) => {
         res.error
@@ -85,12 +87,13 @@ const ContainerEditModel = ({
 
   useEffect(() => {
     if (defaultValue) {
-      setValue("container_type", [defaultValue?.container_type?.id]);
+      setValue("container_type", defaultValue?.container_type?.id);
       setValue("gross_weight", defaultValue?.gross_weight);
       setValue("volume", defaultValue?.volume);
       setValue("number_of_packages", defaultValue?.number_of_packages);
-      setValue("package_types", [defaultValue?.package_type?.id]);
+      setValue("package_types", defaultValue?.package_type?.id);
       setValue("seal_number", defaultValue?.seal_number);
+      setValue("number", defaultValue?.number);
     }
   }, [defaultValue, setValue]);
 
@@ -109,9 +112,17 @@ const ContainerEditModel = ({
         addOptionFunc={handleOptions}
         defaultValue={defaultValue?.id}
         errorMeassage={
-          errors?.seal_number?.message
-            ? String(errors?.seal_number?.message)
+          errors?.container_type?.message
+            ? String(errors?.container_type?.message)
             : ""
+        }
+      />
+      <CustomInput
+        type="number"
+        label="Number"
+        {...register("number")}
+        errorMeassage={
+          errors?.number?.message ? String(errors?.number?.message) : ""
         }
       />
 
@@ -125,7 +136,6 @@ const ContainerEditModel = ({
             : ""
         }
       />
-
       <CustomInput
         type="number"
         label="Volume"
@@ -134,7 +144,6 @@ const ContainerEditModel = ({
           errors?.volume?.message ? String(errors?.volume?.message) : ""
         }
       />
-
       <CustomInput
         type="number"
         label="numbe of packages"
@@ -145,7 +154,6 @@ const ContainerEditModel = ({
             : ""
         }
       />
-
       <CustomSelectWithAddButtom
         label="Package type"
         name="package_types"
@@ -158,13 +166,12 @@ const ContainerEditModel = ({
         fields={[{ name: "name", type: "text", required: true }]}
         addOptionFunc={handleOptions}
         errorMeassage={
-          errors?.seal_number?.message
-            ? String(errors?.seal_number?.message)
+          errors?.package_types?.message
+            ? String(errors?.package_types?.message)
             : ""
         }
         // defaultValue={orderData?.data?.data?.agent?.id}
       />
-
       <CustomInput
         type="text"
         label="Seal number"

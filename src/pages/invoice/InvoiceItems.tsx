@@ -33,7 +33,7 @@ type Inputs = {
   charges: string;
   quntity: string;
   unit: string;
-  currancy: string[];
+  currancy: string;
   rate: string;
   ex_rate: string;
 };
@@ -43,7 +43,7 @@ const schema = yup
     charges: yup.string().required(),
     quntity: yup.string().required(),
     unit: yup.string().required(),
-    currancy: yup.array().required(),
+    currancy: yup.string().required(),
     rate: yup.string().required(),
     ex_rate: yup.string().required(),
   })
@@ -56,6 +56,7 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
   const [isOpenDelete, setIsOpenDelete] = useState(false);
   const itemsData = useCustomQuery(`/invoice/items/?invoice_id=${invoiceId}`, [
     "invoice-items",
+    `invoice-items-${invoiceId}`,
   ]);
   const columnHelper = createColumnHelper<any>();
 
@@ -214,7 +215,7 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
         charges: itemDetails.charges || "",
         quntity: itemDetails.quntity || "",
         unit: itemDetails.unit || "",
-        currancy: itemDetails.currancy.id ? [itemDetails.currancy.id] : [],
+        currancy: itemDetails.currancy.id || "",
         rate: itemDetails.rate || "",
         ex_rate: itemDetails.ex_rate || "",
       });
@@ -309,7 +310,7 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
 
           {/* rate */}
           <CustomInput
-            type="number"
+            type="text"
             label="rate"
             {...register("rate")}
             errorMeassage={
@@ -343,7 +344,7 @@ const InvoiceItems = ({ invoiceId }: { invoiceId: string }) => {
 
           {/* ex_rate */}
           <CustomInput
-            type="number"
+            type="text"
             label="ex_rate"
             {...register("ex_rate")}
             errorMeassage={

@@ -87,7 +87,7 @@ const LogisticsDetails = ({
               fields={[{ name: "name", type: "text", required: true }]}
               addOptionFunc={handleOptions}
               // defaultValue={defaultValue?.third_party_logistics_name}
-              multiple
+              // multiple
               disabled={disabled}
             />
             {/* <CustomInput

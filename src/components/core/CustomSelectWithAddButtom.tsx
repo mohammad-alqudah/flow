@@ -109,7 +109,7 @@ const CustomSelectWithAddButton = ({
                   <IconButton
                     position="absolute"
                     right="0.5rem"
-                    top="70%"
+                    top="45px"
                     transform="translateY(-50%)"
                     variant="surface"
                     colorScheme="teal"
@@ -124,7 +124,9 @@ const CustomSelectWithAddButton = ({
                     <HugeiconsIcon icon={AddIcon} />
                   </IconButton>
                 )}
-                {errorMeassage && <Text color="fg.error">{errorMeassage}</Text>}
+                {errorMeassage && (
+                  <Text color="fg.error">{formatFieldName(errorMeassage)}</Text>
+                )}
               </Field.Root>
             );
           }}

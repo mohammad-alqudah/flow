@@ -382,6 +382,7 @@ const CreateOrder = () => {
                   type="text"
                   label="Reference Number"
                   {...register("reference_number")}
+                  defaultValue={orderData?.data?.data?.reference_number}
                 />
               </SimpleGrid>
             </Box>

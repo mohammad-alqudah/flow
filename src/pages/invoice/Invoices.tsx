@@ -99,8 +99,8 @@ const Invoices = () => {
   const params = new URLSearchParams({
     ...(currentPage > 1 && { page: currentPage.toString() }),
     ...(search && { search }),
-    ...(dateFrom && { date_issued_after: dateFrom.toString() }),
-    ...(dateTo && { date_issued_before: dateTo.toString() }),
+    ...(dateFrom && { date_issued_after: formatDate(dateFrom.toString()) }),
+    ...(dateTo && { date_issued_before: formatDate(dateTo.toString()) }),
   });
 
   const { data, isPending } = useCustomQuery(

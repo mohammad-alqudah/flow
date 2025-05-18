@@ -1,5 +1,6 @@
 "use client";
 
+import formatFieldName from "@/utils/formatFieldName";
 import { createListCollection, Portal, Select, Text } from "@chakra-ui/react";
 
 import { useMemo } from "react";
@@ -53,7 +54,7 @@ const CustomSelect = ({
               fontWeight="normal"
               textTransform="capitalize"
             >
-              {label}
+              {formatFieldName(label)}
             </Select.Label>
 
             <Select.Control>

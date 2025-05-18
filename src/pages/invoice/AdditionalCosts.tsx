@@ -36,7 +36,7 @@ type Inputs = {
   charges: string;
   value: string;
   date: string;
-  supplier: string[];
+  supplier: string;
 };
 
 const schema = yup
@@ -44,7 +44,7 @@ const schema = yup
     charges: yup.string().required(),
     value: yup.string().required(),
     date: yup.string().required(),
-    supplier: yup.array().required(),
+    supplier: yup.string().required(),
   })
   .required();
 
@@ -55,6 +55,7 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
   const [isOpenDelete, setIsOpenDelete] = useState(false);
   const itemsData = useCustomQuery(`invoice/costs/?invoice_id=${invoiceId}`, [
     "invoice-costs",
+    `invoice-costs-${invoiceId}`,
   ]);
   const columnHelper = createColumnHelper<any>();
 
@@ -200,7 +201,7 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
         charges: itemDetails.charges || "",
         value: itemDetails.value || "",
         date: itemDetails.date || "",
-        supplier: itemDetails.supplier.id ? [itemDetails.supplier.id] : [],
+        supplier: itemDetails.supplier.id || "",
       });
     }
   }, [isOpenEdit, itemDetails, reset]);
