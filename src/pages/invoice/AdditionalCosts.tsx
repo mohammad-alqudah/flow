@@ -10,7 +10,6 @@ import {
 } from "@/hooks/useMutation";
 import { useCustomQuery } from "@/hooks/useQuery";
 import getTodayDate from "@/utils/getTodayDate";
-// import getTodayDate from "@/utils/getTodayDate";
 import handleOption from "@/utils/handleOptions";
 import handleErrorAlerts from "@/utils/showErrorMessages";
 import {
@@ -86,10 +85,10 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
       header: () => "date",
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor("invoice", {
-      header: () => "invoice",
-      cell: (info) => info.getValue(),
-    }),
+    // columnHelper.accessor("invoice", {
+    //   header: () => "invoice",
+    //   cell: (info) => info.getValue(),
+    // }),
     columnHelper.accessor("supplier", {
       header: () => "supplier",
       cell: (info) => info.getValue().name,

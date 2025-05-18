@@ -18,7 +18,7 @@ import {
   Flex,
   Heading,
   HStack,
-  Icon,
+  // Icon,
   SimpleGrid,
   Text,
   Textarea,
@@ -45,6 +45,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router";
 import { debounce } from "lodash";
 import Loading from "@/components/core/Loading";
 import handleOption from "@/utils/handleOptions";
+import Documents from "@/components/orders/Documents";
 const CreateOrder = () => {
   const [loading, setIsLoading] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -874,47 +875,7 @@ const CreateOrder = () => {
         <VStack w="1/3" gap="6">
           <Invoices id={id} />
 
-          <PageCard title="Documents">
-            {["index", "cover letter", "Pre-advice", "arrival notes"].map(
-              (item) => (
-                <Button
-                  key={item}
-                  w="full"
-                  justifyContent="center"
-                  bg="white"
-                  border="1px solid"
-                  borderColor="gray.200"
-                  color="gray.700"
-                  _hover={{ bg: "gray.50" }}
-                  display="flex"
-                  alignItems="center"
-                  gap={2}
-                >
-                  <Icon
-                    as={() => (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="7 10 12 15 17 10"></polyline>
-                        <line x1="12" x2="12" y1="15" y2="3"></line>
-                      </svg>
-                    )}
-                    boxSize={5}
-                  />
-                  Download {item}
-                </Button>
-              )
-            )}
-          </PageCard>
+          <Documents id={id} />
         </VStack>
         {/* right side */}
       </HStack>

@@ -21,8 +21,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .react-select {
   width: 100% !important;
+  background: transparent !important;
 }
 
 .react-select__indicators {
-  margin-right: 30px !important;
+  margin-right: 31px !important;
+}
+
+.react-select--is-disabled .react-select__control {
+  background: transparent !important;
+}
+.react-select--is-disabled .react-select__indicators {
+  margin-right: auto !important;
 }
