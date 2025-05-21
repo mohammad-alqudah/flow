@@ -171,7 +171,7 @@ const Invoices = () => {
                 <DatePicker
                   onChange={setDateFrom}
                   value={dateFrom}
-                  format="MM/dd/yyyy"
+                  format="dd/MM/yyyy"
                   dayPlaceholder="d"
                   monthPlaceholder="m"
                   yearPlaceholder="y"
@@ -206,7 +206,7 @@ const Invoices = () => {
                 <DatePicker
                   onChange={setDateTo}
                   value={dateTo}
-                  format="MM/dd/yyyy"
+                  format="dd/MM/yyyy"
                   dayPlaceholder="d"
                   monthPlaceholder="m"
                   yearPlaceholder="y"

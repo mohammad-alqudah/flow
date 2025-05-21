@@ -723,7 +723,7 @@ const Orders = () => {
                   <DatePicker
                     onChange={(value) => field.onChange(value)}
                     value={field.value ? field.value : new Date()}
-                    format="MM/dd/yyyy"
+                    format="dd/MM/yyyy"
                     dayPlaceholder="d"
                     monthPlaceholder="m"
                     yearPlaceholder="y"

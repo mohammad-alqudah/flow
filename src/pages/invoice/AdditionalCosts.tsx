@@ -156,6 +156,8 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
         res.error
           ? handleErrorAlerts(res.error)
           : toast.success("invoice created successflly") && setIsOpenAdd(false);
+
+        reset();
       })
       .catch((error) => {
         handleErrorAlerts(error?.response?.data?.error);
@@ -293,7 +295,7 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
                   <DatePicker
                     onChange={(value) => field.onChange(value)}
                     value={field.value}
-                    format="MM/dd/yyyy"
+                    format="dd/MM/yyyy"
                     dayPlaceholder="d"
                     monthPlaceholder="m"
                     yearPlaceholder="y"
@@ -395,7 +397,7 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
                   <DatePicker
                     onChange={(value) => field.onChange(value)}
                     value={field.value}
-                    format="MM/dd/yyyy"
+                    format="dd/MM/yyyy"
                     dayPlaceholder="d"
                     monthPlaceholder="m"
                     yearPlaceholder="y"

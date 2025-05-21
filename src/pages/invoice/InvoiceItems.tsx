@@ -173,6 +173,8 @@ const InvoiceItems = ({
         res.error
           ? handleErrorAlerts(res.error)
           : toast.success("invoice created successflly") && setIsOpenAdd(false);
+
+        reset();
       })
       .catch((error) => {
         handleErrorAlerts(error?.response?.data?.error);
@@ -230,7 +232,7 @@ const InvoiceItems = ({
     }
   }, [isOpenEdit, itemDetails, reset]);
 
-  const selectedCurrency = watch("currancy")?.[0];
+  const selectedCurrency = watch("currancy");
 
   useEffect(() => {
     if (selectedCurrency) {
