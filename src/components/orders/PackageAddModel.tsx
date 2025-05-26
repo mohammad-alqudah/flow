@@ -11,13 +11,13 @@ import CustomSelectWithAddButtom from "../core/CustomSelectWithAddButtom";
 
 const schema = yup
   .object({
-    number_of_packages: yup.string().required(),
-    package_type: yup.string().required(),
-    gross_weight: yup.string().required(),
-    net_weight: yup.string().required(),
-    fimensions_length: yup.string().required(),
-    fimensions_width: yup.string().required(),
-    fimensions_height: yup.string().required(),
+    number_of_packages: yup.string(),
+    package_type: yup.string(),
+    gross_weight: yup.string(),
+    net_weight: yup.string(),
+    fimensions_length: yup.string(),
+    fimensions_width: yup.string(),
+    fimensions_height: yup.string(),
   })
   .required();
 
@@ -56,11 +56,17 @@ const PackageAddModel = ({
   const onSubmit: SubmitHandler<any> = (data) => {
     console.log(data, "data");
     setLoadingStatus(true);
+    const payload = {
+      file: orderId,
+      ...data,
+    };
+
+    if (payload.number_of_packages === "") {
+      delete payload.number_of_packages;
+    }
+
     addPackage
-      .mutateAsync({
-        file: orderId,
-        ...data,
-      })
+      .mutateAsync(payload)
       .then((res) => {
         res.error
           ? handleErrorAlerts(res.error)

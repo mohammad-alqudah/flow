@@ -12,12 +12,12 @@ import { useEffect } from "react";
 
 const schema = yup
   .object({
-    container_type: yup.string().required(),
-    gross_weight: yup.string().required(),
-    volume: yup.string().required(),
-    number_of_packages: yup.string().required(),
-    package_types: yup.string().required(),
-    seal_number: yup.string().required(),
+    container_type: yup.string(),
+    gross_weight: yup.string().nullable(),
+    volume: yup.string().nullable(),
+    number_of_packages: yup.string().nullable(),
+    package_types: yup.string(),
+    seal_number: yup.string(),
     number: yup.string().required(),
   })
   .required();
@@ -64,13 +64,15 @@ const ContainerEditModel = ({
     setLoadingStatus(true);
     updateContainer
       .mutateAsync({
-        container_type: data?.container_type[0],
+        container_type: data?.container_type?.[0],
         gross_weight: data?.gross_weight,
         volume: data?.volume,
-        number_of_packages: data?.number_of_packages,
-        package_type: data?.package_types[0],
+        package_type: data?.package_types?.[0],
         seal_number: data?.seal_number,
         number: data?.number,
+        ...(data?.number_of_packages && {
+          number_of_packages: data?.number_of_packages,
+        }),
       })
       .then((res) => {
         res.error
@@ -118,7 +120,7 @@ const ContainerEditModel = ({
         }
       />
       <CustomInput
-        type="number"
+        type="text"
         label="Number"
         {...register("number")}
         errorMeassage={
@@ -127,7 +129,7 @@ const ContainerEditModel = ({
       />
 
       <CustomInput
-        type="number"
+        type="text"
         label="Gross weight"
         {...register("gross_weight")}
         errorMeassage={
@@ -135,6 +137,7 @@ const ContainerEditModel = ({
             ? String(errors?.gross_weight?.message)
             : ""
         }
+        pattern="[0-9]+(\.[0-9]{0,2})?"
       />
       <CustomInput
         type="number"

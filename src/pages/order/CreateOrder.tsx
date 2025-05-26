@@ -381,12 +381,12 @@ const CreateOrder = () => {
                   {...register("declaration_number")}
                   defaultValue={orderData?.data?.data?.declaration_number}
                 />
-                <CustomInput
+                {/* <CustomInput
                   type="text"
                   label="Reference Number"
                   {...register("reference_number")}
                   defaultValue={orderData?.data?.data?.reference_number}
-                />
+                /> */}
               </SimpleGrid>
             </Box>
           </PageCard>

@@ -12,13 +12,13 @@ import { useEffect } from "react";
 
 const schema = yup
   .object({
-    number_of_packages: yup.string().required(),
-    package_type: yup.string().required(),
-    gross_weight: yup.string().required(),
-    net_weight: yup.string().required(),
-    fimensions_length: yup.string().required(),
-    fimensions_width: yup.string().required(),
-    fimensions_height: yup.string().required(),
+    number_of_packages: yup.string().nullable(),
+    package_type: yup.string().nullable(),
+    gross_weight: yup.string().nullable(),
+    net_weight: yup.string().nullable(),
+    fimensions_length: yup.string().nullable(),
+    fimensions_width: yup.string().nullable(),
+    fimensions_height: yup.string().nullable(),
   })
   .required();
 
@@ -61,8 +61,17 @@ const PackageEditModel = ({
 
   const onSubmit: SubmitHandler<any> = (data) => {
     setLoadingStatus(true);
+
+    const payload = {
+      ...data,
+    };
+
+    if (payload.number_of_packages === "") {
+      delete payload.number_of_packages;
+    }
+
     updateContainer
-      .mutateAsync(data)
+      .mutateAsync(payload)
       .then((res) => {
         res.error
           ? handleErrorAlerts(res.error)
