@@ -34,3 +34,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .react-select--is-disabled .react-select__indicators {
   margin-right: auto !important;
 }
+
+.react-date-picker--disabled {
+  background: #fff !important;
+  cursor: not-allowed !important;
+}
+
+.react-date-picker--disabled .react-date-picker__button {
+  display: none !important;
+}

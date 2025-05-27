@@ -42,13 +42,14 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { debounce } from "lodash";
 import Loading from "@/components/core/Loading";
 import handleOption from "@/utils/handleOptions";
 import Documents from "@/components/orders/Documents";
+import DatePicker from "react-date-picker";
 const OrderView = () => {
   const [_, setIsLoading] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -680,7 +681,7 @@ const OrderView = () => {
             <SimpleGrid columns={2} gap={6}>
               {/* ETD */}
               <Box>
-                <CustomInput
+                {/* <CustomInput
                   type="date"
                   label="ETD"
                   w="full"
@@ -688,12 +689,52 @@ const OrderView = () => {
                   {...register("etd")}
                   defaultValue={orderData?.data?.data?.etd}
                   disabled
-                />
+                /> */}
+
+                <Field.Root>
+                  <Field.Label
+                    color="#6b7280"
+                    fontWeight="normal"
+                    textTransform="capitalize"
+                  >
+                    ETD <Field.RequiredIndicator />
+                  </Field.Label>
+
+                  <Controller
+                    control={control}
+                    name="etd"
+                    defaultValue={new Date()}
+                    render={({ field }) => (
+                      <Box
+                        asChild
+                        w="full"
+                        border="1px solid #e4e4e7 !important"
+                        outline="none"
+                        rounded="0.25rem !important"
+                        py="1.5"
+                        px="2"
+                      >
+                        <DatePicker
+                          onChange={(value) => field.onChange(value)}
+                          value={field.value ? field.value : new Date()}
+                          format="dd/MM/yyyy"
+                          dayPlaceholder="d"
+                          monthPlaceholder="m"
+                          yearPlaceholder="y"
+                          autoFocus={false}
+                          openCalendarOnFocus={false}
+                          disabled
+                          className="date-picker-flow"
+                        />
+                      </Box>
+                    )}
+                  />
+                </Field.Root>
               </Box>
               {/* ETD */}
               {/* ETA */}
               <Box>
-                <CustomInput
+                {/* <CustomInput
                   type="date"
                   label="ETA"
                   w="full"
@@ -701,7 +742,47 @@ const OrderView = () => {
                   {...register("eta")}
                   defaultValue={orderData?.data?.data?.eta}
                   disabled
-                />
+                /> */}
+
+                <Field.Root>
+                  <Field.Label
+                    color="#6b7280"
+                    fontWeight="normal"
+                    textTransform="capitalize"
+                  >
+                    ETA <Field.RequiredIndicator />
+                  </Field.Label>
+
+                  <Controller
+                    control={control}
+                    name="eta"
+                    defaultValue={new Date()}
+                    render={({ field }) => (
+                      <Box
+                        asChild
+                        w="full"
+                        border="1px solid #e4e4e7 !important"
+                        outline="none"
+                        rounded="0.25rem !important"
+                        py="1.5"
+                        px="2"
+                      >
+                        <DatePicker
+                          onChange={(value) => field.onChange(value)}
+                          value={field.value ? field.value : new Date()}
+                          format="dd/MM/yyyy"
+                          dayPlaceholder="d"
+                          monthPlaceholder="m"
+                          yearPlaceholder="y"
+                          autoFocus={false}
+                          openCalendarOnFocus={false}
+                          disabled
+                          className="date-picker-flow"
+                        />
+                      </Box>
+                    )}
+                  />
+                </Field.Root>
               </Box>
               {/* ETA */}
             </SimpleGrid>
