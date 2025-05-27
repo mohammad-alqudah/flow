@@ -685,47 +685,95 @@ const CreateOrder = () => {
                   defaultValue={orderData?.data?.data?.etd}
                 /> */}
 
-                <Controller
-                  control={control}
-                  name="etd"
-                  defaultValue={new Date()}
-                  render={({ field }) => (
-                    <Box
-                      asChild
-                      w="full"
-                      border="1px solid #e4e4e7 !important"
-                      outline="none"
-                      rounded="0.25rem !important"
-                      py="1.5"
-                      px="2"
-                    >
-                      <DatePicker
-                        onChange={(value) =>
-                          field.onChange(formatTimestampToArabicDate(value))
-                        }
-                        value={field.value ? field.value : new Date()}
-                        format="dd/MM/yyyy"
-                        dayPlaceholder="d"
-                        monthPlaceholder="m"
-                        yearPlaceholder="y"
-                        autoFocus={false}
-                        openCalendarOnFocus={false}
-                      />
-                    </Box>
-                  )}
-                />
+                <Field.Root>
+                  <Field.Label
+                    color="#6b7280"
+                    fontWeight="normal"
+                    textTransform="capitalize"
+                  >
+                    ETD <Field.RequiredIndicator />
+                  </Field.Label>
+                  <Controller
+                    control={control}
+                    name="etd"
+                    defaultValue={orderData?.data?.data?.etd}
+                    render={({ field }) => (
+                      <Box
+                        asChild
+                        w="full"
+                        border="1px solid #e4e4e7 !important"
+                        outline="none"
+                        rounded="0.25rem !important"
+                        py="1.5"
+                        px="2"
+                      >
+                        <DatePicker
+                          onChange={(value) =>
+                            field.onChange(formatTimestampToArabicDate(value))
+                          }
+                          value={field.value}
+                          format="dd/MM/yyyy"
+                          dayPlaceholder="d"
+                          monthPlaceholder="m"
+                          yearPlaceholder="y"
+                          autoFocus={false}
+                          openCalendarOnFocus={false}
+                        />
+                      </Box>
+                    )}
+                  />
+                </Field.Root>
               </Box>
               {/* ETD */}
               {/* ETA */}
               <Box>
-                <CustomInput
+                <Field.Root>
+                  <Field.Label
+                    color="#6b7280"
+                    fontWeight="normal"
+                    textTransform="capitalize"
+                  >
+                    ETA <Field.RequiredIndicator />
+                  </Field.Label>
+
+                  <Controller
+                    control={control}
+                    name="eta"
+                    defaultValue={orderData?.data?.data?.eta}
+                    render={({ field }) => (
+                      <Box
+                        asChild
+                        w="full"
+                        border="1px solid #e4e4e7 !important"
+                        outline="none"
+                        rounded="0.25rem !important"
+                        py="1.5"
+                        px="2"
+                      >
+                        <DatePicker
+                          onChange={(value) =>
+                            field.onChange(formatTimestampToArabicDate(value))
+                          }
+                          value={field.value}
+                          format="dd/MM/yyyy"
+                          dayPlaceholder="d"
+                          monthPlaceholder="m"
+                          yearPlaceholder="y"
+                          autoFocus={false}
+                          openCalendarOnFocus={false}
+                        />
+                      </Box>
+                    )}
+                  />
+                </Field.Root>
+                {/* <CustomInput
                   type="date"
                   label="ETA"
                   w="full"
                   mt={1}
                   {...register("eta")}
                   defaultValue={orderData?.data?.data?.eta}
-                />
+                /> */}
               </Box>
               {/* ETA */}
             </SimpleGrid>

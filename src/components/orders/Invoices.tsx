@@ -6,7 +6,7 @@ import { useCustomQuery } from "@/hooks/useQuery";
 import handleErrorAlerts from "@/utils/showErrorMessages";
 import toast from "react-hot-toast";
 import CustomModal from "../core/CustomModal";
-import { Box, VStack } from "@chakra-ui/react";
+import { Box, Field, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -107,35 +107,43 @@ const Invoices = ({ id }: { id: string }) => {
             }
             defaultValue={getTodayDate()}
           /> */}
+          <Field.Root>
+            <Field.Label
+              color="#6b7280"
+              fontWeight="normal"
+              textTransform="capitalize"
+            >
+              Date <Field.RequiredIndicator />
+            </Field.Label>
 
-          <Controller
-            control={control}
-            name="date_issued"
-            defaultValue={new Date()}
-            render={({ field }) => (
-              <Box
-                asChild
-                w="full"
-                border="1px solid #e4e4e7 !important"
-                outline="none"
-                rounded="0.25rem !important"
-                py="1.5"
-                px="2"
-              >
-                <DatePicker
-                  onChange={(value) => field.onChange(value)}
-                  value={field.value ? field.value : new Date()}
-                  format="dd/MM/yyyy"
-                  dayPlaceholder="d"
-                  monthPlaceholder="m"
-                  yearPlaceholder="y"
-                  autoFocus={false}
-                  openCalendarOnFocus={false}
-                />
-              </Box>
-            )}
-          />
-
+            <Controller
+              control={control}
+              name="date_issued"
+              defaultValue={new Date()}
+              render={({ field }) => (
+                <Box
+                  asChild
+                  w="full"
+                  border="1px solid #e4e4e7 !important"
+                  outline="none"
+                  rounded="0.25rem !important"
+                  py="1.5"
+                  px="2"
+                >
+                  <DatePicker
+                    onChange={(value) => field.onChange(value)}
+                    value={field.value ? field.value : new Date()}
+                    format="dd/MM/yyyy"
+                    dayPlaceholder="d"
+                    monthPlaceholder="m"
+                    yearPlaceholder="y"
+                    autoFocus={false}
+                    openCalendarOnFocus={false}
+                  />
+                </Box>
+              )}
+            />
+          </Field.Root>
           {/* date */}
         </VStack>
       </CustomModal>
