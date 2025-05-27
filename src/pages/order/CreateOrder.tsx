@@ -18,7 +18,6 @@ import {
   Flex,
   Heading,
   HStack,
-  // Icon,
   SimpleGrid,
   Text,
   Textarea,
@@ -48,11 +47,14 @@ import handleOption from "@/utils/handleOptions";
 import Documents from "@/components/orders/Documents";
 import DatePicker from "react-date-picker";
 import formatTimestampToArabicDate from "@/utils/formatTimestampToArabicDate";
+import { useQueryClient } from "@tanstack/react-query";
+
 const CreateOrder = () => {
   const [loading, setIsLoading] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const [searchParams] = useSearchParams();
   const name = searchParams.get("name");
@@ -76,11 +78,13 @@ const CreateOrder = () => {
   const {
     control,
     register,
-    // handleSubmit,
     formState: { errors },
     setValue,
     watch,
-  } = useForm<any>({});
+    reset,
+  } = useForm<any>({
+    defaultValues: orderData?.data?.data || {},
+  });
 
   const saveOrder = useCustomUpdate(`file/files/${id}/`, ["orders"]);
   const addOptions = useCustomPost("client_settings/options/", ["options"]);
@@ -90,7 +94,8 @@ const CreateOrder = () => {
   const handleOptions = async (model: string, data: any) => {
     await handleOption(addOptions, model, data);
   };
-  const onSubmit: SubmitHandler<any> = (data) => {
+
+  const onSubmit: SubmitHandler<any> = async (data) => {
     const removeEmptyStrings = (
       obj: Record<string, any>
     ): Record<string, any> => {
@@ -117,21 +122,27 @@ const CreateOrder = () => {
     const cleanedData = removeEmptyStrings(data);
 
     setIsLoading(true);
-    saveOrder
-      .mutateAsync(cleanedData)
-      .then(async (res) => {
-        if (res.status) {
-          toast.success(`order updated successfully`);
-        } else {
-          toast.error(res.detail);
-        }
-      })
-      .catch((err) => {
-        handleErrorAlerts(err.response.data.error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    try {
+      const res = await saveOrder.mutateAsync(cleanedData);
+      if (res.status) {
+        toast.success(`order updated successfully`);
+        queryClient.setQueryData(["orders"], (oldData: any) => {
+          if (!oldData) return { data: [res.data] };
+          return {
+            ...oldData,
+            data: oldData.data.map((item: any) =>
+              item.id === id ? res.data : item
+            ),
+          };
+        });
+      } else {
+        toast.error(res.detail);
+      }
+    } catch (err) {
+      handleErrorAlerts((err as any).response?.data?.error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   function ModeIcon({
@@ -152,37 +163,39 @@ const CreateOrder = () => {
   }
 
   useEffect(() => {
-    setValue("client", [orderData?.data?.data?.client?.id]);
-    setValue("shipper", [orderData?.data?.data?.shipper?.id]);
-    setValue("consignee", [orderData?.data?.data?.consignee?.id]);
-    setValue("pol", [orderData?.data?.data?.pol?.id]);
-    setValue("pod", [orderData?.data?.data?.pod?.id]);
-    setValue("pol_country", [orderData?.data?.data?.pol_country?.id]);
-    setValue("pod_country", [orderData?.data?.data?.pod_country?.id]);
-    setValue("clearing_agent", [orderData?.data?.data?.clearing_agent?.id]);
-    setValue("agent", [orderData?.data?.data?.agent?.id]);
-    setValue("network", [orderData?.data?.data?.network?.id]);
-    setValue("final_destination", [orderData?.data?.data?.final_destination]);
-    // logistics
-    setValue("service", [orderData?.data?.data?.service?.id]);
-    setValue("bl_number", orderData?.data?.data?.bl_number);
-    setValue(
-      "third_party_logistics_name",
-      orderData?.data?.data?.third_party_logistics_name
-    );
-    // airfreight
-    setValue("mawb_number", orderData?.data?.data?.hawb_number);
-    setValue("hawb_number", orderData?.data?.data?.hawb_number);
-    setValue("airline", [orderData?.data?.data?.airline?.id]);
-    setValue("gross_weight", orderData?.data?.data?.gross_weight);
-    setValue("net_weight", orderData?.data?.data?.net_weight);
-    setValue("volume", orderData?.data?.data?.volume);
-    setValue("chargable_weight", orderData?.data?.data?.chargable_weight);
-    //land
-    setValue("transporter", orderData?.data?.data?.transporter);
-    //sea
-    setValue("shipping_line", [orderData?.data?.data?.shipping_line]);
-  }, [orderData?.data?.data]);
+    if (orderData?.data?.data) {
+      setValue("client", [orderData?.data?.data?.client?.id]);
+      setValue("shipper", [orderData?.data?.data?.shipper?.id]);
+      setValue("consignee", [orderData?.data?.data?.consignee?.id]);
+      setValue("pol", [orderData?.data?.data?.pol?.id]);
+      setValue("pod", [orderData?.data?.data?.pod?.id]);
+      setValue("pol_country", [orderData?.data?.data?.pol_country?.id]);
+      setValue("pod_country", [orderData?.data?.data?.pod_country?.id]);
+      setValue("clearing_agent", [orderData?.data?.data?.clearing_agent?.id]);
+      setValue("agent", [orderData?.data?.data?.agent?.id]);
+      setValue("network", [orderData?.data?.data?.network?.id]);
+      setValue("final_destination", [orderData?.data?.data?.final_destination]);
+      // logistics
+      setValue("service", [orderData?.data?.data?.service?.id]);
+      setValue("bl_number", orderData?.data?.data?.bl_number);
+      setValue(
+        "third_party_logistics_name",
+        orderData?.data?.data?.third_party_logistics_name
+      );
+      // airfreight
+      setValue("mawb_number", orderData?.data?.data?.hawb_number);
+      setValue("hawb_number", orderData?.data?.data?.hawb_number);
+      setValue("airline", [orderData?.data?.data?.airline?.id]);
+      setValue("gross_weight", orderData?.data?.data?.gross_weight);
+      setValue("net_weight", orderData?.data?.data?.net_weight);
+      setValue("volume", orderData?.data?.data?.volume);
+      setValue("chargable_weight", orderData?.data?.data?.chargable_weight);
+      //land
+      setValue("transporter", orderData?.data?.data?.transporter);
+      //sea
+      setValue("shipping_line", [orderData?.data?.data?.shipping_line]);
+    }
+  }, [orderData?.data?.data, reset]);
 
   const selectedClientId = watch("client");
   const selectedShipperId = watch("shipper");
@@ -229,7 +242,6 @@ const CreateOrder = () => {
             (item: any) => item.id == selectedClearingAgentId
           )
         : null;
-
       setValue("clearing_agent_code", selectedClearingAgen?.code || "");
     } else {
       setValue("clearing_agent_code", "");
@@ -241,24 +253,27 @@ const CreateOrder = () => {
     selectedClearingAgentId,
   ]);
 
-  // auto save
   const formValues = watch();
-  const prevFormValues = useRef(formValues);
+  const prevFormValues = useRef<any>(formValues);
+  const [hasChanges, setHasChanges] = useState(false);
 
   const debouncedSubmit = useCallback(
     debounce((data: any) => {
-      if (!isInitialLoad) {
+      if (!isInitialLoad && hasChanges) {
         console.log("Submitting", data);
         onSubmit(data);
+        setHasChanges(false);
       }
     }, 1000),
-    [isInitialLoad]
+    [isInitialLoad, hasChanges]
   );
+
   useEffect(() => {
     if (
       Object.keys(formValues).length > 0 &&
       JSON.stringify(formValues) !== JSON.stringify(prevFormValues.current)
     ) {
+      setHasChanges(true);
       debouncedSubmit(formValues);
       prevFormValues.current = formValues;
     }
@@ -268,7 +283,8 @@ const CreateOrder = () => {
     return () => {
       debouncedSubmit.cancel();
     };
-  }, []);
+  }, [debouncedSubmit]);
+
   useEffect(() => {
     if (orderData?.data?.data) {
       const timeout = setTimeout(() => {
@@ -277,13 +293,10 @@ const CreateOrder = () => {
       return () => clearTimeout(timeout);
     }
   }, [orderData?.data?.data]);
+
   if (!id || !name || !type || !freight_type || !date) {
     toast.error("Missing required parameters");
-
-    navigate("/orders", {
-      replace: true,
-    });
-
+    navigate("/orders", { replace: true });
     return null;
   }
 
@@ -316,12 +329,10 @@ const CreateOrder = () => {
               {orderData?.data?.data?.name}
             </Text>
           </HStack>
-
           <Text color="GrayText">
             Created on {formatDate(orderData?.data?.data?.created_at)}
           </Text>
         </VStack>
-
         <HStack gap={2}>
           <Button
             colorPalette="gray"
@@ -344,6 +355,7 @@ const CreateOrder = () => {
             loading={loading}
             loadingText="Loading..."
             onClick={() => {
+              // onSubmit(formValues);
               navigate({
                 pathname: `/orders/${id}/view`,
                 search: `?name=${name}&type=${type}&freight_type=${freight_type}&date=${date}`,
@@ -383,12 +395,6 @@ const CreateOrder = () => {
                   {...register("declaration_number")}
                   defaultValue={orderData?.data?.data?.declaration_number}
                 />
-                {/* <CustomInput
-                  type="text"
-                  label="Reference Number"
-                  {...register("reference_number")}
-                  defaultValue={orderData?.data?.data?.reference_number}
-                /> */}
               </SimpleGrid>
             </Box>
           </PageCard>
@@ -409,7 +415,6 @@ const CreateOrder = () => {
                   Client
                 </Heading>
                 <VStack gap="2">
-                  {/* <CustomInput type="text" label="Name" w="full" mt={1} /> */}
                   <CustomSelectWithAddButtom
                     label="Name"
                     name="client"
@@ -455,7 +460,6 @@ const CreateOrder = () => {
                   Shipper
                 </Heading>
                 <VStack gap="2">
-                  {/* <CustomInput type="text" label="Name" w="full" mt={1} /> */}
                   <CustomSelectWithAddButtom
                     label="Name"
                     name="shipper"
@@ -501,7 +505,6 @@ const CreateOrder = () => {
                   Consignee
                 </Heading>
                 <VStack gap="2">
-                  {/* <CustomInput type="text" label="Name" w="full" mt={1} /> */}
                   <CustomSelectWithAddButtom
                     label="Name"
                     name="consignee"
@@ -584,7 +587,6 @@ const CreateOrder = () => {
               {/* Port of Loading */}
               {/* POL Country */}
               <Box>
-                {/* <CustomInput type="text" label="POL Country" w="full" mt={1} /> */}
                 <CustomSelectWithAddButtom
                   label="POL Country"
                   name="pol_country"
@@ -619,7 +621,6 @@ const CreateOrder = () => {
               {/* Port of Discharge  */}
               {/* POD Country */}
               <Box>
-                {/* <CustomInput type="text" label="POD Country" w="full" mt={1} /> */}
                 <CustomSelectWithAddButtom
                   label="POD Country"
                   name="pod_country"
@@ -651,20 +652,7 @@ const CreateOrder = () => {
                   fields={[{ name: "name", type: "text", required: true }]}
                   addOptionFunc={handleOptions}
                   defaultValue={orderData?.data?.data?.final_destination}
-                  // errorMeassage={
-                  //   errors?.seal_number?.message
-                  //     ? String(errors?.seal_number?.message)
-                  //     : ""
-                  // }
                 />
-                {/* <CustomInput
-                  type="text"
-                  label="Final Destination"
-                  w="full"
-                  mt={1}
-                  {...register("final_destination")}
-                  defaultValue={orderData?.data?.data?.final_destination}
-                /> */}
               </Box>
               {/* Final Destination */}
             </SimpleGrid>
@@ -676,15 +664,6 @@ const CreateOrder = () => {
             <SimpleGrid columns={2} gap={6}>
               {/* ETD */}
               <Box>
-                {/* <CustomInput
-                  type="date"
-                  label="ETD"
-                  w="full"
-                  mt={1}
-                  {...register("etd")}
-                  defaultValue={orderData?.data?.data?.etd}
-                /> */}
-
                 <Field.Root>
                   <Field.Label
                     color="#6b7280"
@@ -735,7 +714,6 @@ const CreateOrder = () => {
                   >
                     ETA <Field.RequiredIndicator />
                   </Field.Label>
-
                   <Controller
                     control={control}
                     name="eta"
@@ -766,14 +744,6 @@ const CreateOrder = () => {
                     )}
                   />
                 </Field.Root>
-                {/* <CustomInput
-                  type="date"
-                  label="ETA"
-                  w="full"
-                  mt={1}
-                  {...register("eta")}
-                  defaultValue={orderData?.data?.data?.eta}
-                /> */}
               </Box>
               {/* ETA */}
             </SimpleGrid>
@@ -872,7 +842,6 @@ const CreateOrder = () => {
                   Network
                 </Heading>
                 <VStack gap="2">
-                  {/* <CustomInput type="text" label="Name" w="full" mt={1} /> */}
                   <CustomSelectWithAddButtom
                     label="Name"
                     name="network"
@@ -902,7 +871,6 @@ const CreateOrder = () => {
                   Clearing Agent
                 </Heading>
                 <VStack gap="2">
-                  {/* <CustomInput type="text" label="Name" w="full" mt={1} /> */}
                   <CustomSelectWithAddButtom
                     label="Name"
                     name="clearing_agent"
@@ -923,7 +891,6 @@ const CreateOrder = () => {
               </Box>
 
               <Box>
-                {/* hide title */}
                 <Heading
                   as="h3"
                   size="sm"
@@ -934,8 +901,6 @@ const CreateOrder = () => {
                 >
                   Clearing Agent code
                 </Heading>
-                {/* hide title */}
-
                 <CustomInput
                   type="text"
                   label="Code"
@@ -956,7 +921,6 @@ const CreateOrder = () => {
         {/* right side */}
         <VStack w="1/3" gap="6">
           <Invoices id={id} />
-
           <Documents id={id} />
         </VStack>
         {/* right side */}
