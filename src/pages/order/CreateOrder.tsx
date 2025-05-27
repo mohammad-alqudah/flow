@@ -39,13 +39,15 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { debounce } from "lodash";
 import Loading from "@/components/core/Loading";
 import handleOption from "@/utils/handleOptions";
 import Documents from "@/components/orders/Documents";
+import DatePicker from "react-date-picker";
+import formatTimestampToArabicDate from "@/utils/formatTimestampToArabicDate";
 const CreateOrder = () => {
   const [loading, setIsLoading] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -674,13 +676,43 @@ const CreateOrder = () => {
             <SimpleGrid columns={2} gap={6}>
               {/* ETD */}
               <Box>
-                <CustomInput
+                {/* <CustomInput
                   type="date"
                   label="ETD"
                   w="full"
                   mt={1}
                   {...register("etd")}
                   defaultValue={orderData?.data?.data?.etd}
+                /> */}
+
+                <Controller
+                  control={control}
+                  name="etd"
+                  defaultValue={new Date()}
+                  render={({ field }) => (
+                    <Box
+                      asChild
+                      w="full"
+                      border="1px solid #e4e4e7 !important"
+                      outline="none"
+                      rounded="0.25rem !important"
+                      py="1.5"
+                      px="2"
+                    >
+                      <DatePicker
+                        onChange={(value) =>
+                          field.onChange(formatTimestampToArabicDate(value))
+                        }
+                        value={field.value ? field.value : new Date()}
+                        format="dd/MM/yyyy"
+                        dayPlaceholder="d"
+                        monthPlaceholder="m"
+                        yearPlaceholder="y"
+                        autoFocus={false}
+                        openCalendarOnFocus={false}
+                      />
+                    </Box>
+                  )}
                 />
               </Box>
               {/* ETD */}
