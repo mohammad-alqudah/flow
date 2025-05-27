@@ -199,6 +199,19 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
       });
   };
 
+  const calculateTotal = (data: any) => {
+    if (!Array.isArray(data)) return 0;
+
+    const totalSum = data.reduce((sum, item) => {
+      console.log("item", item);
+      const value = parseFloat(item.value) || 0;
+
+      return sum + value;
+    }, 0);
+
+    return totalSum;
+  };
+
   useEffect(() => {
     if (isOpenEdit && itemDetails) {
       reset({
@@ -232,6 +245,13 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
           <DataTable data={itemsData?.data?.data} columns={columns} />
         )}
       </Box>
+
+      <HStack justify="end">
+        Total:{" "}
+        {itemsData?.isPending
+          ? "loading..."
+          : calculateTotal(itemsData?.data?.data)}
+      </HStack>
 
       {/* add item */}
       <CustomModal

@@ -219,6 +219,23 @@ const InvoiceItems = ({
     await handleOption(addOptions, model, data);
   };
 
+  const calculateTotal = (data: any) => {
+    if (!Array.isArray(data)) return 0;
+
+    const totalSum = data.reduce((sum, item) => {
+      console.log("item", item);
+      const quantity = parseFloat(item.quntity) || 0;
+      const rate = parseFloat(item.rate) || 0;
+      const extraRate = parseFloat(item.ex_rate) || 0;
+
+      const total = quantity * rate * extraRate;
+
+      return sum + total;
+    }, 0);
+
+    return totalSum;
+  };
+
   useEffect(() => {
     if (isOpenEdit && itemDetails) {
       reset({
@@ -270,7 +287,12 @@ const InvoiceItems = ({
           <DataTable data={itemsData?.data?.data} columns={columns} />
         )}
       </Box>
-
+      <HStack justify="end">
+        Total:{" "}
+        {itemsData?.isPending
+          ? "loading..."
+          : calculateTotal(itemsData?.data?.data)}
+      </HStack>
       {/* add item */}
       <CustomModal
         open={isOpenAdd}
@@ -367,7 +389,6 @@ const InvoiceItems = ({
         </VStack>
       </CustomModal>
       {/* add item */}
-
       {/* edit item */}
       <CustomModal
         open={isOpenEdit}
@@ -464,7 +485,6 @@ const InvoiceItems = ({
         </VStack>
       </CustomModal>
       {/* edit item */}
-
       {/* delete item */}
       <CustomModal
         open={isOpenDelete}
@@ -478,7 +498,6 @@ const InvoiceItems = ({
         are you sure you want to delete this item
       </CustomModal>
       {/* delete item */}
-
       {options.isPending ? <Loading /> : ""}
     </>
   );
