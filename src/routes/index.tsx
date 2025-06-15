@@ -12,6 +12,7 @@ import InvoiceDetails from "@/pages/invoice/InvoiceDetails";
 // react date picker
 import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
+import InvoiceUpdate from "@/pages/invoice/InvoiceUpdate";
 
 export default function AppRoutes() {
   const { isAuthenticated } = useAuth();
@@ -33,6 +34,7 @@ export default function AppRoutes() {
               <Route index element={<Invoices />} />
               <Route path=":id">
                 <Route path="view" element={<InvoiceDetails />} />
+                <Route path="update" element={<InvoiceUpdate />} />
               </Route>
             </Route>
           </Route>

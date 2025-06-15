@@ -14,13 +14,13 @@ import {
 } from "@chakra-ui/react";
 import {
   ArrowLeft01Icon,
-  CancelIcon,
+  FileEditIcon,
   OfficeChairFreeIcons,
   ReturnRequestIcon,
   SendToMobileIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import InvoiceItems from "./InvoiceItems";
 import AdditionalCosts from "./AdditionalCosts";
 // import { useMutation } from "@tanstack/react-query";
@@ -39,6 +39,7 @@ import toast from "react-hot-toast";
 
 const InvoiceDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   // console.log("id", id);
   // const { mutate, isPending, isError } = useMutation({
   //   mutationFn: () => downloadPreAdvicePDF(id),
@@ -164,6 +165,13 @@ const InvoiceDetails = () => {
               cancel_return
               returned
             ===== */}
+          <Button
+            onClick={() => navigate(`/invoices/${id}/update`)}
+            variant="surface"
+          >
+            <HugeiconsIcon icon={FileEditIcon} size="24px" />
+            Edit
+          </Button>
           {invoiceData?.data?.data?.jofotra_status === "not_sent" ? (
             <Button
               variant="solid"
@@ -173,17 +181,6 @@ const InvoiceDetails = () => {
             >
               <HugeiconsIcon icon={SendToMobileIcon} size="24px" />
               Send to Jo fotara
-            </Button>
-          ) : invoiceData?.data?.data?.jofotra_status === "pending_to_sent" ? (
-            <Button
-              variant="subtle"
-              colorPalette="red"
-              onClick={() => {
-                handleSendToFotara("cancel_send");
-              }}
-            >
-              <HugeiconsIcon icon={CancelIcon} size="24px" />
-              Cancel send
             </Button>
           ) : invoiceData?.data?.data?.jofotra_status === "sent" ? (
             <Button
@@ -196,19 +193,22 @@ const InvoiceDetails = () => {
               <HugeiconsIcon icon={ReturnRequestIcon} size="24px" />
               Return
             </Button>
-          ) : invoiceData?.data?.data?.jofotra_status ===
-            "pending_to_returned" ? (
-            <Button
-              variant="subtle"
-              colorPalette="red"
-              onClick={() => {
-                handleSendToFotara("cancel_return");
-              }}
-            >
-              <HugeiconsIcon icon={CancelIcon} size="24px" />
-              Cancel return
-            </Button>
           ) : (
+            // :
+            // invoiceData?.data?.data?.jofotra_status ===
+            //   "pending_to_returned" ? (
+            //   <Button
+            //     variant="subtle"
+            //     colorPalette="red"
+            //     onClick={() => {
+            //       handleSendToFotara("cancel_return");
+            //     }}
+            //   >
+            //     <HugeiconsIcon icon={CancelIcon} size="24px" />
+            //     Cancel return
+            //   </Button>
+            // )
+
             <Button variant="plain" disabled>
               <HugeiconsIcon icon={OfficeChairFreeIcons} size="24px" />
               Returned

@@ -124,7 +124,6 @@ const InvoiceItems = ({
             variant="ghost"
             rounded="full"
             onClick={() => {
-              console.log("info.row.original", info.row.original);
               setItemDetails(info.row.original);
               setIsOpenEdit(true);
             }}
@@ -223,7 +222,6 @@ const InvoiceItems = ({
     if (!Array.isArray(data)) return 0;
 
     const totalSum = data.reduce((sum, item) => {
-      console.log("item", item);
       const quantity = parseFloat(item.quntity) || 0;
       const rate = parseFloat(item.rate) || 0;
       const extraRate = parseFloat(item.ex_rate) || 0;
