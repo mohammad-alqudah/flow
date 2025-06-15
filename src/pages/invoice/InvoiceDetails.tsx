@@ -165,13 +165,15 @@ const InvoiceDetails = () => {
               cancel_return
               returned
             ===== */}
-          <Button
-            onClick={() => navigate(`/invoices/${id}/update`)}
-            variant="surface"
-          >
-            <HugeiconsIcon icon={FileEditIcon} size="24px" />
-            Edit
-          </Button>
+          {invoiceData?.data?.data?.jofotra_status === "not_sent" && (
+            <Button
+              onClick={() => navigate(`/invoices/${id}/update`)}
+              variant="surface"
+            >
+              <HugeiconsIcon icon={FileEditIcon} size="24px" />
+              Edit
+            </Button>
+          )}
           {invoiceData?.data?.data?.jofotra_status === "not_sent" ? (
             <Button
               variant="solid"
