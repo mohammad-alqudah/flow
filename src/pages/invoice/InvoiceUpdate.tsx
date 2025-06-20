@@ -42,7 +42,7 @@ const InvoiceUpdate = () => {
 
   const saveInvoice = useCustomUpdate(`/invoice/invoices/${id}/`, ["invoice"]);
 
-  const { register, watch, setValue, handleSubmit } = useForm({
+  const { register, watch, setValue } = useForm({
     defaultValues: {
       number: invoiceData?.data?.data?.number,
     },
