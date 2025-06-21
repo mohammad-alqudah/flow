@@ -696,7 +696,8 @@ const CreateOrder = () => {
                           monthPlaceholder="m"
                           yearPlaceholder="y"
                           autoFocus={false}
-                          openCalendarOnFocus={false}
+                          openCalendarOnFocus={true}
+                          onKeyDown={(e) => e.preventDefault()}
                         />
                       </Box>
                     )}
@@ -739,6 +740,7 @@ const CreateOrder = () => {
                           yearPlaceholder="y"
                           autoFocus={false}
                           openCalendarOnFocus={false}
+                          onKeyDown={(e) => e.preventDefault()}
                         />
                       </Box>
                     )}

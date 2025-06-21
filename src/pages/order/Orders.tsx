@@ -727,6 +727,7 @@ const Orders = () => {
                     dayPlaceholder="d"
                     monthPlaceholder="m"
                     yearPlaceholder="y"
+                    onKeyDown={(e) => e.preventDefault()}
                   />
                 </Box>
               )}

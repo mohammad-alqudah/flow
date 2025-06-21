@@ -175,6 +175,7 @@ const Invoices = () => {
                   dayPlaceholder="d"
                   monthPlaceholder="m"
                   yearPlaceholder="y"
+                  onKeyDown={(e) => e.preventDefault()}
                 />
               </Box>
             </Field.Root>
@@ -210,6 +211,7 @@ const Invoices = () => {
                   dayPlaceholder="d"
                   monthPlaceholder="m"
                   yearPlaceholder="y"
+                  onKeyDown={(e) => e.preventDefault()}
                 />
               </Box>
             </Field.Root>

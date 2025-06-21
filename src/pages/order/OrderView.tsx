@@ -725,6 +725,7 @@ const OrderView = () => {
                           openCalendarOnFocus={false}
                           disabled
                           className="date-picker-flow"
+                          onKeyDown={(e) => e.preventDefault()}
                         />
                       </Box>
                     )}
@@ -778,6 +779,7 @@ const OrderView = () => {
                           openCalendarOnFocus={false}
                           disabled
                           className="date-picker-flow"
+                          onKeyDown={(e) => e.preventDefault()}
                         />
                       </Box>
                     )}

@@ -139,6 +139,7 @@ const Invoices = ({ id }: { id: string }) => {
                     yearPlaceholder="y"
                     autoFocus={false}
                     openCalendarOnFocus={false}
+                    onKeyDown={(e) => e.preventDefault()}
                   />
                 </Box>
               )}

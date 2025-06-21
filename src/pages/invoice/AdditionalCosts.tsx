@@ -319,6 +319,7 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
                     dayPlaceholder="d"
                     monthPlaceholder="m"
                     yearPlaceholder="y"
+                    onKeyDown={(e) => e.preventDefault()}
                   />
                 </Box>
               )}
@@ -421,6 +422,7 @@ const AdditionalCosts = ({ invoiceId }: { invoiceId: string }) => {
                     dayPlaceholder="d"
                     monthPlaceholder="m"
                     yearPlaceholder="y"
+                    onKeyDown={(e) => e.preventDefault()}
                   />
                 </Box>
               )}
