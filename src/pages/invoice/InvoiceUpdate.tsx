@@ -111,49 +111,48 @@ const InvoiceUpdate = () => {
   }
 
   return (
-    <form onSubmit={(e) => e.preventDefault()}>
-      <VStack>
-        {/* page header */}
-        <HStack justify="space-between" align="center" w="full" px={4} py={2}>
-          {/* Left Section: Back Arrow, Title, Status, and Date */}
-          <HStack gap={4} align="center">
-            {/* Back Arrow */}
-            <Link
-              href="/invoices"
-              _hover={{ color: "gray.500" }}
-              color="gray.400"
-            >
-              <Icon
-                as={() => <HugeiconsIcon icon={ArrowLeft01Icon} size="24px" />}
-                boxSize={6}
-              />
-            </Link>
+    <VStack>
+      {/* page header */}
+      <HStack justify="space-between" align="center" w="full" px={4} py={2}>
+        {/* Left Section: Back Arrow, Title, Status, and Date */}
+        <HStack gap={4} align="center">
+          {/* Back Arrow */}
+          <Link
+            href="/invoices"
+            _hover={{ color: "gray.500" }}
+            color="gray.400"
+          >
+            <Icon
+              as={() => <HugeiconsIcon icon={ArrowLeft01Icon} size="24px" />}
+              boxSize={6}
+            />
+          </Link>
 
-            {/* Title, Status, and Date */}
-            <VStack align="start" gap={1}>
-              <HStack gap={3}>
-                <Text fontSize="2xl" fontWeight="semibold" color="gray.900">
-                  Invoice {invoiceData?.data?.data?.file?.name}
-                </Text>
-              </HStack>
-              <Text fontSize="sm" color="gray.500">
-                Created on {formatDate(invoiceData?.data?.data?.date)}
+          {/* Title, Status, and Date */}
+          <VStack align="start" gap={1}>
+            <HStack gap={3}>
+              <Text fontSize="2xl" fontWeight="semibold" color="gray.900">
+                Invoice {invoiceData?.data?.data?.file?.name}
               </Text>
-            </VStack>
-          </HStack>
-
-          <HStack>
-            <Button onClick={() => navigate(`/invoices/${id}/view`)}>
-              <HugeiconsIcon icon={DocumentValidationIcon} size="24px" />
-              Save
-            </Button>
-          </HStack>
+            </HStack>
+            <Text fontSize="sm" color="gray.500">
+              Created on {formatDate(invoiceData?.data?.data?.date)}
+            </Text>
+          </VStack>
         </HStack>
-        {/* page header */}
 
-        {/* invoice details */}
-        <VStack gap={6} align="stretch" w="full">
-          {/* Card 1: SEA FREIGHT */}
+        <HStack>
+          <Button onClick={() => navigate(`/invoices/${id}/view`)}>
+            <HugeiconsIcon icon={DocumentValidationIcon} size="24px" />
+            Save
+          </Button>
+        </HStack>
+      </HStack>
+      {/* page header */}
+
+      {/* invoice details */}
+      <VStack gap={6} align="stretch" w="full">
+        <form onSubmit={(e) => e.preventDefault()}>
           <Card.Root p={6}>
             <Card.Body>
               <HStack gap={3} mb={6} align="center">
@@ -309,31 +308,30 @@ const InvoiceUpdate = () => {
               </SimpleGrid>
             </Card.Body>
           </Card.Root>
+        </form>
+        {/* Card 2: Invoice Items */}
+        <Card.Root p={6}>
+          <Card.Body>
+            <InvoiceItems
+              invoiceId={String(id)}
+              canEdit={
+                invoiceData?.data?.data?.jofotra_status === "not_sent"
+                  ? true
+                  : false
+              }
+            />
+          </Card.Body>
+        </Card.Root>
 
-          {/* Card 2: Invoice Items */}
-          <Card.Root p={6}>
-            <Card.Body>
-              <InvoiceItems
-                invoiceId={String(id)}
-                canEdit={
-                  invoiceData?.data?.data?.jofotra_status === "not_sent"
-                    ? true
-                    : false
-                }
-              />
-            </Card.Body>
-          </Card.Root>
-
-          {/* Card 3: Additional Costs */}
-          <Card.Root p={6}>
-            <Card.Body>
-              <AdditionalCosts invoiceId={String(id)} />
-            </Card.Body>
-          </Card.Root>
-        </VStack>
-        {/* invoice details */}
+        {/* Card 3: Additional Costs */}
+        <Card.Root p={6}>
+          <Card.Body>
+            <AdditionalCosts invoiceId={String(id)} />
+          </Card.Body>
+        </Card.Root>
       </VStack>
-    </form>
+      {/* invoice details */}
+    </VStack>
   );
 };
 

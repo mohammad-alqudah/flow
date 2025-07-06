@@ -52,6 +52,8 @@ const AirFreightDetails = ({
   const [loading, setLoading] = useState(false);
   const columnHelper = createColumnHelper<any>();
 
+  console.log("defaultValue", defaultValue);
+
   const packageData = useCustomQuery(`/file/packeges/all/${defaultValue.id}/`, [
     "packeges",
     `packeges-${defaultValue.id}`,
@@ -149,7 +151,7 @@ const AirFreightDetails = ({
           {/* mawb_number */}
           <Box>
             <CustomInput
-              type="number"
+              type="string"
               label="MAWB number"
               w="full"
               mt={1}

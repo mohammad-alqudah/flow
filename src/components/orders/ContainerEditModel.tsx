@@ -137,15 +137,16 @@ const ContainerEditModel = ({
             ? String(errors?.gross_weight?.message)
             : ""
         }
-        pattern="[0-9]+(\.[0-9]{0,2})?"
+        pattern="[0-9]+(\.[0-9]{0,3})?"
       />
       <CustomInput
-        type="number"
+        type="text"
         label="Volume"
         {...register("volume")}
         errorMeassage={
           errors?.volume?.message ? String(errors?.volume?.message) : ""
         }
+        pattern="[0-9]+(\.[0-9]{0,3})?"
       />
       <CustomInput
         type="number"

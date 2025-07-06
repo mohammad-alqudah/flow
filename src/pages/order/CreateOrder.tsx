@@ -183,7 +183,7 @@ const CreateOrder = () => {
         orderData?.data?.data?.third_party_logistics_name
       );
       // airfreight
-      setValue("mawb_number", orderData?.data?.data?.hawb_number);
+      setValue("mawb_number", orderData?.data?.data?.mawb_number);
       setValue("hawb_number", orderData?.data?.data?.hawb_number);
       setValue("airline", [orderData?.data?.data?.airline?.id]);
       setValue("gross_weight", orderData?.data?.data?.gross_weight);

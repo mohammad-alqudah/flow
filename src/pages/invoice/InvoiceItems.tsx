@@ -169,11 +169,12 @@ const InvoiceItems = ({
     addInvoiceItem
       .mutateAsync(cleardData)
       .then((res) => {
-        res.error
-          ? handleErrorAlerts(res.error)
-          : toast.success("invoice created successflly") && setIsOpenAdd(false);
+        // res.error
+        console.log("res", res);
+        //   ? handleErrorAlerts(res.error)
+        //   : toast.success("invoice created successflly") && setIsOpenAdd(false);
 
-        reset();
+        // reset();
       })
       .catch((error) => {
         handleErrorAlerts(error?.response?.data?.error);

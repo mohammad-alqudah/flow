@@ -26,10 +26,13 @@ const schema = yup
 const Invoices = ({ id }: { id: string }) => {
   const [open, setOpen] = useState(false);
   const { data, isPending } = useCustomQuery(`invoice/invoices/?file=${id}`, [
-    "invoices",
+    `invoices-file-${id}`,
   ]);
   const navigate = useNavigate();
-  const addInvoice = useCustomPost("invoice/invoices/", ["invoices"]);
+  const addInvoice = useCustomPost("invoice/invoices/", [
+    `invoices-file-${id}`,
+    "invoices",
+  ]);
 
   const { control, handleSubmit } = useForm<Inputs>({
     resolver: yupResolver(schema),
