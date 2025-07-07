@@ -128,15 +128,16 @@ const PackageEditModel = ({
         }
       />
       <CustomInput
-        type="number"
+        type="text"
         label="Net weight"
         {...register("net_weight")}
         errorMeassage={
           errors?.net_weight?.message ? String(errors?.net_weight?.message) : ""
         }
+        pattern="[0-9]+(\.[0-9]{0,3})?"
       />
       <CustomInput
-        type="number"
+        type="text"
         label="Gross weight"
         {...register("gross_weight")}
         errorMeassage={
@@ -144,6 +145,7 @@ const PackageEditModel = ({
             ? String(errors?.gross_weight?.message)
             : ""
         }
+        pattern="[0-9]+(\.[0-9]{0,3})?"
       />
       <CustomInput
         type="text"
